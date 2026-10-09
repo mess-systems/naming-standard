@@ -81,4 +81,4 @@ Questioned and kept:
 
 ## License
 
-Text licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE). You may share and adapt it, including commercially, with attribution: "mess.systems naming standard, CC BY 4.0".
+Text licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE). You may share and adapt it, including commercially, with attribution: "mess.systems naming standard (https://github.com/mess-systems/naming-standard), CC BY 4.0".
