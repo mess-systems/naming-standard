@@ -1,7 +1,7 @@
-# Identity conventions — humans, agents, service accounts, groups, roles
+# Identity conventions: humans, agents, service accounts, groups, roles
 
-> **Status:** v2, evolving. Combines a four-tier privileged-access model (T0–T3) with the consumer and plane rules of [01](01-naming-conventions.md).
-> **Product-agnostic.** The rules apply to system categories: identity provider (IdP), secrets manager, mesh VPN, workload identity (SPIFFE), Kubernetes RBAC, database roles, LLM/MCP gateway clients, container registry robots, git forge and CI tokens. Products named in examples (Keycloak, OpenBao/Vault, SPIRE, Harbor, Gitea, Jenkins, Grafana, …) are interchangeable illustrations.
+> **Status:** v2, evolving. Combines a four-tier privileged-access model (T0 to T3) with the consumer and plane rules of the [naming conventions](01-naming-conventions.md).
+> **Product-agnostic.** The rules apply to system categories: identity provider (IdP), secrets manager, mesh VPN, workload identity ([SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)), Kubernetes RBAC, database roles, LLM/MCP gateway clients, container registry robots, git forge and CI tokens. Products named in examples (Keycloak, OpenBao/Vault, SPIRE, Harbor, Gitea, Jenkins, Grafana, and others) are interchangeable illustrations.
 > **One identity, one ID, everywhere.** The same string is the IdP username, the secrets-manager policy and machine role, the `x-user-id`, the DB role (with `_`), the OTel `service.name`.
 
 ## 1. Principles applied
@@ -9,13 +9,13 @@
 | # | Rule |
 |---|---|
 | I1 | **Kind is visible in the ID.** Humans, admins, break-glass, service accounts, agents, workloads have different prefixes because they have different lifecycles, credentials and audit needs |
-| I2 | **Agents are not service accounts.** An agent acts autonomously and often on behalf of a human; it gets its own kind, its own secrets node ([03](03-secrets-conventions.md) §3) and a mandatory `operator` (a human who answers for it) |
-| I3 | **Groups grant, names describe.** A DNS label, a hostname, a path never authorises anything (01 §3.1) |
-| I4 | **Three group prefixes only**: `tier-` (privilege level), `role-` (function), `app-` (access to one capability). Tier ⊂ role ⊂ app in specificity |
+| I2 | **Agents are not service accounts.** An agent acts autonomously and often on behalf of a human; it gets its own kind, its own secrets node ([Path grammar](03-secrets-conventions.md#3-path-grammar)) and a mandatory `operator` (a human who answers for it) |
+| I3 | **Groups grant, names describe.** A DNS label, a hostname, a path never authorises anything ([Grammar A: internal](01-naming-conventions.md#31-grammar-a-internal)) |
+| I4 | **Three group prefixes only**: `tier-` (privilege level), `role-` (function), `app-` (access to one capability). Specificity grows from tier to role to app |
 | I5 | **Separate admin account** for T0/T1 work (`<handle>-adm`), never the daily account |
 | I6 | **Break-glass is an account, not a shared password**: `breakglass-<capability>-<NN>`, sealed, alerted, rotated after use |
 | I7 | **Service account = application.** `svc-<plane>-<domain>-<product>`; one per install, one per env when envs exist |
-| I8 | **Workload identity is SPIFFE**, path mirrors the capability, trust domain is the company, not the DNS zone |
+| I8 | **Workload identity is [SPIFFE](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE-ID.md)**, the path mirrors the capability, and the trust domain is the company, not the DNS zone |
 | I9 | **Every identity has `owner` and `expires`** (or `expires: none` justified). Reviews: t0 monthly, t1 quarterly, rest semi-annually |
 | I10 | **Names are lowercase kebab**; `_` only where the store forbids `-` (Postgres, ClickHouse, env vars) |
 
@@ -27,9 +27,9 @@
 | Human admin | `<handle>-adm` | `jdoe-adm` | WebAuthn only; no email/chat | IdP, tier groups |
 | Break-glass | `breakglass-<capability>-<NN>` | `breakglass-sso-01` | sealed password in `<mount>/…/admin` | local to the system |
 | Service account | `svc-<plane>-<domain>-<product>[-<env>]` | `svc-eng-sdlc-jenkins` | AppRole / OIDC client / SPIFFE | IdP (machine user) + secrets manager |
-| Agent | `agent-<name>` | `agent-code-review`, `agent-docs-writer` | AppRole → SPIFFE; gateway key | secrets manager, gateway `clients` |
+| Agent | `agent-<name>` | `agent-code-review`, `agent-docs-writer` | AppRole, later SPIFFE; gateway key | secrets manager, gateway `clients` |
 | Human tool | `user-<handle>-<tool>` | `user-jdoe-ide` | gateway key issued to a human's tool | gateway `clients` only |
-| Workload | `spiffe://mess.systems/<plane>/<domain>/<capability>` | `spiffe://mess.systems/corp/ai/gateway` | X.509-SVID | SPIRE |
+| Workload | `spiffe://mess.systems/<plane>/<domain>/<capability>` | `spiffe://mess.systems/corp/ai/gateway` | [X.509-SVID](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md) | SPIRE |
 | Node | `spiffe://mess.systems/node/<host>` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` | join token / attestor | SPIRE |
 | External (B2B) | `ext-<org>-<handle>` | `ext-acme-jdoe` | federated via `b2b.iam.shared` | IdP source |
 
@@ -61,7 +61,7 @@ Legacy privilege groups in other schemes (`sg-*`, `*-admins`, `operators`) map o
 
 ### 3.3 App groups (access to one capability)
 
-`app-<capability>-<access>`, access ∈ `user | editor | admin`.
+`app-<capability>-<access>`, where access is `user`, `editor`, or `admin`.
 
 | Example | Grants |
 |---|---|
@@ -70,7 +70,7 @@ Legacy privilege groups in other schemes (`sg-*`, `*-admins`, `operators`) map o
 | `app-gateway-user` | may call `gateway.ai.corp` |
 | `app-warehouse-editor` | warehouse write |
 
-Provisioner defaults like `app-<name>-operators` → `app-<capability>-admin`. Zone-suffixed providers (`grafana-public/-private/-admin`) are dropped; exposure is a mesh group (§4), admin is `app-dashboards-admin`.
+Provisioner defaults such as `app-<name>-operators` become `app-<capability>-admin`. Zone-suffixed providers (`grafana-public/-private/-admin`) are dropped: exposure is handled by a mesh group (see [mesh VPN groups](#4-mesh-vpn-groups)), and admin access by `app-dashboards-admin`.
 
 ## 4. Mesh VPN groups
 
@@ -82,17 +82,17 @@ Provisioner defaults like `app-<name>-operators` → `app-<capability>-admin`. Z
 | `egress-<plane>` | egress gateways | `egress-corp` |
 | `site-<code>` | location | `site-dc1`, `site-cld` |
 
-Policies: `<subject-group> → <zone-group>`. Typical legacy mappings: an all-access `admins` group → `tier-t0-superadmin`; a `devs` group → `role-developers`; ad-hoc tag-style groups → the matching `tier-*` or `role-*` group.
+Policies: `<subject-group> → <zone-group>`. Typical legacy mappings: an all-access `admins` group becomes `tier-t0-superadmin`, a `devs` group becomes `role-developers`, and ad-hoc tag-style groups become the matching `tier-*` or `role-*` group.
 
 ## 5. Owners
 
-`owner` metadata (01 §2) is always a **group**, never a person: `role-platform-engineers`, `role-data-engineers`, `tier-t0-superadmin`. Agents' `operator` is the exception (a human).
+`owner` metadata (see [metadata keys](01-naming-conventions.md#2-the-ten-metadata-keys)) is always a **group**, never a person: `role-platform-engineers`, `role-data-engineers`, `tier-t0-superadmin`. Agents' `operator` is the exception (a human).
 
 ## 6. IdP objects
 
 | Object | Name | Example |
 |---|---|---|
-| Application slug | `<application>` (01 §5) | `shared-obs-grafana` |
+| Application slug | `<application>` ([Object forms](01-naming-conventions.md#5-object-forms)) | `shared-obs-grafana` |
 | Application display name | product name | `Grafana` |
 | Provider | `<application>-<protocol>` | `shared-obs-grafana-oidc`, `eng-sdlc-gitea-oidc` |
 | Property mapping / scope | `<application>-<claim>` | `shared-obs-grafana-groups` |
@@ -102,11 +102,11 @@ Policies: `<subject-group> → <zone-group>`. Typical legacy mappings: an all-ac
 
 Object kinds follow common IdPs (Keycloak, Entra ID, Okta, …); map them to your product's equivalents.
 
-Legacy slugs named after the product (`grafana`, `argocd`) → the application form (`shared-obs-grafana`, `eng-sdlc-argocd`). Redirect URIs use canonical FQDNs only (01 §6).
+Legacy slugs named after the product (`grafana`, `argocd`) move to the application form (`shared-obs-grafana`, `eng-sdlc-argocd`). Redirect URIs use canonical FQDNs only (see [single base URL](01-naming-conventions.md#6-single-base-url)).
 
 ## 7. Secrets manager (OpenBao / Vault)
 
-Policy = identity ID; AppRole = identity ID; JWT role = group ID. Full rules in [03](03-secrets-conventions.md) §5–§6.
+Policy = identity ID; AppRole = identity ID; JWT role = group ID. The full rules are in the [policies](03-secrets-conventions.md#5-policies) and [auth roles and tokens](03-secrets-conventions.md#6-auth-roles-and-tokens) sections of the secrets conventions.
 
 | Typical legacy | Target |
 |---|---|
@@ -126,13 +126,13 @@ Policy = identity ID; AppRole = identity ID; JWT role = group ID. Full rules in 
 | `spiffe://corp.lan/infra/llm-proxy` (repo folder) | `spiffe://mess.systems/corp/ai/gateway` |
 | `spiffe://corp.lan/apps/doc-converter` | `spiffe://mess.systems/corp/data/convert` |
 | `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` |
-| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01` (a workstation keeps its name — not a service host) |
+| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01` (a workstation keeps its name; it is not a service host) |
 
 Agents: `spiffe://mess.systems/corp/ai/agent-<name>`. Paths follow **capability codes**, never repository folders.
 
 ## 9. Gateway client identities
 
-Key names in `corp/ai/gateway/prd/clients` and the `x-user-id` header are identity IDs from §2.
+Key names in `corp/ai/gateway/prd/clients` and the `x-user-id` header are identity IDs from [identity kinds](#2-identity-kinds).
 
 | Legacy field (illustrative) | Target ID | Kind |
 |---|---|---|
@@ -156,7 +156,7 @@ Env var names: `GATEWAY_CLIENT_KEY_<ID_UPPER_SNAKE>` (`GATEWAY_CLIENT_KEY_AGENT_
 | GitOps project (e.g. Argo CD) | `<plane>` or `<product>` | `default` → `eng`, product apps → `<product>` |
 | Labels | `mess.systems/plane`, `mess.systems/owner`, … | |
 
-OIDC group claim → RBAC subjects are the `tier-*`/`role-*` groups unchanged.
+RBAC subjects taken from the OIDC group claim are the `tier-*` and `role-*` groups, unchanged.
 
 ## 11. Database roles
 
@@ -178,7 +178,7 @@ Form: `<plane>_<domain>_<capability>_<access>` for capability-owned roles (`ro |
 |---|---|---|
 | Registry robot (e.g. Harbor) | `robot$<project>+<consumer-id>` | `robot$corp-ai+svc-eng-sdlc-jenkins` |
 | Git forge token / deploy key | `<consumer-id>` (+ `--<purpose>`) | `svc-eng-sdlc-jenkins--clone` |
-| CI credential ID | secrets path with `/`→`-` | `eng-sdlc-ci-prd-packages` |
+| CI credential ID | secrets path with `/` replaced by `-` | `eng-sdlc-ci-prd-packages` |
 | Package registry token | `<consumer-id>` | `svc-eng-sdlc-jenkins` |
 | Dashboards service account | `svc-<application>` | `svc-corp-ai-litellm` |
 | SSH key comment | `<identity-id>@<host>` | `jdoe-adm@dc1-shared-infra-kvm-prd-01` |
@@ -187,16 +187,16 @@ Form: `<plane>_<domain>_<capability>_<access>` for capability-owned roles (`ro |
 
 | Event | Rule |
 |---|---|
-| Create | intake (01 §9) → identity kind → groups → secrets-manager policy/role → catalog entry with `owner`, `expires` |
+| Create | intake ([Naming procedure](01-naming-conventions.md#9-naming-procedure)), then identity kind, groups, secrets-manager policy and role, and a catalog entry with `owner` and `expires` |
 | Rotate | per `custom_metadata.rotation`; agents and tools 90d; service accounts 365d; break-glass after every use |
 | Review | t0 monthly, t1 quarterly, t2/t3 semi-annual; agents with their operator |
-| Leave / retire | disable in the IdP → revoke AppRole secret-ids → drop DB role → remove gateway client field → close catalog entry. Never reuse an ID |
+| Leave / retire | in this order: disable in the IdP, revoke AppRole secret-ids, drop the DB role, remove the gateway client field, close the catalog entry. Never reuse an ID |
 
 ## 14. Refusals
 
 - Group without one of the three prefixes; a fourth prefix.
 - Tier and role in one group name (`platform-admins`).
-- Product name inside a group (`grafana-admins` → `app-dashboards-admin`).
+- Product name inside a group (`grafana-admins`; use `app-dashboards-admin`).
 - Exposure in a group or provider name (`-public`, `-private`, `-admin` provider).
 - Agent registered as `svc-*` or a human's tool registered as an agent.
 - Policy/AppRole/JWT-role name that is not an identity or group ID.

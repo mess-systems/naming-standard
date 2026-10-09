@@ -1,11 +1,11 @@
 [English](../../02-worked-example.md) | [Русский](../ru/02-worked-example.md) | **简体中文**
 
-> **译文说明。** 本文为标准 v2 版本的译文，源提交 `b6791c2`。英文文本为规范性文本：如有任何不一致，以英文版本为准。
+> **译文说明。** 本文为标准 v2 版本的译文，源提交 `ca24160`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
 
-# 完整示例——迁移一个虚构组织
+# 完整示例：迁移一个虚构组织
 
-> **状态：** 示意性。此处一切均为虚构：组织、主机、服务和路径仅用于展示 [01](01-naming-conventions.md)、[03](03-secrets-conventions.md) 和 [04](04-identity-conventions.md) 如何协同应用。
-> **域名替换：** 本标准使用组织域名 `mess.systems`。本示例使用 **`northwind.example`**（RFC 2606/6761 保留域名），以说明公司域名只是一个参数：`svc.mess.systems` 变为 `svc.northwind.example`，`spiffe://mess.systems` 变为 `spiffe://northwind.example`，依此类推。
+> **状态：** 示意性。此处一切均为虚构：组织、主机、服务和路径仅用于展示[命名](01-naming-conventions.md)、[机密](03-secrets-conventions.md)和[身份](04-identity-conventions.md)规范如何协同应用。
+> **域名替换：** 本标准使用组织域名 `mess.systems`。本示例使用 **`northwind.example`**（由 [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) 和 [RFC 6761](https://www.rfc-editor.org/rfc/rfc6761) 保留），以说明公司域名只是一个参数：`svc.mess.systems` 变为 `svc.northwind.example`，`spiffe://mess.systems` 变为 `spiffe://northwind.example`，依此类推。
 
 ## 1. 背景
 
@@ -29,9 +29,9 @@ Northwind Traders 在其办公室的双节点虚拟化平台上运行约十几�
 | 品牌 | `www.northwind.example` | B |
 | 产品 | `app.shopfront.example` | B |
 
-## 3. 服务——登记与编码
+## 3. 服务：登记与编码
 
-登记 (intake) 遵循 01 §9：平面 → 域 → 能力 → 产品 → 环境。此处所有服务都是生产环境，因此语法 A 省略环境，而主机、schema 和机密中写出 `prd`。
+登记 (intake) 遵循[命名流程](01-naming-conventions.md#9-命名流程)：平面、域、能力、产品、环境。此处所有服务都是生产环境，因此语法 A 省略环境，而主机、schema 和机密中写出 `prd`。
 
 | 遗留名称 | 登记信息 (plane / domain / capability / product) | 目标 FQDN | 应用 | 所有者 |
 |---|---|---|---|---|
@@ -50,14 +50,14 @@ Northwind Traders 在其办公室的双节点虚拟化平台上运行约十几�
 
 过程中做出的决定：
 
-- `grafana-admin` 不是第二个名称。管理员访问权限改为组 `app-dashboards-admin`（04 §3.3）；FQDN 保持唯一（01 §3.1、§6）。
-- `gitea.corp.lan` 改为指向规范 FQDN 的 90 天重定向，之后删除（01 §6）。
-- `*.int.corp.lan` 编码的是暴露范围。所有名称都迁移到语法 A；谁可以访问由网状网络/IdP 组决定（04 §4）。
-- LLM 的 UI 是网关上的一个路径，而不是第二个 FQDN（一个实例 → 一个名称）。
+- `grafana-admin` 不是第二个名称。管理员访问权限改为组 `app-dashboards-admin`（见[应用组](04-identity-conventions.md#33-应用组对单个能力的访问)），服务只保留一个 FQDN（见[语法 A](01-naming-conventions.md#31-语法-a内部)和[单一基础 URL](01-naming-conventions.md#6-单一基础-url)）。
+- `gitea.corp.lan` 改为指向规范 FQDN 的 90 天重定向，之后删除（见[单一基础 URL](01-naming-conventions.md#6-单一基础-url)）。
+- `*.int.corp.lan` 编码的是暴露范围。所有名称都迁移到语法 A；谁可以访问由网状网络组或 IdP 组决定（见[网状 VPN 组](04-identity-conventions.md#4-网状-vpn-组)）。
+- LLM 的 UI 是网关上的一个路径，而不是第二个 FQDN（一个实例，一个名称）。
 
 ## 4. 主机
 
-形式：`<site>-<plane>-<domain>-<product>-<env>-<NN>`（01 §5）。管理接口位于 `mgmt.northwind.example` 下。
+形式：`<site>-<plane>-<domain>-<product>-<env>-<NN>`（见[对象形式](01-naming-conventions.md#5-对象形式)）。管理接口位于 `mgmt.northwind.example` 下。
 
 | 遗留主机 | 运行内容 | 目标主机 |
 |---|---|---|
@@ -71,21 +71,21 @@ Northwind Traders 在其办公室的双节点虚拟化平台上运行约十几�
 
 ## 5. 机密与身份
 
-每个平面一个挂载点，取代 `secret/`（03 §2）：
+每个平面一个挂载点，取代 `secret/`（见[挂载点](03-secrets-conventions.md#2-挂载点)）：
 
 | 遗留（`secret/`） | 目标 | 规则 |
 |---|---|---|
-| `grafana/oidc` | `shared/obs/dashboards/prd/oidc` | 用能力而不是产品（03 §9） |
-| `postgres/root` | `shared/data/sql/prd/admin` | 紧急访问条目，仅限 t0（03 S6） |
+| `grafana/oidc` | `shared/obs/dashboards/prd/oidc` | 用能力而不是产品（见[机密拒绝规则](03-secrets-conventions.md#9-拒绝规则)） |
+| `postgres/root` | `shared/data/sql/prd/admin` | 紧急访问条目，仅限 t0（规则 [S6](03-secrets-conventions.md#1-所采用的原则)） |
 | `jenkins/registry` | `eng/sdlc/ci/prd/oci` | 使用方副本，以其所解锁的能力命名 |
-| `llm/acmeai` | `corp/ai/gateway/prd/provider-acmeai` | 供应商是条目，不是节点（03 S4） |
-| `users/jdoe/*` | **拒绝** | 个人机密存放在密码管理器中（03 S5） |
+| `llm/acmeai` | `corp/ai/gateway/prd/provider-acmeai` | 供应商是条目，不是节点（规则 [S4](03-secrets-conventions.md#1-所采用的原则)） |
+| `users/jdoe/*` | **拒绝** | 个人机密存放在密码管理器中（规则 [S5](03-secrets-conventions.md#1-所采用的原则)） |
 
-身份与组（04）：
+身份与组（见[身份规范](04-identity-conventions.md)）：
 
 | 遗留 | 目标 | 类型 |
 |---|---|---|
-| `jdoe`（日常 + 管理） | `jdoe` 和 `jdoe-adm` | 人员、人员管理员账号（04 I5） |
+| `jdoe`（日常 + 管理） | `jdoe` 和 `jdoe-adm` | 人员、人员管理员账号（规则 [I5](04-identity-conventions.md#1-所采用的原则)） |
 | Postgres 上共用的 `root` | `breakglass-sql-01` | 紧急访问账号 |
 | 服务用户 `jenkins` | `svc-eng-sdlc-jenkins` | 服务账号 |
 | `release-bot` | `agent-release-notes`，操作员 `jdoe` | 智能体 |
@@ -95,7 +95,7 @@ Northwind Traders 在其办公室的双节点虚拟化平台上运行约十几�
 
 ## 6. 证书
 
-默认按名称使用 ACME 签发。只有无法使用 ACME 的端点才获得预先签发的通配符证书，每个实际使用的 `<domain>.<plane>` 组合一张（01 §7）：
+默认按名称使用 ACME 签发。只有无法使用 ACME 的端点才获得预先签发的通配符证书，每个实际使用的 `<domain>.<plane>` 组合一张（见[TLS](01-naming-conventions.md#7-tls)）：
 
 ```
 *.obs.shared.svc.northwind.example

@@ -17,7 +17,7 @@ The rule, code, or form you want, as it would appear in the standard.
 
 ## Affected sections
 
-e.g. 01 §4.3, 03 §3, 04 §2
+Files and sections, e.g. `01-naming-conventions.md`, "4.3 Capability codes".
 
 ## Breaking?
 

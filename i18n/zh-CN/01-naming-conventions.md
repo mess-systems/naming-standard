@@ -1,27 +1,27 @@
 [English](../../01-naming-conventions.md) | [Русский](../ru/01-naming-conventions.md) | **简体中文**
 
-> **译文说明。** 本文为标准 v2 版本的译文，源提交 `b6791c2`。英文文本为规范性文本：如有任何不一致，以英文版本为准。
+> **译文说明。** 本文为标准 v2 版本的译文，源提交 `ca24160`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
 
-# 命名规范 v2 — mess.systems
+# mess.systems 命名规范（v2）
 
 > **状态：** v2，持续演进中。自成体系：应用本标准所需的全部规则都在本仓库中。
-> **范围：** 人或机器读取的所有标识符：DNS、主机、代码仓库、镜像、存储桶、数据库、Kubernetes、可观测性、目录 ID。机密 → [03](03-secrets-conventions.md)。身份 → [04](04-identity-conventions.md)。迁移示例 → [02](02-worked-example.md)。
+> **范围：** 人或机器读取的所有标识符：DNS、主机、代码仓库、镜像、存储桶、数据库、Kubernetes、可观测性、目录 ID。机密见[机密规范](03-secrets-conventions.md)，身份见[身份规范](04-identity-conventions.md)，完整的迁移过程见[完整示例](02-worked-example.md)。
 > **组织域名：** `mess.systems` 是本组织自己的域名，全文均使用该域名。调整使用本标准时，请替换为您自己已注册的域名。
 
 ## 1. 字符规则（适用于所有类别）
 
 | 规则 | 取值 | 原因 |
 |---|---|---|
-| 字母表 | `a-z 0-9 -` | RFC 1123 主机名、Kubernetes 名称、S3、容器镜像仓库、大多数 IdP |
+| 字母表 | `a-z 0-9 -` | [RFC 1123](https://www.rfc-editor.org/rfc/rfc1123) 主机名、[Kubernetes 名称](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/)、S3、容器镜像仓库、大多数 IdP |
 | 大小写 | 仅小写 | DNS 不区分大小写；其他系统则区分 |
 | 维度之间的分隔符 | 名称中用 `-`，DNS 和点分 ID 中用 `.`，路径中用 `/` | 每种分隔符只有一种含义 |
 | 多词令牌 (token) | 用连字符连接（`data-catalog`），绝不直接拼接或使用 camelCase | 可读性；DNS 允许 |
 | `_` | 仅用于不允许 `-` 的场合：SQL 标识符、环境变量、机密字段名 | 由系统限制决定 |
-| 标签长度 | ≤ 63 个字符；FQDN ≤ 253 | RFC 1035 |
+| 标签长度 | ≤ 63 个字符；FQDN ≤ 253 | [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035) |
 | 开头/结尾的 `-` | 绝不允许 | RFC 1123 |
 | 数字 | 允许；令牌绝不以数字开头 | k8s 标签值、shell |
 | 序号 | 两位数，左侧补零（`01`） | 排序正确 |
-| 保留字 | `api`、`www`、`app`、`admin`、`internal`、`public`、`prod`、`test`、`svc`、`local`、`cluster`——绝不能用作平面、域、能力或产品代码 | 与语法令牌或 RFC 6762/6761 冲突 |
+| 保留字 | `api`、`www`、`app`、`admin`、`internal`、`public`、`prod`、`test`、`svc`、`local`、`cluster`——绝不能用作平面、域、能力或产品代码 | 与语法令牌或 [RFC 6762](https://www.rfc-editor.org/rfc/rfc6762)、[RFC 6761](https://www.rfc-editor.org/rfc/rfc6761) 保留的名称冲突 |
 
 ## 2. 十个元数据键
 
@@ -30,21 +30,21 @@
 | 键 | 取值 | 编码位置 |
 |---|---|---|
 | `plane` | `shared corp eng platform ext <product>` | DNS、主机、仓库、k8s 标签、机密挂载点 |
-| `domain` | §4.2 中的代码 | DNS、主机、仓库、schema |
-| `capability` | §4.3 中的代码 | DNS 最左侧标签、SPIFFE 路径、MCP 目标 |
+| `domain` | [域代码](#42-域) | DNS、主机、仓库、schema |
+| `capability` | [能力代码](#43-能力代码在所有域中唯一) | DNS 最左侧标签、SPIFFE 路径、MCP 目标 |
 | `product` | 实例代码（`keycloak`、`gitea`） | 主机、仓库、镜像、k8s 命名空间 |
 | `env` | `prd dev tst stg` | DNS（仅非生产）、主机、schema、机密路径（始终） |
-| `owner` | [04](04-identity-conventions.md) §5 中的组 ID | 目录、机密元数据、k8s 标签 |
-| `tier` | `t0 t1 t2 t3`（特权访问层级，[04](04-identity-conventions.md) §3.1） | 目录、身份组 |
+| `owner` | 组 ID（见[所有者](04-identity-conventions.md#5-所有者)） | 目录、机密元数据、k8s 标签 |
+| `tier` | `t0 t1 t2 t3`（特权访问层级，见[层级组](04-identity-conventions.md#31-层级组特权)） | 目录、身份组 |
 | `scope` | `dev tst stg prd`——对象获准使用的最高环境 | 仅目录 |
 | `data_class` | `public internal confidential restricted` | 目录、机密元数据、存储桶标签 |
 | `exposure` | `mesh lan public` | 目录、网状网络组——**绝不出现在名称中** |
 
-Kubernetes 标签键：`mess.systems/<key>`。虚拟化平台和云标签：`<key>-<value>`（`plane-corp`），或在支持的情况下使用原生键/值标签。容器镜像仓库标签：与虚拟化平台标签相同。机密管理器：`custom_metadata.<key>`。
+[Kubernetes 标签](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)键：`mess.systems/<key>`。虚拟化平台和云标签：`<key>-<value>`（`plane-corp`），或在支持的情况下使用原生键/值标签。容器镜像仓库标签：与虚拟化平台标签相同。机密管理器：`custom_metadata.<key>`。
 
-## 3. DNS——两种语法，别无其他
+## 3. DNS：两种语法，别无其他
 
-### 3.1 语法 A——内部
+### 3.1 语法 A：内部
 
 ```
 <capability>.<domain>.<plane>.svc.mess.systems                 # prod
@@ -55,10 +55,10 @@ Kubernetes 标签键：`mess.systems/<key>`。虚拟化平台和云标签：`<ke
 - `svc.mess.systems` 是内部区域（水平分割 DNS (split-horizon)、内部 CA + ACME），不对外公开委派。这里的 `svc` 表示“服务区域”，与 Kubernetes 的 `*.svc.cluster.local` 无关——后缀不同，解析器也不同。
 - 最左侧标签是**能力 (capability)**，而不是产品（用 `git`，不用 `gitea`）。产品属于资产清单信息，不属于名称的一部分。
 - 生产环境省略环境。其他所有地方（主机、schema、机密）都写出 `prd`。
-- 一个实例 → 恰好一个规范 FQDN。别名是重定向，不是名称。
-- **标签绝不作为授权依据。** 可达性和权限来自网状网络组、IdP 组和机密管理器策略（[04](04-identity-conventions.md)）。同一实例的两个使用方使用相同的名称和不同的组。
+- 一个实例恰好对应一个规范 FQDN。别名是重定向，不是名称。
+- **标签绝不作为授权依据。** 可达性和权限来自网状网络组、IdP 组和机密管理器策略（见[身份规范](04-identity-conventions.md)）。同一实例的两个使用方使用相同的名称和不同的组。
 
-### 3.2 语法 B——公共
+### 3.2 语法 B：公共
 
 ```
 <surface>.<product-domain>            # www | app | api | docs | status | auth
@@ -99,7 +99,7 @@ www.mess.systems                      # brand
 | `iam` | 身份、访问、PKI、机密、密码 | shared |
 | `gov` | 架构、策略、CMDB、ADR | corp |
 | `sec` | 威胁检测、漏洞管理、SIEM | shared |
-| `obs` | 指标、日志、链路追踪、告警（参见 README 中的待解决问题） | shared |
+| `obs` | 指标、日志、链路追踪、告警（参见 README 中的[待解决问题](../../README.zh-CN.md#待解决问题)） | shared |
 | `net` | DNS、网状网络、边缘、防火墙 | shared |
 | `infra` | 计算、存储、备份、虚拟化平台 | shared |
 | `sdlc` | 代码、CI、制品、GitOps | eng |
@@ -155,8 +155,8 @@ www.mess.systems                      # brand
 
 | 类别 | 形式 | 示例 |
 |---|---|---|
-| 内部 FQDN | §3.1 | `git.sdlc.eng.svc.mess.systems` |
-| 公共 FQDN | §3.2 | `app.shopfront.example` |
+| 内部 FQDN | [语法 A](#31-语法-a内部) | `git.sdlc.eng.svc.mess.systems` |
+| 公共 FQDN | [语法 B](#32-语法-b公共) | `app.shopfront.example` |
 | 应用（目录、`service.name`、OIDC slug、AppRole） | `<plane>-<domain>-<product>` | `eng-sdlc-gitea` |
 | 主机 / 容器 / 虚拟机 | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | 虚拟化平台节点 | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
@@ -188,7 +188,7 @@ www.mess.systems                      # brand
 
 ## 7. TLS
 
-- 内部：通过 `pki.iam.shared` 使用 ACME。默认按名称签发（例如支持按需 TLS 的入口代理）。只有无法使用 ACME 的端点才使用预先签发的通配符证书：每个 `<domain>.<plane>` 组合一张，并列入部署的证书清单（示例见 [02](02-worked-example.md) §6）。
+- 内部：通过 `pki.iam.shared` 使用 [ACME](https://www.rfc-editor.org/rfc/rfc8555)。默认按名称签发（例如支持按需 TLS 的入口代理）。只有无法使用 ACME 的端点才使用预先签发的通配符证书：每个 `<domain>.<plane>` 组合一张，并列入部署的证书清单（示例见完整示例中的[证书](02-worked-example.md#6-证书)一节）。
 - 公共：在产品域名上通过 DNS-01 向公共 CA 申请。每个产品域名一张通配符证书。
 - SAN 中的名称始终是规范 FQDN 加上已登记的重定向名称，绝不包含遗留名称。
 
@@ -196,29 +196,29 @@ www.mess.systems                      # brand
 
 - 外部供应商是目录 ID（`<vendor>.<service>`），绝不是内部 FQDN。
 - 访问供应商的出站流量经由所属能力（LLM 提供商经由 `gateway.ai.corp`，网络经由 `mesh.net.shared` 出站组）。
-- 提供商机密存放在**使用方**能力的路径下（[03](03-secrets-conventions.md) §4）。
+- 提供商机密存放在**使用方**能力的路径下（见[条目与字段](03-secrets-conventions.md#4-条目与字段)）。
 
-## 9. 流程
+## 9. 命名流程
 
-**步骤 A——登记 (intake)，按顺序确定维度：** 平面 → 域 → 能力 → 产品 → 环境 → 所有者/层级/scope/data_class/exposure。
-**步骤 B——编码：** FQDN（§3）、应用（§5）、主机（§5），然后是各类别的特定形式。先在目录中登记，再配置 DNS。
-**步骤 C——身份与机密：** 创建组/机器角色（[04](04-identity-conventions.md)），创建路径（[03](03-secrets-conventions.md)）。
-**步骤 D——可观测性：** `service.name` = 应用；仪表板文件夹 = `<plane>-<domain>`。
+- **步骤 A：登记 (intake)。** 按以下顺序确定维度：平面、域、能力、产品、环境，然后是所有者、层级、scope、data_class 和 exposure。
+- **步骤 B：编码。** 先推导 FQDN（[DNS 语法](#3-dns两种语法别无其他)），再推导应用名和主机名（[对象形式](#5-对象形式)），然后是各类别的特定形式。先在目录中登记，再创建 DNS 记录。
+- **步骤 C：身份与机密。** 创建组和机器角色（[身份规范](04-identity-conventions.md)），以及机密路径（[机密规范](03-secrets-conventions.md)）。
+- **步骤 D：可观测性。** 将 `service.name` 设为应用名，将仪表板文件夹设为 `<plane>-<domain>`。
 
 ## 10. 拒绝规则（出现以下情况时拒绝该名称）
 
 | 问题特征 | 违反的规则 |
 |---|---|
-| 产品作为最左侧标签 | §3.1 |
-| 名称中包含暴露范围或层级（`admin.`、`public.`、`t0-`） | §3.1、§2 |
-| 生产 DNS 名称中包含环境 | §3.1 |
-| 主机、schema、存储桶或机密路径中缺少环境 | §5、[03](03-secrets-conventions.md) |
-| 供应商作为内部 FQDN | §8 |
-| 通过路径在一个 FQDN 上承载两个能力 | §6 |
-| 仓库目录作为名称 | §3.3 |
-| DNS 或 k8s 中出现 `_` | §1 |
-| 能力代码被赋予第二种含义重复使用 | §4.3 |
-| 为“特殊”情况创建新语法 | §3.3 |
+| 产品作为最左侧标签 | [语法 A：内部](#31-语法-a内部) |
+| 名称中包含暴露范围或层级（`admin.`、`public.`、`t0-`） | [语法 A：内部](#31-语法-a内部)、[十个元数据键](#2-十个元数据键) |
+| 生产 DNS 名称中包含环境 | [语法 A：内部](#31-语法-a内部) |
+| 主机、schema、存储桶或机密路径中缺少环境 | [对象形式](#5-对象形式)、[路径语法](03-secrets-conventions.md#3-路径语法) |
+| 供应商作为内部 FQDN | [提供商与出站流量](#8-提供商与出站流量) |
+| 通过路径在一个 FQDN 上承载两个能力 | [单一基础 URL](#6-单一基础-url) |
+| 仓库目录作为名称 | [不存在语法 C](#33-不存在语法-c) |
+| DNS 或 k8s 中出现 `_` | [字符规则](#1-字符规则适用于所有类别) |
+| 能力代码被赋予第二种含义重复使用 | [能力代码](#43-能力代码在所有域中唯一) |
+| 为“特殊”情况创建新语法 | [不存在语法 C](#33-不存在语法-c) |
 
 ## 11. 编码示例
 

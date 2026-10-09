@@ -1,11 +1,11 @@
 [English](../../04-identity-conventions.md) | [Русский](../ru/04-identity-conventions.md) | **简体中文**
 
-> **译文说明。** 本文为标准 v2 版本的译文，源提交 `b6791c2`。英文文本为规范性文本：如有任何不一致，以英文版本为准。
+> **译文说明。** 本文为标准 v2 版本的译文，源提交 `ca24160`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
 
-# 身份规范——人员、智能体、服务账号、组、角色
+# 身份规范：人员、智能体、服务账号、组、角色
 
-> **状态：** v2，持续演进中。将四级特权访问模型（T0–T3）与 [01](01-naming-conventions.md) 中的使用方和平面规则相结合。
-> **与产品无关。** 规则适用于各类系统：身份提供方 (IdP)、机密管理器、网状 VPN (mesh VPN)、工作负载身份 (SPIFFE)、Kubernetes RBAC、数据库角色、LLM/MCP 网关客户端、容器镜像仓库机器人账号、Git 托管平台和 CI 令牌。示例中提到的产品（Keycloak、OpenBao/Vault、SPIRE、Harbor、Gitea、Jenkins、Grafana……）只是可互换的示意。
+> **状态：** v2，持续演进中。将四级特权访问模型（T0 至 T3）与[命名规范](01-naming-conventions.md)中的使用方和平面规则相结合。
+> **与产品无关。** 规则适用于各类系统：身份提供方 (IdP)、机密管理器、网状 VPN (mesh VPN)、工作负载身份 ([SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/))、Kubernetes RBAC、数据库角色、LLM/MCP 网关客户端、容器镜像仓库机器人账号、Git 托管平台和 CI 令牌。示例中提到的产品（Keycloak、OpenBao/Vault、SPIRE、Harbor、Gitea、Jenkins、Grafana 等）只是可互换的示意。
 > **一个身份，一个 ID，处处通用。** 同一个字符串同时是 IdP 用户名、机密管理器的策略和机器角色、`x-user-id`、数据库角色（使用 `_`）以及 OTel `service.name`。
 
 ## 1. 所采用的原则
@@ -13,13 +13,13 @@
 | # | 规则 |
 |---|---|
 | I1 | **类型在 ID 中可见。** 人员、管理员、紧急访问账号、服务账号、智能体、工作负载使用不同的前缀，因为它们的生命周期、凭据和审计需求各不相同 |
-| I2 | **智能体 (agent) 不是服务账号。** 智能体自主行动，且常常代表某个人行动；它拥有自己的类型、自己的机密节点（[03](03-secrets-conventions.md) §3）以及必填的 `operator`（为其负责的人） |
-| I3 | **组授予权限，名称只作描述。** DNS 标签、主机名、路径绝不授予任何权限（01 §3.1） |
-| I4 | **只有三种组前缀**：`tier-`（特权层级）、`role-`（职能）、`app-`（对单个能力的访问）。按具体程度：tier ⊂ role ⊂ app |
+| I2 | **智能体 (agent) 不是服务账号。** 智能体自主行动，且常常代表某个人行动；它拥有自己的类型、自己的机密节点（[路径语法](03-secrets-conventions.md#3-路径语法)）以及必填的 `operator`（为其负责的人） |
+| I3 | **组授予权限，名称只作描述。** DNS 标签、主机名、路径绝不授予任何权限（[语法 A：内部](01-naming-conventions.md#31-语法-a内部)） |
+| I4 | **只有三种组前缀**：`tier-`（特权层级）、`role-`（职能）、`app-`（对单个能力的访问）。具体程度从 tier 到 role 再到 app 递增 |
 | I5 | T0/T1 工作使用**独立的管理员账号**（`<handle>-adm`），绝不使用日常账号 |
 | I6 | **紧急访问 (break-glass) 是账号，而不是共享密码**：`breakglass-<capability>-<NN>`，密封保存、触发告警、每次使用后轮换 |
 | I7 | **服务账号 = 应用。** `svc-<plane>-<domain>-<product>`；每个实例一个，如有多个环境则每个环境一个 |
-| I8 | **工作负载身份采用 SPIFFE**，路径对应能力，信任域是公司而不是 DNS 区域 |
+| I8 | **工作负载身份采用 [SPIFFE](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE-ID.md)**，路径对应能力，信任域是公司而不是 DNS 区域 |
 | I9 | **每个身份都有 `owner` 和 `expires`**（或经论证的 `expires: none`）。审查周期：t0 每月，t1 每季度，其余每半年 |
 | I10 | **名称使用小写 kebab 风格**；仅在存储系统禁止 `-` 时使用 `_`（Postgres、ClickHouse、环境变量） |
 
@@ -31,9 +31,9 @@
 | 人员管理员账号 | `<handle>-adm` | `jdoe-adm` | 仅 WebAuthn；无邮件/聊天 | IdP、层级组 |
 | 紧急访问账号 | `breakglass-<capability>-<NN>` | `breakglass-sso-01` | 密封保存在 `<mount>/…/admin` 中的密码 | 系统本地 |
 | 服务账号 | `svc-<plane>-<domain>-<product>[-<env>]` | `svc-eng-sdlc-jenkins` | AppRole / OIDC 客户端 / SPIFFE | IdP（机器用户）+ 机密管理器 |
-| 智能体 | `agent-<name>` | `agent-code-review`、`agent-docs-writer` | AppRole → SPIFFE；网关密钥 | 机密管理器、网关 `clients` |
+| 智能体 | `agent-<name>` | `agent-code-review`、`agent-docs-writer` | AppRole，之后改用 SPIFFE；网关密钥 | 机密管理器、网关 `clients` |
 | 人员工具 | `user-<handle>-<tool>` | `user-jdoe-ide` | 颁发给人员工具的网关密钥 | 仅网关 `clients` |
-| 工作负载 | `spiffe://mess.systems/<plane>/<domain>/<capability>` | `spiffe://mess.systems/corp/ai/gateway` | X.509-SVID | SPIRE |
+| 工作负载 | `spiffe://mess.systems/<plane>/<domain>/<capability>` | `spiffe://mess.systems/corp/ai/gateway` | [X.509-SVID](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md) | SPIRE |
 | 节点 | `spiffe://mess.systems/node/<host>` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` | join 令牌 / 证明器 (attestor) | SPIRE |
 | 外部 (B2B) | `ext-<org>-<handle>` | `ext-acme-jdoe` | 通过 `b2b.iam.shared` 联合认证 | IdP 身份源 |
 
@@ -65,7 +65,7 @@
 
 ### 3.3 应用组（对单个能力的访问）
 
-`app-<capability>-<access>`，access ∈ `user | editor | admin`。
+`app-<capability>-<access>`，其中 access 为 `user`、`editor` 或 `admin`。
 
 | 示例 | 授予权限 |
 |---|---|
@@ -74,7 +74,7 @@
 | `app-gateway-user` | 可以调用 `gateway.ai.corp` |
 | `app-warehouse-editor` | 数据仓库写入 |
 
-预配工具的默认组如 `app-<name>-operators` → `app-<capability>-admin`。带区域后缀的提供方（`grafana-public/-private/-admin`）予以取消；暴露范围由网状网络组（§4）表达，管理员权限为 `app-dashboards-admin`。
+预配工具的默认组如 `app-<name>-operators` 改为 `app-<capability>-admin`。带区域后缀的提供方（`grafana-public/-private/-admin`）予以取消：暴露范围由网状网络组表达（见[网状 VPN 组](#4-网状-vpn-组)），管理员权限由 `app-dashboards-admin` 表达。
 
 ## 4. 网状 VPN 组
 
@@ -86,17 +86,17 @@
 | `egress-<plane>` | 出站网关 | `egress-corp` |
 | `site-<code>` | 位置 | `site-dc1`、`site-cld` |
 
-策略：`<subject-group> → <zone-group>`。典型的遗留映射：拥有全部访问权限的 `admins` 组 → `tier-t0-superadmin`；`devs` 组 → `role-developers`；临时性的标签式组 → 对应的 `tier-*` 或 `role-*` 组。
+策略：`<subject-group> → <zone-group>`。典型的遗留映射：拥有全部访问权限的 `admins` 组改为 `tier-t0-superadmin`，`devs` 组改为 `role-developers`，临时性的标签式组改为对应的 `tier-*` 或 `role-*` 组。
 
 ## 5. 所有者
 
-`owner` 元数据（01 §2）始终是一个**组**，绝不是个人：`role-platform-engineers`、`role-data-engineers`、`tier-t0-superadmin`。智能体的 `operator` 是例外（是一个人）。
+`owner` 元数据（见[元数据键](01-naming-conventions.md#2-十个元数据键)）始终是一个**组**，绝不是个人：`role-platform-engineers`、`role-data-engineers`、`tier-t0-superadmin`。智能体的 `operator` 是例外（是一个人）。
 
 ## 6. IdP 对象
 
 | 对象 | 名称 | 示例 |
 |---|---|---|
-| 应用 slug | `<application>`（01 §5） | `shared-obs-grafana` |
+| 应用 slug | `<application>`（[对象形式](01-naming-conventions.md#5-对象形式)） | `shared-obs-grafana` |
 | 应用显示名称 | 产品名称 | `Grafana` |
 | 提供方 (provider) | `<application>-<protocol>` | `shared-obs-grafana-oidc`、`eng-sdlc-gitea-oidc` |
 | 属性映射 / scope | `<application>-<claim>` | `shared-obs-grafana-groups` |
@@ -106,11 +106,11 @@
 
 对象类型参照常见 IdP（Keycloak、Entra ID、Okta……）；请将其映射到您所用产品中的对应概念。
 
-以产品命名的遗留 slug（`grafana`、`argocd`）→ 应用形式（`shared-obs-grafana`、`eng-sdlc-argocd`）。重定向 URI 只使用规范 FQDN（01 §6）。
+以产品命名的遗留 slug（`grafana`、`argocd`）改为应用形式（`shared-obs-grafana`、`eng-sdlc-argocd`）。重定向 URI 只使用规范 FQDN（见[单一基础 URL](01-naming-conventions.md#6-单一基础-url)）。
 
 ## 7. 机密管理器（OpenBao / Vault）
 
-策略 = 身份 ID；AppRole = 身份 ID；JWT 角色 = 组 ID。完整规则见 [03](03-secrets-conventions.md) §5–§6。
+策略 = 身份 ID；AppRole = 身份 ID；JWT 角色 = 组 ID。完整规则见机密规范中的[策略](03-secrets-conventions.md#5-策略)和[认证角色与令牌](03-secrets-conventions.md#6-认证角色与令牌)两节。
 
 | 典型遗留 | 目标 |
 |---|---|
@@ -130,13 +130,13 @@
 | `spiffe://corp.lan/infra/llm-proxy`（仓库目录） | `spiffe://mess.systems/corp/ai/gateway` |
 | `spiffe://corp.lan/apps/doc-converter` | `spiffe://mess.systems/corp/data/convert` |
 | `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` |
-| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01`（工作站保留其名称——它不是服务主机） |
+| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01`（工作站保留其名称，它不是服务主机） |
 
 智能体：`spiffe://mess.systems/corp/ai/agent-<name>`。路径遵循**能力代码**，绝不遵循仓库目录。
 
 ## 9. 网关客户端身份
 
-`corp/ai/gateway/prd/clients` 中的键名和 `x-user-id` 请求头均为 §2 中的身份 ID。
+`corp/ai/gateway/prd/clients` 中的键名和 `x-user-id` 请求头均为[身份类型](#2-身份类型)中的身份 ID。
 
 | 遗留字段（示意） | 目标 ID | 类型 |
 |---|---|---|
@@ -160,7 +160,7 @@
 | GitOps 项目（例如 Argo CD） | `<plane>` 或 `<product>` | `default` → `eng`，产品应用 → `<product>` |
 | 标签 | `mess.systems/plane`、`mess.systems/owner`…… | |
 
-OIDC 组声明 → RBAC 主体直接使用 `tier-*`/`role-*` 组，不做改动。
+RBAC 主体取自 OIDC 组声明，直接使用 `tier-*` 和 `role-*` 组，不做改动。
 
 ## 11. 数据库角色
 
@@ -182,7 +182,7 @@ OIDC 组声明 → RBAC 主体直接使用 `tier-*`/`role-*` 组，不做改动�
 |---|---|---|
 | 镜像仓库机器人账号（例如 Harbor） | `robot$<project>+<consumer-id>` | `robot$corp-ai+svc-eng-sdlc-jenkins` |
 | Git 托管平台令牌 / 部署密钥 | `<consumer-id>`（+ `--<purpose>`） | `svc-eng-sdlc-jenkins--clone` |
-| CI 凭据 ID | 机密路径，`/`→`-` | `eng-sdlc-ci-prd-packages` |
+| CI 凭据 ID | 机密路径，其中 `/` 替换为 `-` | `eng-sdlc-ci-prd-packages` |
 | 软件包仓库令牌 | `<consumer-id>` | `svc-eng-sdlc-jenkins` |
 | 仪表板服务账号 | `svc-<application>` | `svc-corp-ai-litellm` |
 | SSH 密钥注释 | `<identity-id>@<host>` | `jdoe-adm@dc1-shared-infra-kvm-prd-01` |
@@ -191,16 +191,16 @@ OIDC 组声明 → RBAC 主体直接使用 `tier-*`/`role-*` 组，不做改动�
 
 | 事件 | 规则 |
 |---|---|
-| 创建 | 登记（01 §9）→ 身份类型 → 组 → 机密管理器策略/角色 → 带有 `owner`、`expires` 的目录条目 |
+| 创建 | 登记（[命名流程](01-naming-conventions.md#9-命名流程)），然后依次确定身份类型、组、机密管理器策略和角色，并创建带有 `owner` 和 `expires` 的目录条目 |
 | 轮换 | 按 `custom_metadata.rotation` 执行；智能体和工具 90d；服务账号 365d；紧急访问账号每次使用后轮换 |
 | 审查 | t0 每月，t1 每季度，t2/t3 每半年；智能体与其操作员一起审查 |
-| 离职 / 退役 | 在 IdP 中停用 → 吊销 AppRole secret-id → 删除数据库角色 → 删除网关客户端字段 → 关闭目录条目。ID 绝不复用 |
+| 离职 / 退役 | 按以下顺序：在 IdP 中停用，吊销 AppRole secret-id，删除数据库角色，删除网关客户端字段，关闭目录条目。ID 绝不复用 |
 
 ## 14. 拒绝规则
 
 - 组没有使用三种前缀之一；出现第四种前缀。
 - 层级和角色混在一个组名中（`platform-admins`）。
-- 组名中包含产品名（`grafana-admins` → `app-dashboards-admin`）。
+- 组名中包含产品名（`grafana-admins`；应使用 `app-dashboards-admin`）。
 - 组名或提供方名称中包含暴露范围（`-public`、`-private`、`-admin` 提供方）。
 - 智能体注册为 `svc-*`，或人员工具注册为智能体。
 - 策略/AppRole/JWT 角色名称不是身份 ID 或组 ID。
