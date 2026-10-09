@@ -1,3 +1,5 @@
+**English** | [Русский](README.ru.md) | [简体中文](README.zh-CN.md)
+
 # mess.systems naming standard
 
 The naming standard of **mess.systems**: one grammar for DNS names, hosts, repositories, images, buckets, databases, Kubernetes objects, observability, secrets paths, and identities (humans, admins, service accounts, AI agents, workloads).
@@ -19,6 +21,7 @@ Names are the cheapest architecture decision and the most expensive one to chang
 | [03-secrets-conventions.md](03-secrets-conventions.md) | Secrets manager (OpenBao / HashiCorp Vault) mounts, paths, items and fields, policies, auth roles, metadata |
 | [04-identity-conventions.md](04-identity-conventions.md) | Humans, admins, break-glass, service accounts, agents, groups and tiers, SPIFFE, mesh groups, k8s RBAC, DB roles, gateway clients |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to propose changes and discussion rules |
+| [i18n/](i18n/) | Russian and Simplified Chinese translations (informative) |
 | [LICENSE](LICENSE) | CC BY 4.0 |
 
 Start with 01 §9 (procedure) and 01 §11 (worked encodings), then read 02.
@@ -78,6 +81,13 @@ Questioned and kept:
 - **Questions, ideas, "how would you name X?"** → GitHub Discussions.
 - **Concrete change proposals** (new code, rule change, bug in an example) → an Issue using the *Proposal* template, then a pull request.
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) first, especially the publication checklist: never post real internal hostnames, IPs, secrets, or personal data in issues, discussions, or examples.
+
+## Translations
+
+- English is the normative text; on any discrepancy, the English version prevails.
+- Translations live in `i18n/<lang>/` under the same filenames: Russian in `i18n/ru/`, Simplified Chinese in `i18n/zh-CN/`. Translated READMEs are `README.ru.md` and `README.zh-CN.md` in the repository root.
+- Only explanations are translated. Names, tokens, codes, FQDNs, paths, and code blocks are identical in every language.
+- Each translation records in its header the English source commit it matches. To update one, follow the *Translations* section of [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

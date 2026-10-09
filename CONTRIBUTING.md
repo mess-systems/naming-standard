@@ -1,3 +1,5 @@
+**English** | [Русский](i18n/ru/CONTRIBUTING.md) | [简体中文](i18n/zh-CN/CONTRIBUTING.md)
+
 # Contributing
 
 Thanks for helping improve the naming standard. It is meant to be argued with: colleagues from different companies and stacks bring the cases that break it.
@@ -41,6 +43,16 @@ Before you post, confirm that the text contains **none** of:
 - [ ] Screenshots that show any of the above.
 
 Maintainers will edit or remove content that fails this checklist. If you posted something sensitive by mistake, rotate it first, then ask a maintainer to purge it.
+
+## Translations
+
+English files in the repository root are normative. Translations in `i18n/<lang>/` and `README.<lang>.md` are informative; on any discrepancy, the English text prevails.
+
+- Change the English text first. A translation may lag behind the English; it must never add to or contradict it.
+- To update a translation, translate the changed sections and set the source commit in its header note to the English commit it now matches (`git log -1 --format=%h -- <file>`).
+- Translate explanations only. Never translate names, tokens, codes, FQDNs, paths, table identifier columns, or code blocks. Keep headings, section numbers (`01 §4.3`), and the Markdown structure.
+- Relative links in a translation point to translated siblings (`03-secrets-conventions.md`) and reach root files with `../../` (`../../LICENSE`).
+- A new language gets `i18n/<lang>/` with a BCP 47 tag (`ru`, `zh-CN`), a `README.<lang>.md`, and an entry in every language switcher.
 
 ## License of contributions
 
