@@ -81,7 +81,7 @@ Field rules: `snake_case`, lowercase; `url` always includes the scheme; no field
 
 | Kind | Name | Grants |
 |---|---|---|
-| Consumer policy | `<identity-id>` (e.g. `corp-ai-litellm`, `agent-code-review`) | `read` on its own `<mount>/<domain>/<capability>/<env>/*`; `read` on consumer copies it needs |
+| Consumer policy | `<identity-id>` (e.g. `corp-ai-agentgateway`, `agent-code-review`) | `read` on its own `<mount>/<domain>/<capability>/<env>/*`; `read` on consumer copies it needs |
 | Tier policy (humans) | `tier-t0-superadmin`, `tier-t1-platform-ops`, `tier-t2-developer`, `tier-t3-readonly` | t0: all mounts incl. `admin` items, alerted; t1: `shared/`, `platform/`, `eng/` except `admin`; t2: `eng/` and `<product>/` non-`admin`; t3: `list` + metadata only |
 | Role policy | `role-<function>` | domain-scoped read/write for that function (e.g. `role-security-engineers` gets `*/sec/*`) |
 | Scoped read policy | `<identity-id>-<capability>-ro` | when a consumer needs exactly one foreign item, e.g. `eng-sdlc-jenkins-packages-ro` |
@@ -132,7 +132,7 @@ corp/ai/gateway/prd/oidc                    issuer, client_id, client_secret
 corp/ai/agent-code-review/prd/gateway       api_key, url          # consumer copy of one field of clients
 ```
 
-Policy `corp-ai-litellm`: read `corp/data/ai/gateway/prd/*`. Policy `agent-code-review`: read `corp/data/ai/agent-code-review/prd/*`. Neither can read the other. AppRole `agent-code-review` bound to its runner's CIDR; target replacement is `jwt-spire` with `spiffe://mess.systems/corp/ai/agent-code-review`.
+Policy `corp-ai-agentgateway`: read `corp/data/ai/gateway/prd/*`. Policy `agent-code-review`: read `corp/data/ai/agent-code-review/prd/*`. Neither can read the other. AppRole `agent-code-review` bound to its runner's CIDR; target replacement is `jwt-spire` with `spiffe://mess.systems/corp/ai/agent-code-review`.
 
 ## 9. Refusals
 

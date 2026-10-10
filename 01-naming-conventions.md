@@ -157,7 +157,7 @@ Site codes are short, organisation-specific, and listed in the catalog; the two 
 | Host / container / VM | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | Hypervisor node | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
 | Git org / repo | org `<plane>` · repo `<domain>-<product>` | `eng/sdlc-gitea` |
-| Container image | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/litellm:1.4.0` |
+| Container image | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/agentgateway:1.6.0` |
 | Registry project (e.g. Harbor) | `<plane>-<domain>` | `corp-ai` |
 | Package feed | `<ecosystem>-<plane>` or `<ecosystem>-proxy` | `npm-proxy`, `pypi-eng` |
 | S3 / object bucket | `<plane>-<domain>-<capability>-<env>` | `platform-data-warehouse-prd` |
@@ -170,11 +170,11 @@ Site codes are short, organisation-specific, and listed in the catalog; the two 
 | Provider catalog ID | `<vendor>.<service>` | `acmecloud.foundation-models` |
 | LLM route prefix (gateway) | `<provider-short>/<model>`; `local/` = corp inference | `acmecloud/large-chat` |
 | MCP target (gateway) | capability code; providers `<vendor>-<service>` | `convert`, `acmesearch-web` |
-| OTel `service.name`, Prometheus `job`, Loki `service_name` | application form | `corp-ai-litellm` |
-| Dashboard folder (e.g. Grafana) / dashboard uid | folder `<plane>-<domain>` · uid `<application>-<view>` | `corp-ai` / `corp-ai-litellm-overview` |
+| OTel `service.name`, Prometheus `job`, Loki `service_name` | application form | `corp-ai-agentgateway` |
+| Dashboard folder (e.g. Grafana) / dashboard uid | folder `<plane>-<domain>` · uid `<application>-<view>` | `corp-ai` / `corp-ai-agentgateway-overview` |
 | Alert rule | `<Domain><Capability><Symptom>` | `AiGatewayHighErrorRate` |
-| Ansible inventory group | `<plane>_<domain>` and `<application>` | `corp_ai`, `corp_ai_litellm` |
-| OpenTofu resource name | `<application>_<env>` | `corp_ai_litellm_prd` |
+| Ansible inventory group | `<plane>_<domain>` and `<application>` | `corp_ai`, `corp_ai_agentgateway` |
+| OpenTofu resource name | `<application>_<env>` | `corp_ai_agentgateway_prd` |
 | Certificate (internal) | `*.<domain>.<plane>.svc.mess.systems` per domain-plane pair | `*.ai.corp.svc.mess.systems` |
 | System mail sender | `<capability>@mess.systems` | `alerts@mess.systems` |
 
@@ -222,8 +222,8 @@ One install has one base URL: `https://<fqdn>`. Path-based multi-tenancy (`/admi
 |---|---|---|---|
 | shared / iam / sso / Keycloak / prd | `sso.iam.shared.svc.mess.systems` | `shared-iam-keycloak` | `dc1-shared-iam-keycloak-prd-01` |
 | eng / sdlc / git / Gitea / prd | `git.sdlc.eng.svc.mess.systems` | `eng-sdlc-gitea` | `dc1-eng-sdlc-gitea-prd-01` |
-| corp / ai / gateway / LiteLLM / prd | `gateway.ai.corp.svc.mess.systems` | `corp-ai-litellm` | `dc1-corp-ai-litellm-prd-01` |
-| corp / ai / gateway / LiteLLM / stg | `gateway.ai.corp.stg.svc.mess.systems` | `corp-ai-litellm` | `dc1-corp-ai-litellm-stg-01` |
+| corp / ai / gateway / agentgateway / prd | `gateway.ai.corp.svc.mess.systems` | `corp-ai-agentgateway` | `dc1-corp-ai-agentgateway-prd-01` |
+| corp / ai / gateway / agentgateway / stg | `gateway.ai.corp.stg.svc.mess.systems` | `corp-ai-agentgateway` | `dc1-corp-ai-agentgateway-stg-01` |
 | platform / data / docstore / MongoDB / prd | `docstore.data.platform.svc.mess.systems` | `platform-data-mongodb` | `dc1-platform-data-mongodb-prd-01..03` |
 | shared / net / mesh / Headscale / prd (cloud site) | `mesh.net.shared.svc.mess.systems` | `shared-net-headscale` | `cld-shared-net-headscale-prd-01` |
 | ext / demo portal | `demo.apps.mess.systems` | `ext-gov-demo-portal` | `cld-ext-gov-portal-prd-01` |

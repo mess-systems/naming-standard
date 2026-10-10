@@ -161,7 +161,7 @@ www.mess.systems                      # brand
 | Хост / контейнер / ВМ | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | Узел гипервизора | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
 | Git-организация / репозиторий | организация `<plane>` · репозиторий `<domain>-<product>` | `eng/sdlc-gitea` |
-| Образ контейнера | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/litellm:1.4.0` |
+| Образ контейнера | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/agentgateway:1.6.0` |
 | Проект реестра (например, Harbor) | `<plane>-<domain>` | `corp-ai` |
 | Фид пакетов | `<ecosystem>-<plane>` или `<ecosystem>-proxy` | `npm-proxy`, `pypi-eng` |
 | S3 / бакет объектного хранилища | `<plane>-<domain>-<capability>-<env>` | `platform-data-warehouse-prd` |
@@ -174,11 +174,11 @@ www.mess.systems                      # brand
 | ID провайдера в каталоге | `<vendor>.<service>` | `acmecloud.foundation-models` |
 | Префикс маршрута LLM (шлюз) | `<provider-short>/<model>`; `local/` = корпоративный инференс | `acmecloud/large-chat` |
 | Цель MCP (шлюз) | код возможности; провайдеры `<vendor>-<service>` | `convert`, `acmesearch-web` |
-| OTel `service.name`, Prometheus `job`, Loki `service_name` | форма приложения | `corp-ai-litellm` |
-| Папка дашбордов (например, Grafana) / uid дашборда | папка `<plane>-<domain>` · uid `<application>-<view>` | `corp-ai` / `corp-ai-litellm-overview` |
+| OTel `service.name`, Prometheus `job`, Loki `service_name` | форма приложения | `corp-ai-agentgateway` |
+| Папка дашбордов (например, Grafana) / uid дашборда | папка `<plane>-<domain>` · uid `<application>-<view>` | `corp-ai` / `corp-ai-agentgateway-overview` |
 | Правило оповещения | `<Domain><Capability><Symptom>` | `AiGatewayHighErrorRate` |
-| Группа инвентаря Ansible | `<plane>_<domain>` и `<application>` | `corp_ai`, `corp_ai_litellm` |
-| Имя ресурса OpenTofu | `<application>_<env>` | `corp_ai_litellm_prd` |
+| Группа инвентаря Ansible | `<plane>_<domain>` и `<application>` | `corp_ai`, `corp_ai_agentgateway` |
+| Имя ресурса OpenTofu | `<application>_<env>` | `corp_ai_agentgateway_prd` |
 | Сертификат (внутренний) | `*.<domain>.<plane>.svc.mess.systems` на каждую пару «домен-плоскость» | `*.ai.corp.svc.mess.systems` |
 | Системный отправитель почты | `<capability>@mess.systems` | `alerts@mess.systems` |
 
@@ -226,8 +226,8 @@ www.mess.systems                      # brand
 |---|---|---|---|
 | shared / iam / sso / Keycloak / prd | `sso.iam.shared.svc.mess.systems` | `shared-iam-keycloak` | `dc1-shared-iam-keycloak-prd-01` |
 | eng / sdlc / git / Gitea / prd | `git.sdlc.eng.svc.mess.systems` | `eng-sdlc-gitea` | `dc1-eng-sdlc-gitea-prd-01` |
-| corp / ai / gateway / LiteLLM / prd | `gateway.ai.corp.svc.mess.systems` | `corp-ai-litellm` | `dc1-corp-ai-litellm-prd-01` |
-| corp / ai / gateway / LiteLLM / stg | `gateway.ai.corp.stg.svc.mess.systems` | `corp-ai-litellm` | `dc1-corp-ai-litellm-stg-01` |
+| corp / ai / gateway / agentgateway / prd | `gateway.ai.corp.svc.mess.systems` | `corp-ai-agentgateway` | `dc1-corp-ai-agentgateway-prd-01` |
+| corp / ai / gateway / agentgateway / stg | `gateway.ai.corp.stg.svc.mess.systems` | `corp-ai-agentgateway` | `dc1-corp-ai-agentgateway-stg-01` |
 | platform / data / docstore / MongoDB / prd | `docstore.data.platform.svc.mess.systems` | `platform-data-mongodb` | `dc1-platform-data-mongodb-prd-01..03` |
 | shared / net / mesh / Headscale / prd (cloud site) | `mesh.net.shared.svc.mess.systems` | `shared-net-headscale` | `cld-shared-net-headscale-prd-01` |
 | ext / demo portal | `demo.apps.mess.systems` | `ext-gov-demo-portal` | `cld-ext-gov-portal-prd-01` |

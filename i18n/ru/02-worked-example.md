@@ -45,7 +45,7 @@ Northwind Traders эксплуатирует около дюжины серви�
 | `pg01.corp.lan` | shared / data / sql / PostgreSQL | `sql.data.shared.svc.northwind.example` | `shared-data-postgres` | `role-platform-engineers` |
 | `chat.corp.lan` | corp / collab / chat / Mattermost | `chat.collab.corp.svc.northwind.example` | `corp-collab-mattermost` | `role-platform-engineers` |
 | `wiki.corp.lan` | corp / collab / wiki / Wiki.js | `wiki.collab.corp.svc.northwind.example` | `corp-collab-wikijs` | `role-developers` |
-| `llm.corp.lan`, `llm-ui.corp.lan` | corp / ai / gateway / LiteLLM | `gateway.ai.corp.svc.northwind.example` (UI = путь `/ui`) | `corp-ai-litellm` | `role-agent-operators` |
+| `llm.corp.lan`, `llm-ui.corp.lan` | corp / ai / gateway / agentgateway | `gateway.ai.corp.svc.northwind.example` (UI = путь `/ui`) | `corp-ai-agentgateway` | `role-agent-operators` |
 | `demo.corp.lan` (публичное) | ext / gov / demo / demo portal | `demo.apps.northwind.example` | `ext-gov-demo-portal` | `role-developers` |
 
 Решения, принятые по ходу:

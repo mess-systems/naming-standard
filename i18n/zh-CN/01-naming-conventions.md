@@ -161,7 +161,7 @@ www.mess.systems                      # brand
 | 主机 / 容器 / 虚拟机 | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | 虚拟化平台节点 | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
 | Git 组织 / 仓库 | 组织 `<plane>` · 仓库 `<domain>-<product>` | `eng/sdlc-gitea` |
-| 容器镜像 | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/litellm:1.4.0` |
+| 容器镜像 | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/agentgateway:1.6.0` |
 | 镜像仓库项目（例如 Harbor） | `<plane>-<domain>` | `corp-ai` |
 | 软件包源 | `<ecosystem>-<plane>` 或 `<ecosystem>-proxy` | `npm-proxy`、`pypi-eng` |
 | S3 / 对象存储桶 | `<plane>-<domain>-<capability>-<env>` | `platform-data-warehouse-prd` |
@@ -174,11 +174,11 @@ www.mess.systems                      # brand
 | 提供商目录 ID | `<vendor>.<service>` | `acmecloud.foundation-models` |
 | LLM 路由前缀（网关） | `<provider-short>/<model>`；`local/` = 企业自有推理 | `acmecloud/large-chat` |
 | MCP 目标（网关） | 能力代码；提供商为 `<vendor>-<service>` | `convert`、`acmesearch-web` |
-| OTel `service.name`、Prometheus `job`、Loki `service_name` | 应用形式 | `corp-ai-litellm` |
-| 仪表板文件夹（例如 Grafana）/ 仪表板 uid | 文件夹 `<plane>-<domain>` · uid `<application>-<view>` | `corp-ai` / `corp-ai-litellm-overview` |
+| OTel `service.name`、Prometheus `job`、Loki `service_name` | 应用形式 | `corp-ai-agentgateway` |
+| 仪表板文件夹（例如 Grafana）/ 仪表板 uid | 文件夹 `<plane>-<domain>` · uid `<application>-<view>` | `corp-ai` / `corp-ai-agentgateway-overview` |
 | 告警规则 | `<Domain><Capability><Symptom>` | `AiGatewayHighErrorRate` |
-| Ansible 清单组 | `<plane>_<domain>` 和 `<application>` | `corp_ai`、`corp_ai_litellm` |
-| OpenTofu 资源名称 | `<application>_<env>` | `corp_ai_litellm_prd` |
+| Ansible 清单组 | `<plane>_<domain>` 和 `<application>` | `corp_ai`、`corp_ai_agentgateway` |
+| OpenTofu 资源名称 | `<application>_<env>` | `corp_ai_agentgateway_prd` |
 | 证书（内部） | 每个域-平面组合一个 `*.<domain>.<plane>.svc.mess.systems` | `*.ai.corp.svc.mess.systems` |
 | 系统邮件发件人 | `<capability>@mess.systems` | `alerts@mess.systems` |
 
@@ -226,8 +226,8 @@ www.mess.systems                      # brand
 |---|---|---|---|
 | shared / iam / sso / Keycloak / prd | `sso.iam.shared.svc.mess.systems` | `shared-iam-keycloak` | `dc1-shared-iam-keycloak-prd-01` |
 | eng / sdlc / git / Gitea / prd | `git.sdlc.eng.svc.mess.systems` | `eng-sdlc-gitea` | `dc1-eng-sdlc-gitea-prd-01` |
-| corp / ai / gateway / LiteLLM / prd | `gateway.ai.corp.svc.mess.systems` | `corp-ai-litellm` | `dc1-corp-ai-litellm-prd-01` |
-| corp / ai / gateway / LiteLLM / stg | `gateway.ai.corp.stg.svc.mess.systems` | `corp-ai-litellm` | `dc1-corp-ai-litellm-stg-01` |
+| corp / ai / gateway / agentgateway / prd | `gateway.ai.corp.svc.mess.systems` | `corp-ai-agentgateway` | `dc1-corp-ai-agentgateway-prd-01` |
+| corp / ai / gateway / agentgateway / stg | `gateway.ai.corp.stg.svc.mess.systems` | `corp-ai-agentgateway` | `dc1-corp-ai-agentgateway-stg-01` |
 | platform / data / docstore / MongoDB / prd | `docstore.data.platform.svc.mess.systems` | `platform-data-mongodb` | `dc1-platform-data-mongodb-prd-01..03` |
 | shared / net / mesh / Headscale / prd (cloud site) | `mesh.net.shared.svc.mess.systems` | `shared-net-headscale` | `cld-shared-net-headscale-prd-01` |
 | ext / demo portal | `demo.apps.mess.systems` | `ext-gov-demo-portal` | `cld-ext-gov-portal-prd-01` |

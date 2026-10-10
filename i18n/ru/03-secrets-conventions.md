@@ -85,7 +85,7 @@
 
 | Вид | Имя | Что выдаёт |
 |---|---|---|
-| Политика потребителя | `<identity-id>` (например, `corp-ai-litellm`, `agent-code-review`) | `read` на свой `<mount>/<domain>/<capability>/<env>/*`; `read` на нужные ему копии потребителя |
+| Политика потребителя | `<identity-id>` (например, `corp-ai-agentgateway`, `agent-code-review`) | `read` на свой `<mount>/<domain>/<capability>/<env>/*`; `read` на нужные ему копии потребителя |
 | Политика уровня (люди) | `tier-t0-superadmin`, `tier-t1-platform-ops`, `tier-t2-developer`, `tier-t3-readonly` | t0: все точки монтирования, включая элементы `admin`, с оповещением; t1: `shared/`, `platform/`, `eng/`, кроме `admin`; t2: `eng/` и `<product>/`, кроме `admin`; t3: только `list` + метаданные |
 | Ролевая политика | `role-<function>` | чтение/запись в пределах домена для этой функции (например, `role-security-engineers` получает `*/sec/*`) |
 | Ограниченная политика чтения | `<identity-id>-<capability>-ro` | когда потребителю нужен ровно один чужой элемент, например `eng-sdlc-jenkins-packages-ro` |
@@ -136,7 +136,7 @@ corp/ai/gateway/prd/oidc                    issuer, client_id, client_secret
 corp/ai/agent-code-review/prd/gateway       api_key, url          # consumer copy of one field of clients
 ```
 
-Политика `corp-ai-litellm`: чтение `corp/data/ai/gateway/prd/*`. Политика `agent-code-review`: чтение `corp/data/ai/agent-code-review/prd/*`. Ни одна не может читать данные другой. AppRole `agent-code-review` привязана к CIDR своего раннера; целевая замена — `jwt-spire` с `spiffe://mess.systems/corp/ai/agent-code-review`.
+Политика `corp-ai-agentgateway`: чтение `corp/data/ai/gateway/prd/*`. Политика `agent-code-review`: чтение `corp/data/ai/agent-code-review/prd/*`. Ни одна не может читать данные другой. AppRole `agent-code-review` привязана к CIDR своего раннера; целевая замена — `jwt-spire` с `spiffe://mess.systems/corp/ai/agent-code-review`.
 
 ## 9. Отказы
 

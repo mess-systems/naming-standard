@@ -34,7 +34,7 @@
 | Агент | `agent-<name>` | `agent-code-review`, `agent-docs-writer` | AppRole, затем SPIFFE; ключ шлюза | менеджер секретов, `clients` шлюза |
 | Инструмент человека | `user-<handle>-<tool>` | `user-jdoe-ide` | ключ шлюза, выданный инструменту человека | только `clients` шлюза |
 | Рабочая нагрузка | `spiffe://mess.systems/<plane>/<domain>/<capability>` | `spiffe://mess.systems/corp/ai/gateway` | [X.509-SVID](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md) | SPIRE |
-| Узел | `spiffe://mess.systems/node/<host>` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` | join-токен / аттестатор | SPIRE |
+| Узел | `spiffe://mess.systems/node/<host>` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` | join-токен / аттестатор | SPIRE |
 | Внешний (B2B) | `ext-<org>-<handle>` | `ext-acme-jdoe` | федерация через `b2b.iam.shared` | источник в IdP |
 
 Агенты фиксируют `operator: <human>` и `scope: <capability list>` в своей записи каталога; шлюз принудительно проверяет `x-user-id = <agent id>` и `x-session-id`.
@@ -129,7 +129,7 @@
 | домен доверия `spiffe://corp.lan` | `spiffe://mess.systems` (не prod: `spiffe://<env>.mess.systems`) |
 | `spiffe://corp.lan/infra/llm-proxy` (папка репозитория) | `spiffe://mess.systems/corp/ai/gateway` |
 | `spiffe://corp.lan/apps/doc-converter` | `spiffe://mess.systems/corp/data/convert` |
-| `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` |
+| `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` |
 | `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01` (рабочая станция сохраняет своё имя — это не хост сервиса) |
 
 Агенты: `spiffe://mess.systems/corp/ai/agent-<name>`. Пути следуют **кодам возможностей**, а не папкам репозитория.
@@ -184,7 +184,7 @@
 | Токен / deploy-ключ git-платформы | `<consumer-id>` (+ `--<purpose>`) | `svc-eng-sdlc-jenkins--clone` |
 | ID учётных данных в CI | путь секрета, в котором `/` заменён на `-` | `eng-sdlc-ci-prd-packages` |
 | Токен реестра пакетов | `<consumer-id>` | `svc-eng-sdlc-jenkins` |
-| Сервисная учётная запись дашбордов | `svc-<application>` | `svc-corp-ai-litellm` |
+| Сервисная учётная запись дашбордов | `svc-<application>` | `svc-corp-ai-agentgateway` |
 | Комментарий SSH-ключа | `<identity-id>@<host>` | `jdoe-adm@dc1-shared-infra-kvm-prd-01` |
 
 ## 13. Жизненный цикл

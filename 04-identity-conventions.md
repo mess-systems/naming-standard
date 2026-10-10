@@ -30,7 +30,7 @@
 | Agent | `agent-<name>` | `agent-code-review`, `agent-docs-writer` | AppRole, later SPIFFE; gateway key | secrets manager, gateway `clients` |
 | Human tool | `user-<handle>-<tool>` | `user-jdoe-ide` | gateway key issued to a human's tool | gateway `clients` only |
 | Workload | `spiffe://mess.systems/<plane>/<domain>/<capability>` | `spiffe://mess.systems/corp/ai/gateway` | [X.509-SVID](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md) | SPIRE |
-| Node | `spiffe://mess.systems/node/<host>` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` | join token / attestor | SPIRE |
+| Node | `spiffe://mess.systems/node/<host>` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` | join token / attestor | SPIRE |
 | External (B2B) | `ext-<org>-<handle>` | `ext-acme-jdoe` | federated via `b2b.iam.shared` | IdP source |
 
 Agents record `operator: <human>` and `scope: <capability list>` in their catalog entry; the gateway enforces `x-user-id = <agent id>` and `x-session-id`.
@@ -125,7 +125,7 @@ Policy = identity ID; AppRole = identity ID; JWT role = group ID. The full rules
 | trust domain `spiffe://corp.lan` | `spiffe://mess.systems` (non-prod: `spiffe://<env>.mess.systems`) |
 | `spiffe://corp.lan/infra/llm-proxy` (repo folder) | `spiffe://mess.systems/corp/ai/gateway` |
 | `spiffe://corp.lan/apps/doc-converter` | `spiffe://mess.systems/corp/data/convert` |
-| `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` |
+| `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` |
 | `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01` (a workstation keeps its name; it is not a service host) |
 
 Agents: `spiffe://mess.systems/corp/ai/agent-<name>`. Paths follow **capability codes**, never repository folders.
@@ -180,7 +180,7 @@ Form: `<plane>_<domain>_<capability>_<access>` for capability-owned roles (`ro |
 | Git forge token / deploy key | `<consumer-id>` (+ `--<purpose>`) | `svc-eng-sdlc-jenkins--clone` |
 | CI credential ID | secrets path with `/` replaced by `-` | `eng-sdlc-ci-prd-packages` |
 | Package registry token | `<consumer-id>` | `svc-eng-sdlc-jenkins` |
-| Dashboards service account | `svc-<application>` | `svc-corp-ai-litellm` |
+| Dashboards service account | `svc-<application>` | `svc-corp-ai-agentgateway` |
 | SSH key comment | `<identity-id>@<host>` | `jdoe-adm@dc1-shared-infra-kvm-prd-01` |
 
 ## 13. Lifecycle

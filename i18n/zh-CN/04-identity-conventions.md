@@ -34,7 +34,7 @@
 | 智能体 | `agent-<name>` | `agent-code-review`、`agent-docs-writer` | AppRole，之后改用 SPIFFE；网关密钥 | 机密管理器、网关 `clients` |
 | 人员工具 | `user-<handle>-<tool>` | `user-jdoe-ide` | 颁发给人员工具的网关密钥 | 仅网关 `clients` |
 | 工作负载 | `spiffe://mess.systems/<plane>/<domain>/<capability>` | `spiffe://mess.systems/corp/ai/gateway` | [X.509-SVID](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md) | SPIRE |
-| 节点 | `spiffe://mess.systems/node/<host>` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` | join 令牌 / 证明器 (attestor) | SPIRE |
+| 节点 | `spiffe://mess.systems/node/<host>` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` | join 令牌 / 证明器 (attestor) | SPIRE |
 | 外部 (B2B) | `ext-<org>-<handle>` | `ext-acme-jdoe` | 通过 `b2b.iam.shared` 联合认证 | IdP 身份源 |
 
 智能体在其目录条目中记录 `operator: <human>` 和 `scope: <capability list>`；网关强制要求 `x-user-id = <agent id>` 和 `x-session-id`。
@@ -129,7 +129,7 @@
 | 信任域 `spiffe://corp.lan` | `spiffe://mess.systems`（非生产：`spiffe://<env>.mess.systems`） |
 | `spiffe://corp.lan/infra/llm-proxy`（仓库目录） | `spiffe://mess.systems/corp/ai/gateway` |
 | `spiffe://corp.lan/apps/doc-converter` | `spiffe://mess.systems/corp/data/convert` |
-| `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-litellm-prd-01` |
+| `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` |
 | `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01`（工作站保留其名称，它不是服务主机） |
 
 智能体：`spiffe://mess.systems/corp/ai/agent-<name>`。路径遵循**能力代码**，绝不遵循仓库目录。
@@ -184,7 +184,7 @@ RBAC 主体取自 OIDC 组声明，直接使用 `tier-*` 和 `role-*` 组，不�
 | Git 托管平台令牌 / 部署密钥 | `<consumer-id>`（+ `--<purpose>`） | `svc-eng-sdlc-jenkins--clone` |
 | CI 凭据 ID | 机密路径，其中 `/` 替换为 `-` | `eng-sdlc-ci-prd-packages` |
 | 软件包仓库令牌 | `<consumer-id>` | `svc-eng-sdlc-jenkins` |
-| 仪表板服务账号 | `svc-<application>` | `svc-corp-ai-litellm` |
+| 仪表板服务账号 | `svc-<application>` | `svc-corp-ai-agentgateway` |
 | SSH 密钥注释 | `<identity-id>@<host>` | `jdoe-adm@dc1-shared-infra-kvm-prd-01` |
 
 ## 13. 生命周期

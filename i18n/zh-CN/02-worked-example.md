@@ -45,7 +45,7 @@ Northwind Traders 在其办公室的双节点虚拟化平台上运行约十几�
 | `pg01.corp.lan` | shared / data / sql / PostgreSQL | `sql.data.shared.svc.northwind.example` | `shared-data-postgres` | `role-platform-engineers` |
 | `chat.corp.lan` | corp / collab / chat / Mattermost | `chat.collab.corp.svc.northwind.example` | `corp-collab-mattermost` | `role-platform-engineers` |
 | `wiki.corp.lan` | corp / collab / wiki / Wiki.js | `wiki.collab.corp.svc.northwind.example` | `corp-collab-wikijs` | `role-developers` |
-| `llm.corp.lan`、`llm-ui.corp.lan` | corp / ai / gateway / LiteLLM | `gateway.ai.corp.svc.northwind.example`（UI = 路径 `/ui`） | `corp-ai-litellm` | `role-agent-operators` |
+| `llm.corp.lan`、`llm-ui.corp.lan` | corp / ai / gateway / agentgateway | `gateway.ai.corp.svc.northwind.example`（UI = 路径 `/ui`） | `corp-ai-agentgateway` | `role-agent-operators` |
 | `demo.corp.lan`（公共） | ext / gov / demo / demo portal | `demo.apps.northwind.example` | `ext-gov-demo-portal` | `role-developers` |
 
 过程中做出的决定：

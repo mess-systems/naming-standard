@@ -85,7 +85,7 @@
 
 | 类型 | 名称 | 授予权限 |
 |---|---|---|
-| 使用方策略 | `<identity-id>`（例如 `corp-ai-litellm`、`agent-code-review`） | 对自身的 `<mount>/<domain>/<capability>/<env>/*` 拥有 `read`；对所需的使用方副本拥有 `read` |
+| 使用方策略 | `<identity-id>`（例如 `corp-ai-agentgateway`、`agent-code-review`） | 对自身的 `<mount>/<domain>/<capability>/<env>/*` 拥有 `read`；对所需的使用方副本拥有 `read` |
 | 层级策略（人员） | `tier-t0-superadmin`、`tier-t1-platform-ops`、`tier-t2-developer`、`tier-t3-readonly` | t0：所有挂载点，包括 `admin` 条目，并触发告警；t1：`shared/`、`platform/`、`eng/`，`admin` 除外；t2：`eng/` 和 `<product>/` 中非 `admin` 的条目；t3：仅 `list` + 元数据 |
 | 角色策略 | `role-<function>` | 针对该职能的域范围读写权限（例如 `role-security-engineers` 获得 `*/sec/*`） |
 | 限定读取策略 | `<identity-id>-<capability>-ro` | 当使用方恰好需要一个他方条目时使用，例如 `eng-sdlc-jenkins-packages-ro` |
@@ -136,7 +136,7 @@ corp/ai/gateway/prd/oidc                    issuer, client_id, client_secret
 corp/ai/agent-code-review/prd/gateway       api_key, url          # consumer copy of one field of clients
 ```
 
-策略 `corp-ai-litellm`：读取 `corp/data/ai/gateway/prd/*`。策略 `agent-code-review`：读取 `corp/data/ai/agent-code-review/prd/*`。两者都无法读取对方的内容。AppRole `agent-code-review` 绑定到其运行器 (runner) 的 CIDR；目标替代方案是使用 `spiffe://mess.systems/corp/ai/agent-code-review` 的 `jwt-spire`。
+策略 `corp-ai-agentgateway`：读取 `corp/data/ai/gateway/prd/*`。策略 `agent-code-review`：读取 `corp/data/ai/agent-code-review/prd/*`。两者都无法读取对方的内容。AppRole `agent-code-review` 绑定到其运行器 (runner) 的 CIDR；目标替代方案是使用 `spiffe://mess.systems/corp/ai/agent-code-review` 的 `jwt-spire`。
 
 ## 9. 拒绝规则
 
