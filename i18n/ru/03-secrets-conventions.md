@@ -112,8 +112,8 @@
 | `bots/code-review` (+ `/tracing`) | `corp/ai/agent-code-review/prd/gateway`, `.../llm-traces` | копии потребителя; элементы названы по возможностям, к которым дают доступ |
 | `llm-gateway/clients` | `corp/ai/gateway/prd/clients` | копия эмитента; имена полей становятся ID идентичностей ([Идентичности клиентов шлюза](04-identity-conventions.md#9-идентичности-клиентов-шлюза)) |
 | `llm-gateway/keys` | `corp/ai/gateway/prd/provider-acmeai`, `provider-acmecloud` | один элемент на вендора |
-| `acmecloud/vm-api` | `shared/infra/compute/prd/provider-acmecloud` | вендор как узел → вендор как элемент |
-| `grafana/oidc` | `shared/obs/dashboards/prd/oidc` | узел продукта → узел возможности |
+| `acmecloud/vm-api` | `shared/infra/compute/prd/provider-acmecloud` | вендор как узел становится вендором как элементом |
+| `grafana/oidc` | `shared/obs/dashboards/prd/oidc` | узел продукта становится узлом возможности |
 | `postgres/admin` | `shared/data/sql/prd/admin` | аварийный доступ |
 | `ci/registry-pull` | `eng/sdlc/ci/prd/oci` | потребитель = CI |
 | `shopfront/db` | `shopfront/api/prd/db` | уже в форме продукта; добавить компонент и окружение |

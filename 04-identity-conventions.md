@@ -147,13 +147,13 @@ Env var names: `GATEWAY_CLIENT_KEY_<ID_UPPER_SNAKE>` (`GATEWAY_CLIENT_KEY_AGENT_
 
 ## 10. Kubernetes RBAC
 
-| Object | Form | Legacy → target (illustrative) |
+| Object | Form | Legacy and target (illustrative) |
 |---|---|---|
-| ServiceAccount | `svc-<workload>` | `ci` → `svc-ci` |
-| Role / ClusterRole for humans | `<group>-<scope>-<access>` | `view-all` → `role-developers-cluster-ro`; `sandbox-viewer` → `role-developers-sandbox-ro` |
-| Role for a SA | `<sa>-<scope>-<access>` | `ci-read` → `svc-ci-workload-ro`; `ci-gitops` → `svc-ci-gitops-rw` |
+| ServiceAccount | `svc-<workload>` | `ci` becomes `svc-ci` |
+| Role / ClusterRole for humans | `<group>-<scope>-<access>` | `view-all` becomes `role-developers-cluster-ro`; `sandbox-viewer` becomes `role-developers-sandbox-ro` |
+| Role for a SA | `<sa>-<scope>-<access>` | `ci-read` becomes `svc-ci-workload-ro`; `ci-gitops` becomes `svc-ci-gitops-rw` |
 | RoleBinding | `<role>--<subject>` | `role-developers-sandbox-ro--role-developers` |
-| GitOps project (e.g. Argo CD) | `<plane>` or `<product>` | `default` → `eng`, product apps → `<product>` |
+| GitOps project (e.g. Argo CD) | `<plane>` or `<product>` | `default` becomes `eng`, product apps become `<product>` |
 | Labels | `mess.systems/plane`, `mess.systems/owner`, … | |
 
 RBAC subjects taken from the OIDC group claim are the `tier-*` and `role-*` groups, unchanged.

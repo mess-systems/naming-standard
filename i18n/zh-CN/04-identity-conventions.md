@@ -151,13 +151,13 @@
 
 ## 10. Kubernetes RBAC
 
-| 对象 | 形式 | 遗留 → 目标（示意） |
+| 对象 | 形式 | 遗留与目标（示意） |
 |---|---|---|
-| ServiceAccount | `svc-<workload>` | `ci` → `svc-ci` |
-| 面向人员的 Role / ClusterRole | `<group>-<scope>-<access>` | `view-all` → `role-developers-cluster-ro`；`sandbox-viewer` → `role-developers-sandbox-ro` |
-| 面向 SA 的 Role | `<sa>-<scope>-<access>` | `ci-read` → `svc-ci-workload-ro`；`ci-gitops` → `svc-ci-gitops-rw` |
+| ServiceAccount | `svc-<workload>` | `ci` 改为 `svc-ci` |
+| 面向人员的 Role / ClusterRole | `<group>-<scope>-<access>` | `view-all` 改为 `role-developers-cluster-ro`；`sandbox-viewer` 改为 `role-developers-sandbox-ro` |
+| 面向 SA 的 Role | `<sa>-<scope>-<access>` | `ci-read` 改为 `svc-ci-workload-ro`；`ci-gitops` 改为 `svc-ci-gitops-rw` |
 | RoleBinding | `<role>--<subject>` | `role-developers-sandbox-ro--role-developers` |
-| GitOps 项目（例如 Argo CD） | `<plane>` 或 `<product>` | `default` → `eng`，产品应用 → `<product>` |
+| GitOps 项目（例如 Argo CD） | `<plane>` 或 `<product>` | `default` 改为 `eng`，产品应用 改为 `<product>` |
 | 标签 | `mess.systems/plane`、`mess.systems/owner`…… | |
 
 RBAC 主体取自 OIDC 组声明，直接使用 `tier-*` 和 `role-*` 组，不做改动。

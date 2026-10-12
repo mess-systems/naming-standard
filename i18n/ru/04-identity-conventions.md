@@ -151,13 +151,13 @@
 
 ## 10. RBAC в Kubernetes
 
-| Объект | Форма | Унаследованное → целевое (иллюстрация) |
+| Объект | Форма | Унаследованное и целевое (иллюстрация) |
 |---|---|---|
-| ServiceAccount | `svc-<workload>` | `ci` → `svc-ci` |
-| Role / ClusterRole для людей | `<group>-<scope>-<access>` | `view-all` → `role-developers-cluster-ro`; `sandbox-viewer` → `role-developers-sandbox-ro` |
-| Role для SA | `<sa>-<scope>-<access>` | `ci-read` → `svc-ci-workload-ro`; `ci-gitops` → `svc-ci-gitops-rw` |
+| ServiceAccount | `svc-<workload>` | `ci` становится `svc-ci` |
+| Role / ClusterRole для людей | `<group>-<scope>-<access>` | `view-all` становится `role-developers-cluster-ro`; `sandbox-viewer` становится `role-developers-sandbox-ro` |
+| Role для SA | `<sa>-<scope>-<access>` | `ci-read` становится `svc-ci-workload-ro`; `ci-gitops` становится `svc-ci-gitops-rw` |
 | RoleBinding | `<role>--<subject>` | `role-developers-sandbox-ro--role-developers` |
-| Проект GitOps (например, Argo CD) | `<plane>` или `<product>` | `default` → `eng`, продуктовые приложения → `<product>` |
+| Проект GitOps (например, Argo CD) | `<plane>` или `<product>` | `default` становится `eng`, продуктовые приложения становятся `<product>` |
 | Метки | `mess.systems/plane`, `mess.systems/owner`, … | |
 
 Субъекты RBAC, полученные из claim группы OIDC, — это группы `tier-*` и `role-*` без изменений.

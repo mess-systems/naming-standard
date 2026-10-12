@@ -108,8 +108,8 @@ The legacy paths below are fictional but show the five typical shapes found in a
 | `bots/code-review` (+ `/tracing`) | `corp/ai/agent-code-review/prd/gateway`, `.../llm-traces` | consumer copies; items named after the capability they unlock |
 | `llm-gateway/clients` | `corp/ai/gateway/prd/clients` | issuer copy; field names become identity IDs ([Gateway client identities](04-identity-conventions.md#9-gateway-client-identities)) |
 | `llm-gateway/keys` | `corp/ai/gateway/prd/provider-acmeai`, `provider-acmecloud` | one item per vendor |
-| `acmecloud/vm-api` | `shared/infra/compute/prd/provider-acmecloud` | vendor as node → vendor as item |
-| `grafana/oidc` | `shared/obs/dashboards/prd/oidc` | product node → capability node |
+| `acmecloud/vm-api` | `shared/infra/compute/prd/provider-acmecloud` | vendor as node becomes vendor as item |
+| `grafana/oidc` | `shared/obs/dashboards/prd/oidc` | product node becomes capability node |
 | `postgres/admin` | `shared/data/sql/prd/admin` | break-glass |
 | `ci/registry-pull` | `eng/sdlc/ci/prd/oci` | consumer = CI |
 | `shopfront/db` | `shopfront/api/prd/db` | already product-shaped; add component and env |

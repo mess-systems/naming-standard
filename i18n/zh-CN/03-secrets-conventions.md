@@ -112,8 +112,8 @@ HCL 路径形式：`path "<mount>/data/<domain>/<capability>/<env>/*"`，列表�
 | `bots/code-review`（+ `/tracing`） | `corp/ai/agent-code-review/prd/gateway`、`.../llm-traces` | 使用方副本；条目以其所解锁的能力命名 |
 | `llm-gateway/clients` | `corp/ai/gateway/prd/clients` | 颁发方副本；字段名改为身份 ID（[网关客户端身份](04-identity-conventions.md#9-网关客户端身份)） |
 | `llm-gateway/keys` | `corp/ai/gateway/prd/provider-acmeai`、`provider-acmecloud` | 每个供应商一个条目 |
-| `acmecloud/vm-api` | `shared/infra/compute/prd/provider-acmecloud` | 供应商作为节点 → 供应商作为条目 |
-| `grafana/oidc` | `shared/obs/dashboards/prd/oidc` | 产品节点 → 能力节点 |
+| `acmecloud/vm-api` | `shared/infra/compute/prd/provider-acmecloud` | 供应商作为节点 改为 供应商作为条目 |
+| `grafana/oidc` | `shared/obs/dashboards/prd/oidc` | 产品节点 改为 能力节点 |
 | `postgres/admin` | `shared/data/sql/prd/admin` | 紧急访问 |
 | `ci/registry-pull` | `eng/sdlc/ci/prd/oci` | 使用方 = CI |
 | `shopfront/db` | `shopfront/api/prd/db` | 已是产品形态；补充组件和环境 |
