@@ -6,7 +6,7 @@ The naming standard of **mess.systems**: one grammar for DNS names, hosts, repos
 
 It is a living template: it is applied, questioned, and revised as understanding grows. Use it as-is or adapt it to your own organisation.
 
-**Status:** v2.3, evolving. Names and rules may still change; changes are recorded in the changelog below.
+**Status:** v2.4, evolving. Names and rules may still change; changes are recorded in the changelog below.
 
 ## Why
 
@@ -22,6 +22,8 @@ Names are the cheapest architecture decision and the most expensive one to chang
 | [04-identity-conventions.md](04-identity-conventions.md) | Humans, admins, break-glass, service accounts, agents, groups and tiers, SPIFFE, mesh groups, k8s RBAC, DB roles, gateway clients |
 | [05-labels-and-tags.md](05-labels-and-tags.md) | Key/value labels and tags: cost tags, CI runner labels, Kubernetes labels and annotations, cloud tags, issue and PR labels, platform limits |
 | [06-endpoint-conventions.md](06-endpoint-conventions.md) | Employee devices: name form, profiles and forms, metadata, the `endpoint` capability code, DNS, BYOD, PAW, refusals |
+| [07-deployment-and-tenants.md](07-deployment-and-tenants.md) | Product contour: product, domain, service, implementation; environments and DNS; deployment keys, cells, tenants, governance labels, OpenTelemetry, SPIFFE |
+| [schema/](schema/), [catalog/](catalog/), [tests/](tests/) | Executable standard: JSON Schema, example vocabulary, golden examples checked in CI |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to propose changes and discussion rules |
 | [i18n/](i18n/) | Russian and Simplified Chinese translations (informative) |
 | [LICENSE](LICENSE) | CC BY 4.0 |
@@ -59,7 +61,17 @@ Questioned and kept:
 
 ## Changelog
 
-### v2.3 (current)
+### v2.4 (current)
+
+- Added a second contour. The **corporate contour** (internal services, devices; parts 01 to 06) is unchanged. The new **product contour** for cloud-native products is described in [deployment and tenants](07-deployment-and-tenants.md): product, domain, service and implementation as separate concepts; service unique within its product; shared platform services as product `platform`.
+- Deployment keys `provider` (own infrastructure is the value `own`), `jurisdiction`, `region`, `site`, `cell`, `tenant-scope`; only `cell` (and a dedicated tenant key) goes into names. Tenants identified by three opaque keys (operator, legal entity, end customer). `residency` is a required label.
+- Product contour writes `prd` in internal DNS; public customer names stay `api.<product-domain>` and `api.stg.<product-domain>`. New env code `sbx` (product contour only).
+- Governance labels classified as required, conditional or derived, reconciled with [labels and tags](05-labels-and-tags.md).
+- OpenTelemetry mapping (`service.namespace` = `<product>.<domain>`) and separate SPIFFE trust domains for prod, non-prod and sandbox.
+- Executable standard: `schema/`, `catalog/`, `tests/golden/` and a CI check.
+- Shaped by an external review of the standard.
+
+### v2.3
 
 - New domain `device` (employee devices, device-side agents, virtual desktops); the capability `endpoint` moves there from `infra`. The tech radar and software catalog already use `device` as a category, so one code serves both.
 - New capability codes: `vdi` (server-side virtual workplace, domain `device`) and `assistant` (AI assistant chat, domain `ai`).

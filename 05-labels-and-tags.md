@@ -66,6 +66,8 @@ User names or handles, e-mail addresses, hostnames, IP addresses, serial numbers
 - Codes `cc-*` and `ini-*` are registered in the catalog before use. A tag value that is not in the catalog is an error.
 - Shared resources get `owner` of the platform group and `cost-center` of the platform; allocation to consumers is a report, not a tag.
 
+**Product contour.** There the required cost tags are `cost-center`, `owner`, `env`, `product`, `domain`, `service`, and `capability` is not set. The full list of governance labels with their classes (required, conditional, derived) is in [07 Governance labels](07-deployment-and-tenants.md#7-governance-labels).
+
 ## 3. CI runner labels
 
 Forgejo Actions and GitHub Actions both choose a runner by matching `runs-on` against runner labels. Runners are registered at instance, organization or repository level (on GitHub: enterprise, organization or repository, with runner groups). A job sees only runners registered at its own level or above.

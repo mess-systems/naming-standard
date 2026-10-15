@@ -1,0 +1,24 @@
+metadata:
+  contour: product
+  product: x
+  domain: records
+  service: store
+  component: worker
+  env: prd
+  owner: team-x-records
+  cost-center: cc-x
+  criticality: critical
+  data-class: restricted
+  residency: jur-b
+  tenant-scope: dedicated
+  cell: dq4w9np
+  tenant-operator: op-a7k2mz
+  tenant-entity: le-q4w9np
+  tenant-customer: ec-h3t8rd
+expect:
+  dns: store-worker.records.dq4w9np.x.prd.svc.mess.systems
+  otel:
+    service.namespace: x.records
+    service.name: store-worker
+    deployment.environment.name: prd
+  spiffe: spiffe://product.mess.systems/x/records/store/dq4w9np

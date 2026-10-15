@@ -1,0 +1,8 @@
+# Example vocabulary for the fictional company mess.systems. Replace with your own.
+contours:
+  corp:
+    description: Internal services, corp/eng/shared/ext planes, employee devices (parts 01 to 06)
+    env_in_prod_dns: false
+  product:
+    description: Products sold to customers, cells and tenants (part 07)
+    env_in_prod_dns: true

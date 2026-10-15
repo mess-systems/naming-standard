@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mess-systems/naming-standard/schema/resource-metadata.schema.json",
+  "title": "mess.systems resource metadata (product contour)",
+  "description": "Metadata of a resource in the product contour. See 07-deployment-and-tenants.md. Derived keys may be present but are filled by tooling.",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "code": {"type": "string", "pattern": "^[a-z]([a-z0-9-]{0,30}[a-z0-9])?$"},
+    "key6": {"type": "string", "pattern": "^[a-hjkmnp-z][a-hjkmnp-z2-9]{5}$"}
+  },
+  "properties": {
+    "contour": {"const": "product"},
+    "product": {"$ref": "#/definitions/code", "not": {"enum": ["shared", "corp", "eng", "ext"]}},
+    "domain": {"$ref": "#/definitions/code"},
+    "service": {"$ref": "#/definitions/code"},
+    "component": {"enum": ["api", "worker", "migrate"]},
+    "env": {"enum": ["prd", "stg", "tst", "dev", "sbx"]},
+    "owner": {"type": "string", "pattern": "^(role|team|app)-[a-z0-9-]+$"},
+    "cost-center": {"type": "string", "pattern": "^cc-[a-z0-9-]+$"},
+    "criticality": {"enum": ["critical", "high", "medium", "low"]},
+    "data-class": {"enum": ["public", "internal", "confidential", "restricted"]},
+    "residency": {"type": "string", "pattern": "^(any|jur-[a-z0-9]+)$"},
+    "tenant-scope": {"enum": ["pooled", "dedicated"]},
+    "cell": {"type": "string", "pattern": "^(c(0[1-9]|[1-9][0-9])|d[a-hjkmnp-z][a-hjkmnp-z2-9]{5})$"},
+    "tenant-operator": {"type": "string", "pattern": "^op-[a-hjkmnp-z][a-hjkmnp-z2-9]{5}$"},
+    "tenant-entity": {"type": "string", "pattern": "^le-[a-hjkmnp-z][a-hjkmnp-z2-9]{5}$"},
+    "tenant-customer": {"type": "string", "pattern": "^ec-[a-hjkmnp-z][a-hjkmnp-z2-9]{5}$"},
+    "lifecycle": {"enum": ["ephemeral", "retiring"]},
+    "provider": {"type": "string", "pattern": "^(own|pub-[a-z])$"},
+    "region": {"type": "string", "pattern": "^reg-[a-z][0-9]$"},
+    "jurisdiction": {"type": "string", "pattern": "^jur-[a-z0-9]+$"},
+    "site": {"$ref": "#/definitions/code"},
+    "managed-by": {"enum": ["opentofu", "argo-cd", "ansible"]},
+    "source-repo": {"type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"},
+    "implementation": {"$ref": "#/definitions/code"}
+  },
+  "required": ["contour", "product", "domain", "service", "env", "owner", "cost-center", "criticality", "data-class", "residency", "tenant-scope"],
+  "allOf": [
+    {
+      "if": {"properties": {"tenant-scope": {"const": "dedicated"}}},
+      "then": {
+        "required": ["cell", "tenant-operator", "tenant-entity", "tenant-customer"],
+        "properties": {"cell": {"pattern": "^d"}}
+      }
+    },
+    {
+      "if": {"properties": {"tenant-scope": {"const": "pooled"}}},
+      "then": {
+        "not": {"anyOf": [{"required": ["tenant-operator"]}, {"required": ["tenant-entity"]}, {"required": ["tenant-customer"]}]},
+        "properties": {"cell": {"pattern": "^c"}}
+      }
+    }
+  ]
+}

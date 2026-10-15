@@ -1,0 +1,14 @@
+# Must fail: a pooled tenant carrying tenant keys, and a missing residency label.
+invalid: true
+metadata:
+  contour: product
+  product: x
+  domain: billing
+  service: payment
+  env: prd
+  owner: team-x-billing
+  cost-center: cc-x
+  criticality: critical
+  data-class: restricted
+  tenant-scope: pooled
+  tenant-customer: ec-h3t8rd

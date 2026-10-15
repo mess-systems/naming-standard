@@ -1,0 +1,6 @@
+environments:
+  prd: {contours: [corp, product], trust_domain: product.mess.systems}
+  stg: {contours: [corp, product], trust_domain: nonprod.product.mess.systems}
+  tst: {contours: [corp, product], trust_domain: nonprod.product.mess.systems}
+  dev: {contours: [corp, product], trust_domain: nonprod.product.mess.systems}
+  sbx: {contours: [product], trust_domain: sandbox.product.mess.systems}

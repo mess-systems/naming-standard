@@ -1,0 +1,11 @@
+# Label classes for the product contour (07 section 7).
+required: [contour, product, domain, service, env, owner, cost-center, criticality, data-class, residency, tenant-scope]
+conditional:
+  component: service has more than one deployable
+  cell: resource is cell-bound
+  tenant-operator: dedicated resource
+  tenant-entity: dedicated resource
+  tenant-customer: dedicated resource
+  lifecycle: resource is ephemeral or retiring
+derived: [provider, region, jurisdiction, site, managed-by, source-repo, implementation]
+in_names: [service, domain, product, env, cell]
