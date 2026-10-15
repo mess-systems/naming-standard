@@ -12,4 +12,4 @@ regions:
 cells:
   c01: {product: x, region: reg-a1, provider: own, site: dc1, tenant-scope: pooled}
   c02: {product: x, region: reg-a1, provider: pub-a, site: cld, tenant-scope: pooled}
-  dh3t8rd: {product: x, region: reg-b1, provider: pub-b, site: cld, tenant-scope: dedicated}
+  dq4w9np: {product: x, region: reg-b1, provider: pub-b, site: cld, tenant-scope: dedicated}

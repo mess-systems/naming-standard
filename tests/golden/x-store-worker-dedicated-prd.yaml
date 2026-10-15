@@ -11,14 +11,14 @@ metadata:
   data-class: restricted
   residency: jur-b
   tenant-scope: dedicated
-  cell: dh3t8rd
+  cell: dq4w9np
   tenant-operator: op-a7k2mz
   tenant-entity: le-q4w9np
   tenant-customer: ec-h3t8rd
 expect:
-  dns: store-worker.records.dh3t8rd.x.prd.svc.mess.systems
+  dns: store-worker.records.dq4w9np.x.prd.svc.mess.systems
   otel:
     service.namespace: x.records
     service.name: store-worker
     deployment.environment.name: prd
-  spiffe: spiffe://product.mess.systems/x/records/store/dh3t8rd
+  spiffe: spiffe://product.mess.systems/x/records/store/dq4w9np

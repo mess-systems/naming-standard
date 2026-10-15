@@ -47,7 +47,7 @@ These ten keys describe the **corporate contour**. The **product contour** (prod
 ```
 <capability>.<domain>.<plane>.svc.mess.systems                 # prod
 <capability>.<domain>.<plane>.<env>.svc.mess.systems           # dev|tst|stg
-<surface>.<product>.svc.mess.systems                           # internal product (plane = product)
+<surface>.<product>.svc.mess.systems                           # superseded by 07 (product contour)
 ```
 
 - `svc.mess.systems` is the internal zone (split-horizon, internal CA + ACME). Not delegated publicly. `svc` here means "service zone" and is unrelated to Kubernetes `*.svc.cluster.local`, which has a different suffix and a different resolver.

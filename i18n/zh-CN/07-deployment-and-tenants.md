@@ -116,7 +116,7 @@ app.<product-domain>, docs.<product-domain>, status.<product-domain>
 - 完整租户路径为 `op-a7k2mz/le-q4w9np/ec-h3t8rd`。没有合作伙伴的租户以 mess.systems 为运营方。
 - 示例和文档只使用通用名称（“运营方 A”、“实体 B”、“客户 C”）。
 - **共享单元中的租户绝不进入名称。** 它们是数据行和标签。
-- **专用租户**获得自己的单元 `d<key>`，取专用所在层级（通常是客户）键的 6 个字符：`dh3t8rd`。示例：`store.records.dh3t8rd.x.prd.svc.mess.systems`。
+- **专用租户**获得自己的单元 `d<key>`，取法律实体键（`tenant-entity`）的 6 个字符：`dq4w9np`。该实体的所有最终客户共用其专用单元。示例：`store.records.dq4w9np.x.prd.svc.mess.systems`。
 
 ## 6. 什么进入名称
 

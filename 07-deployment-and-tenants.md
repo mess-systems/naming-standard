@@ -114,7 +114,7 @@ A tenant is identified by three opaque keys, from the outside in:
 - The full tenant path is `op-a7k2mz/le-q4w9np/ec-h3t8rd`. A tenant without a partner has mess.systems as operator.
 - Examples and documentation use generic names only ("operator A", "entity B", "customer C").
 - **Pooled tenants never appear in names.** They are rows and labels.
-- **A dedicated tenant** gets its own cell named `d<key>` after the 6 characters of the key at the level where dedication happens, usually the customer: `dh3t8rd`. Example: `store.records.dh3t8rd.x.prd.svc.mess.systems`.
+- **A dedicated tenant** gets its own cell named `d<key>` after the 6 characters of the key of the legal entity (`tenant-entity`): `dq4w9np`. All end customers of that entity share its dedicated cell. Example: `store.records.dq4w9np.x.prd.svc.mess.systems`.
 
 ## 6. What goes into a name
 

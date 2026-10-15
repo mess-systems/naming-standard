@@ -51,7 +51,7 @@
 ```
 <capability>.<domain>.<plane>.svc.mess.systems                 # prod
 <capability>.<domain>.<plane>.<env>.svc.mess.systems           # dev|tst|stg
-<surface>.<product>.svc.mess.systems                           # internal product (plane = product)
+<surface>.<product>.svc.mess.systems                           # superseded by 07 (product contour)
 ```
 
 - `svc.mess.systems` — внутренняя зона (split-horizon, внутренний УЦ + ACME). Публично не делегируется. `svc` здесь означает «зона сервисов» и не связан с Kubernetes `*.svc.cluster.local` — другой суффикс, другой резолвер.

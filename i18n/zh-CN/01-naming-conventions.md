@@ -51,7 +51,7 @@
 ```
 <capability>.<domain>.<plane>.svc.mess.systems                 # prod
 <capability>.<domain>.<plane>.<env>.svc.mess.systems           # dev|tst|stg
-<surface>.<product>.svc.mess.systems                           # internal product (plane = product)
+<surface>.<product>.svc.mess.systems                           # superseded by 07 (product contour)
 ```
 
 - `svc.mess.systems` 是内部区域（水平分割 DNS (split-horizon)、内部 CA + ACME），不对外公开委派。这里的 `svc` 表示“服务区域”，与 Kubernetes 的 `*.svc.cluster.local` 无关——后缀不同，解析器也不同。

@@ -44,6 +44,8 @@ for path in sorted(glob.glob(f"{ROOT}/tests/golden/*.yaml")):
             errors.append("service not in catalog for this product and domain")
         if "cell" in m and m["cell"] not in cells:
             errors.append("cell not in catalog")
+        if m.get("tenant-scope") == "dedicated" and m.get("cell") != "d" + m["tenant-entity"][3:]:
+            errors.append("dedicated cell must be d<legal-entity key>")
     if case.get("invalid"):
         ok = bool(errors)
     else:
