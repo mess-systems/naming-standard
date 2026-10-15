@@ -130,7 +130,7 @@
 | `spiffe://corp.lan/infra/llm-proxy`（仓库目录） | `spiffe://mess.systems/corp/ai/gateway` |
 | `spiffe://corp.lan/apps/doc-converter` | `spiffe://mess.systems/corp/data/convert` |
 | `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` |
-| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01`（工作站保留其名称，它不是服务主机） |
+| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/std-lt-a1b2c3`（[终端名称](06-endpoint-conventions.md)，绝不使用用户名；仅限经过证明的完全托管设备；BYOD 没有节点身份） |
 
 智能体：`spiffe://mess.systems/corp/ai/agent-<name>`。路径遵循**能力代码**，绝不遵循仓库目录。
 

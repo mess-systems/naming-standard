@@ -126,7 +126,7 @@ Policy = identity ID; AppRole = identity ID; JWT role = group ID. The full rules
 | `spiffe://corp.lan/infra/llm-proxy` (repo folder) | `spiffe://mess.systems/corp/ai/gateway` |
 | `spiffe://corp.lan/apps/doc-converter` | `spiffe://mess.systems/corp/data/convert` |
 | `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` |
-| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01` (a workstation keeps its name; it is not a service host) |
+| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/std-lt-a1b2c3` (an [endpoint name](06-endpoint-conventions.md), never a user handle; only for fully managed, attested devices; BYOD gets no node identity) |
 
 Agents: `spiffe://mess.systems/corp/ai/agent-<name>`. Paths follow **capability codes**, never repository folders.
 

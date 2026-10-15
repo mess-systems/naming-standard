@@ -124,7 +124,7 @@ www.mess.systems                      # brand
 | `sec` | `siem vuln ids scan` |
 | `obs` | `dashboards metrics logs traces alerts` |
 | `net` | `dns mesh ingress egress firewall` |
-| `infra` | `compute storage backup k8s` |
+| `infra` | `compute storage backup k8s endpoint` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
 | `adlc` | `registry sandbox evals` |
 | `ai` | `gateway inference stt tts ocr llm-traces kb docs guard` |
@@ -135,6 +135,8 @@ www.mess.systems                      # brand
 | `itsm` | `service-desk change` |
 | `api` | `gateway-api portal-api` |
 | `edge` | `lb` |
+
+`endpoint` относится к стороне устройства: так называется всё, что работает на устройствах сотрудников, и этот код никогда не входит в DNS-имя (см. [06](06-endpoint-conventions.md#6-код-возможности-endpoint)).
 
 Эта таблица — пример эталонного набора, а не инвентарь; расширяйте или сокращайте её под свою организацию по правилу ниже.
 
@@ -160,6 +162,7 @@ www.mess.systems                      # brand
 | Приложение (каталог, `service.name`, slug OIDC, AppRole) | `<plane>-<domain>-<product>` | `eng-sdlc-gitea` |
 | Хост / контейнер / ВМ | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | Узел гипервизора | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
+| Корпоративное конечное устройство (ноутбук, настольный компьютер) | `<profile>-<form>-<asset-id>`, см. [06 Соглашения для конечных устройств](06-endpoint-conventions.md) | `std-lt-a1b2c3` |
 | Git-организация / репозиторий | организация `<plane>` · репозиторий `<domain>-<product>` | `eng/sdlc-gitea` |
 | Образ контейнера | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/agentgateway:1.6.0` |
 | Проект реестра (например, Harbor) | `<plane>-<domain>` | `corp-ai` |
