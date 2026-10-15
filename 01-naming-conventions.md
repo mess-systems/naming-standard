@@ -36,7 +36,7 @@ Every object family carries the same keys. DNS encodes the first four (plus env 
 | `data_class` | `public internal confidential restricted` | catalog, secrets metadata, bucket tag |
 | `exposure` | `mesh lan public` | catalog, mesh group; **never in the name** |
 
-[Kubernetes label](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) keys: `mess.systems/<key>`. Hypervisor and cloud tags: `<key>-<value>` (`plane-corp`), or native key/value tags where supported. Container registry labels: same as hypervisor tags. Secrets manager: `custom_metadata.<key>`.
+[Kubernetes label](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) keys: `mess.systems/<key>`. Cloud and hypervisor tags: native key/value tags; `<key>-<value>` (`plane-corp`) only where the platform has no key/value tags. All labels and tags follow [Labels and tags](05-labels-and-tags.md). Container registry labels: same as hypervisor tags. Secrets manager: `custom_metadata.<key>`.
 
 ## 3. DNS: two grammars, nothing else
 
@@ -215,6 +215,13 @@ One install has one base URL: `https://<fqdn>`. Path-based multi-tenancy (`/admi
 | `_` in DNS or k8s | [Character rules](#1-character-rules-apply-to-every-family) |
 | capability code reused with a second meaning | [Capability codes](#43-capability-codes-unique-across-all-domains) |
 | new grammar for a "special" case | [There is no grammar C](#33-there-is-no-grammar-c) |
+| user, hostname, IP, secret or customer in a label or tag value | [Labels and tags](05-labels-and-tags.md) |
+| resource without `cost-center`, `owner`, `env`, `capability` tags | [Labels and tags](05-labels-and-tags.md) |
+| product as the cost axis instead of capability | [Labels and tags](05-labels-and-tags.md) |
+| forge instance without a `default` runner visible to every organization | [Labels and tags](05-labels-and-tags.md) |
+| `sock` or `host` CI runner registered at instance level | [Labels and tags](05-labels-and-tags.md) |
+| commit hash or build number as a Kubernetes label | [Labels and tags](05-labels-and-tags.md) |
+| label or tag used as an authorization input | [Labels and tags](05-labels-and-tags.md) |
 
 ## 11. Worked encodings
 

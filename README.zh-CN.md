@@ -8,7 +8,7 @@
 
 这是一个持续演进的模板：在应用中接受检验和质疑，并随着理解的加深不断修订。可以直接使用，也可以根据贵组织的情况进行调整。
 
-**状态：** v2，持续演进中。名称和规则仍可能变化；变更记录在下方的变更日志中。
+**状态：** v2.1，持续演进中。名称和规则仍可能变化；变更记录在下方的变更日志中。
 
 ## 为什么
 
@@ -22,6 +22,7 @@
 | [02-worked-example.md](i18n/zh-CN/02-worked-example.md) | 一个虚构组织将遗留名称（`grafana.corp.lan`、`vm042`、`secret/users/...`）迁移到本标准 |
 | [03-secrets-conventions.md](i18n/zh-CN/03-secrets-conventions.md) | 机密管理器（OpenBao / HashiCorp Vault）的挂载点、路径、条目与字段、策略、认证角色、元数据 |
 | [04-identity-conventions.md](i18n/zh-CN/04-identity-conventions.md) | 人员、管理员、紧急访问账号、服务账号、智能体、组与层级、SPIFFE、网状网络组、k8s RBAC、数据库角色、网关客户端 |
+| [05-labels-and-tags.md](i18n/zh-CN/05-labels-and-tags.md) | 键值标签：成本标签、CI 运行器标签、Kubernetes 标签与注解、云标签、议题与 PR 标签、平台限制 |
 | [CONTRIBUTING.md](i18n/zh-CN/CONTRIBUTING.md) | 如何提出变更以及讨论规则 |
 | [i18n/](i18n/) | 俄语与简体中文译文（参考性） |
 | [LICENSE](LICENSE) | CC BY 4.0 |
@@ -59,7 +60,13 @@
 
 ## 变更日志
 
-### v2（当前）
+### v2.1（当前）
+
+- 新增[标签与标记](i18n/zh-CN/05-labels-and-tags.md)：统一的键值语法，必填成本标签（`cost-center`、`owner`、`env`、`capability`），带用途、隔离级别以及所有组织可见的 `default` 运行器的 CI 运行器标签，Kubernetes 标签与注解，云标签，以 `prefix/value` 形式的议题与 PR 标签。
+- 云和虚拟化平台标签使用原生键值标签；仅在平台不支持时使用 `<key>-<value>`。
+- `data_class` 在标签中写作 `data-class`。
+
+### v2
 
 - 多词代码使用连字符连接（`data-catalog`、`hub-cache`、`service-desk`），绝不直接拼接。
 - 能力代码在**所有**域中唯一（例如文档数据库是 `docstore` 而不是 `docs`；LLM 链路追踪是 `llm-traces` 而不是 `traces`；AI 护栏 (guardrail) 是 `guard` 而不是 `policy`）。
@@ -77,6 +84,7 @@
 
 - 通用的切换操作手册（DNS、机密挂载点、SPIFFE 信任域的切换顺序）。完整示例中的[切换顺序](i18n/zh-CN/02-worked-example.md#8-切换顺序)给出了一个草案。
 - `obs` 是继续作为独立的域，还是并入 `infra`。
+- cloud.ru Evolution 的标签限制尚未在公开文档中确认；在此之前，[标签与标记](i18n/zh-CN/05-labels-and-tags.md)沿用 Tag Management Service 的限制。
 
 ## 讨论与贡献
 

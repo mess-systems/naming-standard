@@ -6,7 +6,7 @@ The naming standard of **mess.systems**: one grammar for DNS names, hosts, repos
 
 It is a living template: it is applied, questioned, and revised as understanding grows. Use it as-is or adapt it to your own organisation.
 
-**Status:** v2, evolving. Names and rules may still change; changes are recorded in the changelog below.
+**Status:** v2.1, evolving. Names and rules may still change; changes are recorded in the changelog below.
 
 ## Why
 
@@ -20,6 +20,7 @@ Names are the cheapest architecture decision and the most expensive one to chang
 | [02-worked-example.md](02-worked-example.md) | A fictional organisation migrating legacy names (`grafana.corp.lan`, `vm042`, `secret/users/...`) to the standard |
 | [03-secrets-conventions.md](03-secrets-conventions.md) | Secrets manager (OpenBao / HashiCorp Vault) mounts, paths, items and fields, policies, auth roles, metadata |
 | [04-identity-conventions.md](04-identity-conventions.md) | Humans, admins, break-glass, service accounts, agents, groups and tiers, SPIFFE, mesh groups, k8s RBAC, DB roles, gateway clients |
+| [05-labels-and-tags.md](05-labels-and-tags.md) | Key/value labels and tags: cost tags, CI runner labels, Kubernetes labels and annotations, cloud tags, issue and PR labels, platform limits |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to propose changes and discussion rules |
 | [i18n/](i18n/) | Russian and Simplified Chinese translations (informative) |
 | [LICENSE](LICENSE) | CC BY 4.0 |
@@ -57,7 +58,13 @@ Questioned and kept:
 
 ## Changelog
 
-### v2 (current)
+### v2.1 (current)
+
+- Added [labels and tags](05-labels-and-tags.md): one key/value grammar, required cost tags (`cost-center`, `owner`, `env`, `capability`), CI runner labels with purpose, isolation and a `default` runner visible to every organization, Kubernetes labels and annotations, cloud tags, issue and PR labels as `prefix/value`.
+- Cloud and hypervisor tags are native key/value tags; `<key>-<value>` only where the platform has none.
+- `data_class` is written `data-class` in tags.
+
+### v2
 
 - Multi-word codes are hyphenated (`data-catalog`, `hub-cache`, `service-desk`), never concatenated.
 - Capability codes are unique across **all** domains (e.g. the document database is `docstore`, not `docs`; LLM tracing is `llm-traces`, not `traces`; the AI guardrail is `guard`, not `policy`).
@@ -75,6 +82,7 @@ Questioned and kept:
 
 - A generic cutover runbook (order for DNS, secrets mounts, SPIFFE trust domain). The [cutover order](02-worked-example.md#8-cutover-order) in the worked example sketches one.
 - Whether `obs` stays a separate domain or folds into `infra`.
+- cloud.ru Evolution tag limits are not yet confirmed in public docs; [labels and tags](05-labels-and-tags.md) uses the Tag Management Service limits until then.
 
 ## Discussing and contributing
 
