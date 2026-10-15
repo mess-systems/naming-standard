@@ -120,7 +120,7 @@ A code has **one meaning** in the whole company. The same code may appear in sev
 | `sec` | `siem vuln ids scan` |
 | `obs` | `dashboards metrics logs traces alerts` |
 | `net` | `dns mesh ingress egress firewall` |
-| `infra` | `compute storage backup k8s` |
+| `infra` | `compute storage backup k8s endpoint` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
 | `adlc` | `registry sandbox evals` |
 | `ai` | `gateway inference stt tts ocr llm-traces kb docs guard` |
@@ -131,6 +131,8 @@ A code has **one meaning** in the whole company. The same code may appear in sev
 | `itsm` | `service-desk change` |
 | `api` | `gateway-api portal-api` |
 | `edge` | `lb` |
+
+`endpoint` is device-side: it names what runs on employee devices and never appears in a DNS name (see [06 Endpoint conventions](06-endpoint-conventions.md#6-capability-code-endpoint)).
 
 This table is an example reference set, not an inventory; extend or trim it per organisation using the rule below.
 
@@ -156,6 +158,7 @@ Site codes are short, organisation-specific, and listed in the catalog; the two 
 | Application (catalog, `service.name`, OIDC slug, AppRole) | `<plane>-<domain>-<product>` | `eng-sdlc-gitea` |
 | Host / container / VM | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | Hypervisor node | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
+| Enterprise endpoint (laptop, desktop) | `<profile>-<form>-<asset-id>`, see [06 Endpoint conventions](06-endpoint-conventions.md) | `std-lt-a1b2c3` |
 | Git org / repo | org `<plane>` · repo `<domain>-<product>` | `eng/sdlc-gitea` |
 | Container image | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/agentgateway:1.6.0` |
 | Registry project (e.g. Harbor) | `<plane>-<domain>` | `corp-ai` |

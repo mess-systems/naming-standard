@@ -8,7 +8,7 @@
 
 这是一个持续演进的模板：在应用中接受检验和质疑，并随着理解的加深不断修订。可以直接使用，也可以根据贵组织的情况进行调整。
 
-**状态：** v2.1，持续演进中。名称和规则仍可能变化；变更记录在下方的变更日志中。
+**状态：** v2.2，持续演进中。名称和规则仍可能变化；变更记录在下方的变更日志中。
 
 ## 为什么
 
@@ -23,6 +23,7 @@
 | [03-secrets-conventions.md](i18n/zh-CN/03-secrets-conventions.md) | 机密管理器（OpenBao / HashiCorp Vault）的挂载点、路径、条目与字段、策略、认证角色、元数据 |
 | [04-identity-conventions.md](i18n/zh-CN/04-identity-conventions.md) | 人员、管理员、紧急访问账号、服务账号、智能体、组与层级、SPIFFE、网状网络组、k8s RBAC、数据库角色、网关客户端 |
 | [05-labels-and-tags.md](i18n/zh-CN/05-labels-and-tags.md) | 键值标签：成本标签、CI 运行器标签、Kubernetes 标签与注解、云标签、议题与 PR 标签、平台限制 |
+| [06-endpoint-conventions.md](i18n/zh-CN/06-endpoint-conventions.md) | 员工设备：名称形式、配置档与形态、元数据、能力代码 `endpoint`、DNS、BYOD、PAW、拒绝情形 |
 | [CONTRIBUTING.md](i18n/zh-CN/CONTRIBUTING.md) | 如何提出变更以及讨论规则 |
 | [i18n/](i18n/) | 俄语与简体中文译文（参考性） |
 | [LICENSE](LICENSE) | CC BY 4.0 |
@@ -60,7 +61,13 @@
 
 ## 变更日志
 
-### v2.1（当前）
+### v2.2（当前）
+
+- 新增[终端约定](i18n/zh-CN/06-endpoint-conventions.md)：员工笔记本和台式机命名为 `<profile>-<form>-<asset-id>`（配置档 `std`、`eng`、`paw`；形态 `lt`、`dt`；6 字符不透明资产 ID），不建服务 DNS 记录，含 BYOD 规则，PAW 是设备类别而非层级。
+- 在 `infra` 行新增能力代码 `endpoint`（设备侧）。
+- 工作站的 SPIFFE 节点示例改为 `node/std-lt-a1b2c3`，绝不使用用户名。
+
+### v2.1
 
 - 新增[标签与标记](i18n/zh-CN/05-labels-and-tags.md)：统一的键值语法，必填成本标签（`cost-center`、`owner`、`env`、`capability`），带用途、隔离级别以及所有组织可见的 `default` 运行器的 CI 运行器标签，Kubernetes 标签与注解，云标签，以 `prefix/value` 形式的议题与 PR 标签。
 - 云和虚拟化平台标签使用原生键值标签；仅在平台不支持时使用 `<key>-<value>`。

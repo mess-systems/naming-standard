@@ -124,7 +124,7 @@ www.mess.systems                      # brand
 | `sec` | `siem vuln ids scan` |
 | `obs` | `dashboards metrics logs traces alerts` |
 | `net` | `dns mesh ingress egress firewall` |
-| `infra` | `compute storage backup k8s` |
+| `infra` | `compute storage backup k8s endpoint` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
 | `adlc` | `registry sandbox evals` |
 | `ai` | `gateway inference stt tts ocr llm-traces kb docs guard` |
@@ -135,6 +135,8 @@ www.mess.systems                      # brand
 | `itsm` | `service-desk change` |
 | `api` | `gateway-api portal-api` |
 | `edge` | `lb` |
+
+`endpoint` 属于设备侧：指员工设备上运行的一切，从不出现在 DNS 名称中（见 [06](06-endpoint-conventions.md)）。
 
 此表是一个示例参考集，而不是资产清单；请按照下面的规则，根据各组织情况进行扩充或删减。
 
@@ -160,6 +162,7 @@ www.mess.systems                      # brand
 | 应用（目录、`service.name`、OIDC slug、AppRole） | `<plane>-<domain>-<product>` | `eng-sdlc-gitea` |
 | 主机 / 容器 / 虚拟机 | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | 虚拟化平台节点 | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
+| 企业终端（笔记本、台式机） | `<profile>-<form>-<asset-id>`，见 [06 终端约定](06-endpoint-conventions.md) | `std-lt-a1b2c3` |
 | Git 组织 / 仓库 | 组织 `<plane>` · 仓库 `<domain>-<product>` | `eng/sdlc-gitea` |
 | 容器镜像 | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/agentgateway:1.6.0` |
 | 镜像仓库项目（例如 Harbor） | `<plane>-<domain>` | `corp-ai` |

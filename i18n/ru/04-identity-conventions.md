@@ -130,7 +130,7 @@
 | `spiffe://corp.lan/infra/llm-proxy` (папка репозитория) | `spiffe://mess.systems/corp/ai/gateway` |
 | `spiffe://corp.lan/apps/doc-converter` | `spiffe://mess.systems/corp/data/convert` |
 | `spiffe://corp.lan/node/vm042` | `spiffe://mess.systems/node/dc1-corp-ai-agentgateway-prd-01` |
-| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/ws-jdoe-01` (рабочая станция сохраняет своё имя — это не хост сервиса) |
+| `spiffe://corp.lan/node/ws-jdoe-01` | `spiffe://mess.systems/node/std-lt-a1b2c3` ([имя устройства](06-endpoint-conventions.md), никогда не логин пользователя; только для полностью управляемых устройств, прошедших аттестацию; у BYOD узловой идентичности нет) |
 
 Агенты: `spiffe://mess.systems/corp/ai/agent-<name>`. Пути следуют **кодам возможностей**, а не папкам репозитория.
 

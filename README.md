@@ -6,7 +6,7 @@ The naming standard of **mess.systems**: one grammar for DNS names, hosts, repos
 
 It is a living template: it is applied, questioned, and revised as understanding grows. Use it as-is or adapt it to your own organisation.
 
-**Status:** v2.1, evolving. Names and rules may still change; changes are recorded in the changelog below.
+**Status:** v2.2, evolving. Names and rules may still change; changes are recorded in the changelog below.
 
 ## Why
 
@@ -21,6 +21,7 @@ Names are the cheapest architecture decision and the most expensive one to chang
 | [03-secrets-conventions.md](03-secrets-conventions.md) | Secrets manager (OpenBao / HashiCorp Vault) mounts, paths, items and fields, policies, auth roles, metadata |
 | [04-identity-conventions.md](04-identity-conventions.md) | Humans, admins, break-glass, service accounts, agents, groups and tiers, SPIFFE, mesh groups, k8s RBAC, DB roles, gateway clients |
 | [05-labels-and-tags.md](05-labels-and-tags.md) | Key/value labels and tags: cost tags, CI runner labels, Kubernetes labels and annotations, cloud tags, issue and PR labels, platform limits |
+| [06-endpoint-conventions.md](06-endpoint-conventions.md) | Employee devices: name form, profiles and forms, metadata, the `endpoint` capability code, DNS, BYOD, PAW, refusals |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to propose changes and discussion rules |
 | [i18n/](i18n/) | Russian and Simplified Chinese translations (informative) |
 | [LICENSE](LICENSE) | CC BY 4.0 |
@@ -58,7 +59,13 @@ Questioned and kept:
 
 ## Changelog
 
-### v2.1 (current)
+### v2.2 (current)
+
+- Added [endpoint conventions](06-endpoint-conventions.md): employee laptops and desktops are named `<profile>-<form>-<asset-id>` (profiles `std`, `eng`, `paw`; forms `lt`, `dt`; 6-character opaque asset ID), with no service DNS records, BYOD handling and PAW as a device class, not a tier.
+- New capability code `endpoint` (device-side) in the `infra` row.
+- SPIFFE node example for a workstation is now `node/std-lt-a1b2c3`, never a user handle.
+
+### v2.1
 
 - Added [labels and tags](05-labels-and-tags.md): one key/value grammar, required cost tags (`cost-center`, `owner`, `env`, `capability`), CI runner labels with purpose, isolation and a `default` runner visible to every organization, Kubernetes labels and annotations, cloud tags, issue and PR labels as `prefix/value`.
 - Cloud and hypervisor tags are native key/value tags; `<key>-<value>` only where the platform has none.
