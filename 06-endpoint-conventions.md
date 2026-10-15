@@ -65,7 +65,7 @@ As labels and tags these keys use the hyphenated form of [05](05-labels-and-tags
 
 `endpoint` is the [capability code](01-naming-conventions.md#43-capability-codes-unique-across-all-domains) for everything that runs on the employee device: device management agents, security and access agents, remote support, AI client control, local container runtimes. It is used in catalogs, the tech radar and cost tags. It never appears in an endpoint name or in service DNS, because endpoints have no service DNS name.
 
-The tech radar and software catalog category `device` covers the same area (user devices, not network gear or IoT). It is a catalog code, not a name token.
+`endpoint` belongs to the domain `device` (employee devices; not network gear or IoT). The tech radar and software catalog use the same code as their category, so there is one vocabulary. The server-side virtual workplace (browser-delivered desktops) is the capability `vdi` in the same domain and gets a normal service name. Endpoint names never carry the domain.
 
 ## 7. DNS and registration
 

@@ -108,6 +108,7 @@ www.mess.systems                      # brand
 | `itsm` | service desk, change | corp |
 | `api` | API management for products | platform |
 | `edge` | ingress for products | platform |
+| `device` | employee devices, device-side agents, virtual desktops | corp |
 
 ### 4.3 Capability codes (unique across all domains)
 
@@ -120,10 +121,10 @@ A code has **one meaning** in the whole company. The same code may appear in sev
 | `sec` | `siem vuln ids scan` |
 | `obs` | `dashboards metrics logs traces alerts` |
 | `net` | `dns mesh ingress egress firewall` |
-| `infra` | `compute storage backup k8s endpoint` |
+| `infra` | `compute storage backup k8s` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
 | `adlc` | `registry sandbox evals` |
-| `ai` | `gateway inference stt tts ocr llm-traces kb docs guard` |
+| `ai` | `gateway inference stt tts ocr llm-traces kb docs guard assistant` |
 | `data` | `warehouse orchestrate transform ingest data-catalog bi docstore convert sql cache objects` |
 | `collab` | `chat wiki intranet video` |
 | `comm` | `mail notify` |
@@ -131,8 +132,9 @@ A code has **one meaning** in the whole company. The same code may appear in sev
 | `itsm` | `service-desk change` |
 | `api` | `gateway-api portal-api` |
 | `edge` | `lb` |
+| `device` | `endpoint vdi` |
 
-`endpoint` is device-side: it names what runs on employee devices and never appears in a DNS name (see [06 Endpoint conventions](06-endpoint-conventions.md#6-capability-code-endpoint)).
+`endpoint` is device-side: it names what runs on employee devices and never appears in a DNS name; `vdi` is the server-side virtual workplace and is named like any service (`vdi.device.corp.svc.mess.systems`). See [06 Endpoint conventions](06-endpoint-conventions.md#6-capability-code-endpoint).
 
 This table is an example reference set, not an inventory; extend or trim it per organisation using the rule below.
 

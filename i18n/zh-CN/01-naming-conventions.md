@@ -112,6 +112,7 @@ www.mess.systems                      # brand
 | `itsm` | 服务台、变更管理 | corp |
 | `api` | 面向产品的 API 管理 | platform |
 | `edge` | 面向产品的入口 (ingress) | platform |
+| `device` | 员工设备、设备侧代理、虚拟桌面 | corp |
 
 ### 4.3 能力代码（在所有域中唯一）
 
@@ -124,10 +125,10 @@ www.mess.systems                      # brand
 | `sec` | `siem vuln ids scan` |
 | `obs` | `dashboards metrics logs traces alerts` |
 | `net` | `dns mesh ingress egress firewall` |
-| `infra` | `compute storage backup k8s endpoint` |
+| `infra` | `compute storage backup k8s` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
 | `adlc` | `registry sandbox evals` |
-| `ai` | `gateway inference stt tts ocr llm-traces kb docs guard` |
+| `ai` | `gateway inference stt tts ocr llm-traces kb docs guard assistant` |
 | `data` | `warehouse orchestrate transform ingest data-catalog bi docstore convert sql cache objects` |
 | `collab` | `chat wiki intranet video` |
 | `comm` | `mail notify` |
@@ -135,8 +136,9 @@ www.mess.systems                      # brand
 | `itsm` | `service-desk change` |
 | `api` | `gateway-api portal-api` |
 | `edge` | `lb` |
+| `device` | `endpoint vdi` |
 
-`endpoint` 属于设备侧：指员工设备上运行的一切，从不出现在 DNS 名称中（见 [06](06-endpoint-conventions.md)）。
+`endpoint` 属于设备侧：指员工设备上运行的一切，从不出现在 DNS 名称中；`vdi` 是服务器侧的虚拟工作场所，按普通服务命名（`vdi.device.corp.svc.mess.systems`）。见 [06](06-endpoint-conventions.md)。
 
 此表是一个示例参考集，而不是资产清单；请按照下面的规则，根据各组织情况进行扩充或删减。
 
