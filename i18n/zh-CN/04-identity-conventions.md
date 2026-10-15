@@ -134,6 +134,8 @@
 
 智能体：`spiffe://mess.systems/corp/ai/agent-<name>`。路径遵循**能力代码**，绝不遵循仓库目录。
 
+产品轮廓为 prod、non-prod 和沙箱分别设有信任域；见 [07 SPIFFE](07-deployment-and-tenants.md)。
+
 ## 9. 网关客户端身份
 
 `corp/ai/gateway/prd/clients` 中的键名和 `x-user-id` 请求头均为[身份类型](#2-身份类型)中的身份 ID。

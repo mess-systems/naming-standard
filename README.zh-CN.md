@@ -8,7 +8,7 @@
 
 这是一个持续演进的模板：在应用中接受检验和质疑，并随着理解的加深不断修订。可以直接使用，也可以根据贵组织的情况进行调整。
 
-**状态：** v2.3，持续演进中。名称和规则仍可能变化；变更记录在下方的变更日志中。
+**状态：** v2.4，持续演进中。名称和规则仍可能变化；变更记录在下方的变更日志中。
 
 ## 为什么
 
@@ -24,6 +24,8 @@
 | [04-identity-conventions.md](i18n/zh-CN/04-identity-conventions.md) | 人员、管理员、紧急访问账号、服务账号、智能体、组与层级、SPIFFE、网状网络组、k8s RBAC、数据库角色、网关客户端 |
 | [05-labels-and-tags.md](i18n/zh-CN/05-labels-and-tags.md) | 键值标签：成本标签、CI 运行器标签、Kubernetes 标签与注解、云标签、议题与 PR 标签、平台限制 |
 | [06-endpoint-conventions.md](i18n/zh-CN/06-endpoint-conventions.md) | 员工设备：名称形式、配置档与形态、元数据、能力代码 `endpoint`、DNS、BYOD、PAW、拒绝情形 |
+| [07-deployment-and-tenants.md](i18n/zh-CN/07-deployment-and-tenants.md) | 产品轮廓：产品、域、服务、实现；环境与 DNS；部署键、单元、租户、治理标签、OpenTelemetry、SPIFFE |
+| [schema/](schema/)、[catalog/](catalog/)、[tests/](tests/) | 可执行标准：JSON Schema、示例词汇、在 CI 中检查的黄金示例 |
 | [CONTRIBUTING.md](i18n/zh-CN/CONTRIBUTING.md) | 如何提出变更以及讨论规则 |
 | [i18n/](i18n/) | 俄语与简体中文译文（参考性） |
 | [LICENSE](LICENSE) | CC BY 4.0 |
@@ -61,7 +63,17 @@
 
 ## 变更日志
 
-### v2.3（当前）
+### v2.4（当前）
+
+- 新增第二个轮廓。**企业轮廓**（内部服务、设备；第 01 至 06 部分）不变。面向云原生产品的新**产品轮廓**见[部署与租户](i18n/zh-CN/07-deployment-and-tenants.md)：产品、域、服务和实现是独立概念；服务在产品内唯一；共享平台服务属于产品 `platform`。
+- 部署键 `provider`（自有基础设施为 `own`）、`jurisdiction`、`region`、`site`、`cell`、`tenant-scope`；只有 `cell`（及专用租户键）进入名称。租户由三个不透明键标识（运营方、法律实体、最终客户）。`residency` 是必填标签。
+- 产品轮廓在内部 DNS 中写出 `prd`；面向客户的公共名称保持 `api.<product-domain>` 和 `api.stg.<product-domain>`。新环境代码 `sbx`（仅产品轮廓）。
+- 治理标签分为必填、条件和派生，并与[标签与标记](i18n/zh-CN/05-labels-and-tags.md)协调。
+- OpenTelemetry 映射（`service.namespace` = `<product>.<domain>`），以及 prod、non-prod 和沙箱各自独立的 SPIFFE 信任域。
+- 可执行标准：`schema/`、`catalog/`、`tests/golden/` 和 CI 检查。
+- 源于对本标准的一次外部评审。
+
+### v2.3
 
 - 新增域 `device`（员工设备、设备侧代理、虚拟桌面）；能力 `endpoint` 从 `infra` 移入该域。技术雷达和软件目录已使用 `device` 作为类别，一个代码两处通用。
 - 新增能力代码：`vdi`（服务器侧虚拟工作场所，域 `device`）和 `assistant`（AI 助手聊天，域 `ai`）。

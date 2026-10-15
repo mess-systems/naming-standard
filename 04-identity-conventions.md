@@ -130,6 +130,8 @@ Policy = identity ID; AppRole = identity ID; JWT role = group ID. The full rules
 
 Agents: `spiffe://mess.systems/corp/ai/agent-<name>`. Paths follow **capability codes**, never repository folders.
 
+The product contour has its own trust domains for prod, non-prod and sandbox; see [07 SPIFFE](07-deployment-and-tenants.md#9-spiffe).
+
 ## 9. Gateway client identities
 
 Key names in `corp/ai/gateway/prd/clients` and the `x-user-id` header are identity IDs from [identity kinds](#2-identity-kinds).

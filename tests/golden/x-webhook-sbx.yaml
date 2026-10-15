@@ -1,0 +1,20 @@
+metadata:
+  contour: product
+  product: x
+  domain: integration
+  service: webhook
+  env: sbx
+  owner: team-x-integration
+  cost-center: cc-x
+  criticality: low
+  data-class: internal
+  residency: any
+  tenant-scope: pooled
+  lifecycle: ephemeral
+expect:
+  dns: webhook.integration.x.sbx.svc.mess.systems
+  otel:
+    service.namespace: x.integration
+    service.name: webhook
+    deployment.environment.name: sbx
+  spiffe: spiffe://sandbox.product.mess.systems/sbx/x/integration/webhook

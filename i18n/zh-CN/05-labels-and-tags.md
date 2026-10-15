@@ -70,6 +70,8 @@
 - `cc-*` 和 `ini-*` 代码在使用前登记到目录中。目录中不存在的标签值视为错误。
 - 共享资源使用平台组作为 `owner`、平台作为 `cost-center`；向使用方分摊通过报表完成，而不是通过标签。
 
+**产品轮廓。** 其必填成本标签为 `cost-center`、`owner`、`env`、`product`、`domain`、`service`，不设 `capability`。治理标签及其类别（必填、条件、派生）的完整列表见 [07 治理标签](07-deployment-and-tenants.md)。
+
 ## 3. CI 运行器标签
 
 Forgejo Actions 和 GitHub Actions 都通过将 `runs-on` 与运行器标签匹配来选择运行器。运行器在实例、组织或仓库级别注册（GitHub 上为企业、组织或仓库级别，并有运行器组）。作业只能看到注册在其自身级别或更高级别的运行器。

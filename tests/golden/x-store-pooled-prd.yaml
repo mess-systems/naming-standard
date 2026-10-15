@@ -1,0 +1,20 @@
+metadata:
+  contour: product
+  product: x
+  domain: records
+  service: store
+  env: prd
+  owner: team-x-records
+  cost-center: cc-x
+  criticality: high
+  data-class: confidential
+  residency: jur-a
+  tenant-scope: pooled
+  cell: c01
+expect:
+  dns: store.records.c01.x.prd.svc.mess.systems
+  otel:
+    service.namespace: x.records
+    service.name: store
+    deployment.environment.name: prd
+  spiffe: spiffe://product.mess.systems/x/records/store/c01

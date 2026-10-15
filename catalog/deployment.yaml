@@ -1,0 +1,15 @@
+# Neutral, opaque example codes. Real provider names and jurisdictions live only in a private catalog.
+providers:
+  own: {description: own infrastructure and private cloud}
+  pub-a: {description: public provider A}
+  pub-b: {description: public provider B}
+jurisdictions:
+  jur-a: {description: jurisdiction A}
+  jur-b: {description: jurisdiction B}
+regions:
+  reg-a1: {jurisdiction: jur-a, providers: [own, pub-a]}
+  reg-b1: {jurisdiction: jur-b, providers: [pub-b]}
+cells:
+  c01: {product: x, region: reg-a1, provider: own, site: dc1, tenant-scope: pooled}
+  c02: {product: x, region: reg-a1, provider: pub-a, site: cld, tenant-scope: pooled}
+  dh3t8rd: {product: x, region: reg-b1, provider: pub-b, site: cld, tenant-scope: dedicated}

@@ -1,0 +1,19 @@
+metadata:
+  contour: product
+  product: x
+  domain: access
+  service: login
+  env: stg
+  owner: team-x-access
+  cost-center: cc-x
+  criticality: medium
+  data-class: internal
+  residency: any
+  tenant-scope: pooled
+expect:
+  dns: login.access.x.stg.svc.mess.systems
+  otel:
+    service.namespace: x.access
+    service.name: login
+    deployment.environment.name: stg
+  spiffe: spiffe://nonprod.product.mess.systems/stg/x/access/login

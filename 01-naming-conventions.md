@@ -38,6 +38,8 @@ Every object family carries the same keys. DNS encodes the first four (plus env 
 
 [Kubernetes label](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) keys: `mess.systems/<key>`. Cloud and hypervisor tags: native key/value tags; `<key>-<value>` (`plane-corp`) only where the platform has no key/value tags. All labels and tags follow [Labels and tags](05-labels-and-tags.md). Container registry labels: same as hypervisor tags. Secrets manager: `custom_metadata.<key>`.
 
+These ten keys describe the **corporate contour**. The **product contour** (products sold to customers, their cells and tenants) uses `product`, `domain`, `service` and `implementation` plus deployment and tenant keys; see [07 Deployment and tenants](07-deployment-and-tenants.md#1-two-contours).
+
 ## 3. DNS: two grammars, nothing else
 
 ### 3.1 Grammar A: internal
@@ -51,6 +53,7 @@ Every object family carries the same keys. DNS encodes the first four (plus env 
 - `svc.mess.systems` is the internal zone (split-horizon, internal CA + ACME). Not delegated publicly. `svc` here means "service zone" and is unrelated to Kubernetes `*.svc.cluster.local`, which has a different suffix and a different resolver.
 - The leftmost label is the **capability**, never the product (`git`, not `gitea`). The product is inventory, not part of the name.
 - Env is omitted in prod. Everywhere else (hosts, schemas, secrets) `prd` is written.
+- The product contour writes `prd` in internal DNS as well; see [07 Environments and DNS](07-deployment-and-tenants.md#3-environments-and-dns). The asymmetry is deliberate: corporate names stay short, product names parse the same way in every environment.
 - One install has exactly one canonical FQDN. Aliases are redirects, not names.
 - **A label is never an authorization input.** Reachability and rights come from mesh groups, IdP groups, and secrets-manager policies (see the [identity conventions](04-identity-conventions.md)). Two consumers of the same install use the same name and different groups.
 
@@ -148,6 +151,7 @@ Adding a code: check uniqueness across the whole table, hyphenate multi-word, re
 | staging | `stg` | public cloud tenant | `cld` |
 | test | `tst` | | |
 | development | `dev` | | |
+| sandbox (product contour only, see [07](07-deployment-and-tenants.md)) | `sbx` | | |
 
 Site codes are short, organisation-specific, and listed in the catalog; the two above are examples.
 

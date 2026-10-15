@@ -42,6 +42,8 @@
 
 [Kubernetes 标签](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)键：`mess.systems/<key>`。云和虚拟化平台标签：使用原生键/值标签；仅在平台不支持键/值标签时使用 `<key>-<value>`（`plane-corp`）。所有标签均遵循[标签与标记](05-labels-and-tags.md)。容器镜像仓库标签：与虚拟化平台标签相同。机密管理器：`custom_metadata.<key>`。
 
+这十个键描述**企业轮廓**。**产品轮廓**（面向客户销售的产品及其单元和租户）使用 `product`、`domain`、`service` 和 `implementation`，以及部署和租户键；见 [07 部署与租户](07-deployment-and-tenants.md)。
+
 ## 3. DNS：两种语法，别无其他
 
 ### 3.1 语法 A：内部
@@ -55,6 +57,7 @@
 - `svc.mess.systems` 是内部区域（水平分割 DNS (split-horizon)、内部 CA + ACME），不对外公开委派。这里的 `svc` 表示“服务区域”，与 Kubernetes 的 `*.svc.cluster.local` 无关——后缀不同，解析器也不同。
 - 最左侧标签是**能力 (capability)**，而不是产品（用 `git`，不用 `gitea`）。产品属于资产清单信息，不属于名称的一部分。
 - 生产环境省略环境。其他所有地方（主机、schema、机密）都写出 `prd`。
+- 产品轮廓在内部 DNS 中同样写出 `prd`；见 [07 环境与 DNS](07-deployment-and-tenants.md)。这种不对称是有意的：企业名称保持简短，产品名称在任何环境中都以同样方式解析。
 - 一个实例恰好对应一个规范 FQDN。别名是重定向，不是名称。
 - **标签绝不作为授权依据。** 可达性和权限来自网状网络组、IdP 组和机密管理器策略（见[身份规范](04-identity-conventions.md)）。同一实例的两个使用方使用相同的名称和不同的组。
 
@@ -152,6 +155,7 @@ www.mess.systems                      # brand
 | 预发布 (staging) | `stg` | 公有云租户 | `cld` |
 | 测试 | `tst` | | |
 | 开发 | `dev` | | |
+| 沙箱（仅产品轮廓，见 [07](07-deployment-and-tenants.md)） | `sbx` | | |
 
 站点代码简短、因组织而异，并在目录中列出；上面两个仅为示例。
 

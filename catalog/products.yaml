@@ -1,0 +1,16 @@
+# Fictional product X. Service codes are unique within a product.
+products:
+  platform:
+    description: Shared services used by every product
+    domains:
+      build: [ci, registry]
+      obs: [logs, metrics]
+  x:
+    description: Product X, a simple records application
+    public_domain: x.example
+    domains:
+      records: [store, export]
+      access: [login, session]
+      billing: [subscription, payment]
+      integration: [webhook]
+      admin: [console]
