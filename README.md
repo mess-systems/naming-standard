@@ -6,7 +6,7 @@ The naming standard of **mess.systems**: one grammar for DNS names, hosts, repos
 
 It is a living template: it is applied, questioned, and revised as understanding grows. Use it as-is or adapt it to your own organisation.
 
-**Status:** v2.2, evolving. Names and rules may still change; changes are recorded in the changelog below.
+**Status:** v2.3, evolving. Names and rules may still change; changes are recorded in the changelog below.
 
 ## Why
 
@@ -59,7 +59,12 @@ Questioned and kept:
 
 ## Changelog
 
-### v2.2 (current)
+### v2.3 (current)
+
+- New domain `device` (employee devices, device-side agents, virtual desktops); the capability `endpoint` moves there from `infra`. The tech radar and software catalog already use `device` as a category, so one code serves both.
+- New capability codes: `vdi` (server-side virtual workplace, domain `device`) and `assistant` (AI assistant chat, domain `ai`).
+
+### v2.2
 
 - Added [endpoint conventions](06-endpoint-conventions.md): employee laptops and desktops are named `<profile>-<form>-<asset-id>` (profiles `std`, `eng`, `paw`; forms `lt`, `dt`; 6-character opaque asset ID), with no service DNS records, BYOD handling and PAW as a device class, not a tier.
 - New capability code `endpoint` (device-side) in the `infra` row.

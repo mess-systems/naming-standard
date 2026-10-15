@@ -112,6 +112,7 @@ www.mess.systems                      # brand
 | `itsm` | служба поддержки, управление изменениями | corp |
 | `api` | управление API для продуктов | platform |
 | `edge` | входящий трафик (ingress) для продуктов | platform |
+| `device` | устройства сотрудников, агенты на устройствах, виртуальные рабочие столы | corp |
 
 ### 4.3 Коды возможностей (уникальны во всех доменах)
 
@@ -124,10 +125,10 @@ www.mess.systems                      # brand
 | `sec` | `siem vuln ids scan` |
 | `obs` | `dashboards metrics logs traces alerts` |
 | `net` | `dns mesh ingress egress firewall` |
-| `infra` | `compute storage backup k8s endpoint` |
+| `infra` | `compute storage backup k8s` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
 | `adlc` | `registry sandbox evals` |
-| `ai` | `gateway inference stt tts ocr llm-traces kb docs guard` |
+| `ai` | `gateway inference stt tts ocr llm-traces kb docs guard assistant` |
 | `data` | `warehouse orchestrate transform ingest data-catalog bi docstore convert sql cache objects` |
 | `collab` | `chat wiki intranet video` |
 | `comm` | `mail notify` |
@@ -135,8 +136,9 @@ www.mess.systems                      # brand
 | `itsm` | `service-desk change` |
 | `api` | `gateway-api portal-api` |
 | `edge` | `lb` |
+| `device` | `endpoint vdi` |
 
-`endpoint` относится к стороне устройства: так называется всё, что работает на устройствах сотрудников, и этот код никогда не входит в DNS-имя (см. [06](06-endpoint-conventions.md#6-код-возможности-endpoint)).
+`endpoint` относится к стороне устройства: так называется всё, что работает на устройствах сотрудников, и этот код никогда не входит в DNS-имя; `vdi` это серверное виртуальное рабочее место, его имя строится как у любого сервиса (`vdi.device.corp.svc.mess.systems`). См. [06](06-endpoint-conventions.md#6-код-возможности-endpoint).
 
 Эта таблица — пример эталонного набора, а не инвентарь; расширяйте или сокращайте её под свою организацию по правилу ниже.
 
