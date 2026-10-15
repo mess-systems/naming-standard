@@ -40,7 +40,7 @@
 | `data_class` | `public internal confidential restricted` | 目录、机密元数据、存储桶标签 |
 | `exposure` | `mesh lan public` | 目录、网状网络组——**绝不出现在名称中** |
 
-[Kubernetes 标签](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)键：`mess.systems/<key>`。虚拟化平台和云标签：`<key>-<value>`（`plane-corp`），或在支持的情况下使用原生键/值标签。容器镜像仓库标签：与虚拟化平台标签相同。机密管理器：`custom_metadata.<key>`。
+[Kubernetes 标签](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)键：`mess.systems/<key>`。云和虚拟化平台标签：使用原生键/值标签；仅在平台不支持键/值标签时使用 `<key>-<value>`（`plane-corp`）。所有标签均遵循[标签与标记](05-labels-and-tags.md)。容器镜像仓库标签：与虚拟化平台标签相同。机密管理器：`custom_metadata.<key>`。
 
 ## 3. DNS：两种语法，别无其他
 
@@ -219,6 +219,13 @@ www.mess.systems                      # brand
 | DNS 或 k8s 中出现 `_` | [字符规则](#1-字符规则适用于所有类别) |
 | 能力代码被赋予第二种含义重复使用 | [能力代码](#43-能力代码在所有域中唯一) |
 | 为“特殊”情况创建新语法 | [不存在语法 C](#33-不存在语法-c) |
+| 标签值中包含用户、主机名、IP、机密或客户 | [标签与标记](05-labels-and-tags.md) |
+| 资源缺少 `cost-center`、`owner`、`env`、`capability` 标签 | [标签与标记](05-labels-and-tags.md) |
+| 以产品而非 capability 作为成本维度 | [标签与标记](05-labels-and-tags.md) |
+| 代码托管实例没有所有组织可见的 `default` 运行器 | [标签与标记](05-labels-and-tags.md) |
+| 在实例级别注册 `sock` 或 `host` CI 运行器 | [标签与标记](05-labels-and-tags.md) |
+| 以提交哈希或构建号作为 Kubernetes 标签 | [标签与标记](05-labels-and-tags.md) |
+| 将标签用作授权依据 | [标签与标记](05-labels-and-tags.md) |
 
 ## 11. 编码示例
 
