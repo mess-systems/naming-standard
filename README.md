@@ -69,7 +69,6 @@ Questioned and kept:
 - Boundary rule between product `platform` and corporate services; new platform service `iac`, CI runner as component `runner` of `ci`.
 - Naming and required metadata (`owner`, `consumer`, `expires`) for access tokens issued by external systems.
 - Executable standard: catalog keys `class`, `dns_alias`, `global_bucket_names`; schema fields `names`, `roles`; golden test "one object, one env code".
-- Shaped by applying the standard to a real product infrastructure.
 
 ### v2.4
 

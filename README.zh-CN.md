@@ -71,7 +71,6 @@
 - 产品 `platform` 与企业服务之间的边界规则；新增平台服务 `iac`，CI 运行器作为 `ci` 的组件 `runner`。
 - 外部系统签发的访问令牌的命名及必需元数据（`owner`、`consumer`、`expires`）。
 - 可执行标准：目录键 `class`、`dns_alias`、`global_bucket_names`；schema 字段 `names`、`roles`；golden 测试“一个对象，一个环境代码”。
-- 源于将标准应用于真实产品基础设施的实践。
 
 ### v2.4
 
