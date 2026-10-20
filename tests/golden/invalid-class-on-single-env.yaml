@@ -1,0 +1,16 @@
+# Must fail: a resource of one env (tst) uses the class code nonprod in its name.
+invalid: true
+metadata:
+  contour: product
+  product: x
+  domain: records
+  service: store
+  env: tst
+  owner: team-x-records
+  cost-center: cc-x
+  criticality: low
+  data-class: internal
+  residency: any
+  tenant-scope: pooled
+  names:
+    database: x_records_store_nonprod

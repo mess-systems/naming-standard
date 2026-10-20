@@ -3,8 +3,10 @@ products:
   platform:
     description: Shared services used by every product
     domains:
-      build: [ci, registry]
+      build: [ci, registry, iac]
       obs: [logs, metrics]
+      access: [login]
+      net: [mesh]
   x:
     description: Product X, a simple records application
     public_domain: x.example

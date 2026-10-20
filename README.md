@@ -6,7 +6,7 @@ The naming standard of **mess.systems**: one grammar for DNS names, hosts, repos
 
 It is a living template: it is applied, questioned, and revised as understanding grows. Use it as-is or adapt it to your own organisation.
 
-**Status:** v2.4, evolving. Names and rules may still change; changes are recorded in the changelog below.
+**Status:** v2.5, evolving. Names and rules may still change; changes are recorded in the changelog below.
 
 ## Why
 
@@ -61,7 +61,16 @@ Questioned and kept:
 
 ## Changelog
 
-### v2.4 (current)
+### v2.5 (current)
+
+- Product contour, new [section 12](07-deployment-and-tenants.md#12-infrastructure-objects-of-a-product-v25) on infrastructure objects. The corporate contour (parts 01 to 06) is unchanged.
+- Environment class `prd`, `nonprod`, `sandbox` for resources that serve several envs; optional env DNS alias (`stage`, `test`) allowed only in public DNS.
+- Forms for clusters and node pools (`<product>-k8s-<env-or-class>`, `-multi`), container images and tags, hosts with several roles (metadata `roles`), IaC stacks and state keys, buckets with an optional `<org>-` prefix for providers with global names.
+- Boundary rule between product `platform` and corporate services; new platform service `iac`, CI runner as component `runner` of `ci`.
+- Naming and required metadata (`owner`, `consumer`, `expires`) for access tokens issued by external systems.
+- Executable standard: catalog keys `class`, `dns_alias`, `global_bucket_names`; schema fields `names`, `roles`; golden test "one object, one env code".
+
+### v2.4
 
 - Added a second contour. The **corporate contour** (internal services, devices; parts 01 to 06) is unchanged. The new **product contour** for cloud-native products is described in [deployment and tenants](07-deployment-and-tenants.md): product, domain, service and implementation as separate concepts; service unique within its product; shared platform services as product `platform`.
 - Deployment keys `provider` (own infrastructure is the value `own`), `jurisdiction`, `region`, `site`, `cell`, `tenant-scope`; only `cell` (and a dedicated tenant key) goes into names. Tenants identified by three opaque keys (operator, legal entity, end customer). `residency` is a required label.

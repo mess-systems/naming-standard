@@ -183,8 +183,8 @@ The vocabulary and the rules of this part are also data in the repository:
 | Path | Content |
 |---|---|
 | `schema/resource-metadata.schema.json` | JSON Schema for the metadata of a product-contour resource |
-| `catalog/*.yaml` | Vocabulary: contours, environments, providers, jurisdictions, regions, cells, product X domains and services, label classes |
-| `tests/golden/*.yaml` | Golden examples: metadata and the names it must produce |
+| `catalog/*.yaml` | Vocabulary: contours, environments, providers, jurisdictions, regions, cells, environment classes and DNS aliases, product X domains and services, label classes |
+| `tests/golden/*.yaml` | Golden examples: metadata and the names it must produce, including the one object, one env code check |
 | `tests/check_golden.py` | Test that validates the golden examples against the schema and the catalog |
 
 CI runs the test on every pull request. The data files are examples for the fictional product X; an organisation replaces the catalog with its own.
@@ -202,3 +202,116 @@ CI runs the test on every pull request. The data files are examples for the fict
 | production and non-production workloads in one trust domain | [SPIFFE](#9-spiffe) |
 | resource without `residency` in the product contour | [Governance labels](#7-governance-labels) |
 | real provider name as a provider code | [Deployment keys](#4-deployment-keys) |
+| class code on a resource that serves one env | [Environment class](#121-environment-class) |
+| env DNS alias outside public DNS, or alias and code mixed in public names | [DNS alias of an env](#122-dns-alias-of-an-env) |
+| cluster named `-prd` that runs non-production pools | [Clusters and node pools](#123-clusters-and-node-pools) |
+| two different env codes in the names of one object | [One object, one env code](#1210-one-object-one-env-code) |
+| external token without `owner`, `consumer` or `expires` | [Access tokens](#129-access-tokens-issued-by-external-systems) |
+
+## 12. Infrastructure objects of a product (v2.5)
+
+Rules for the objects a product needs around its services: environment classes, clusters, images, hosts, buckets, infrastructure as code and access tokens. They apply to the product contour only; the corporate contour ([01](01-naming-conventions.md) to [06](06-endpoint-conventions.md)) is unchanged and may adopt them later by its own decision.
+
+### 12.1 Environment class
+
+Some resources serve several environments at once: a cloud project, a node pool, a database cluster that holds the `stg` and `tst` databases. They carry an environment class instead of an env code.
+
+| Class | Envs | Trust domain |
+|---|---|---|
+| `prd` | `prd` | `product.mess.systems` |
+| `nonprod` | `stg`, `tst`, `dev` | `nonprod.product.mess.systems` |
+| `sandbox` | `sbx` | `sandbox.product.mess.systems` |
+
+- The class is recorded in `catalog/environments.yaml` (key `class`).
+- A class code goes into a name only when the resource really serves more than one env: `x-nonprod` (cloud project), `x-records-store-nonprod` (database cluster). Objects inside it still write their own env: database `x_records_store_stg`.
+- A resource that serves one env never uses the class code.
+
+### 12.2 DNS alias of an env
+
+Public names may use a readable alias of an env code, registered once per organisation in `catalog/environments.yaml` (key `dns_alias`).
+
+| Env | Code everywhere | Optional DNS alias |
+|---|---|---|
+| staging | `stg` | `stage` |
+| test | `tst` | `test` |
+
+- The alias is allowed only in public DNS names: `api.stage.x.example`. Every other name (namespace, GitOps application, identity, group, secret path, bucket, state key) uses the code.
+- One organisation, one choice: either the code or the alias in all public names, never both.
+
+### 12.3 Clusters and node pools
+
+| Object | Form | Example |
+|---|---|---|
+| Cluster for one env or class | `<product>-k8s-<env-or-class>` | `x-k8s-prd`, `x-k8s-nonprod` |
+| Cluster that runs several classes | `<product>-k8s-multi` | `x-k8s-multi` |
+| Node pool | `<cluster>-<env-or-class>` | `x-k8s-multi-prd`, `x-k8s-multi-nonprod` |
+| Namespace of a product env | `<product>-<env>` | `x-prd`, `x-stg` |
+
+A cluster name never claims an env it does not exclusively run: a cluster with a `nonprod` pool is not called `-prd`.
+
+### 12.4 Product platform and corporate services
+
+A service lives in the product `platform` when the product cannot run in its own deployment without it: the identity provider for customers and product operators, the product mesh, the product secrets store, CI runners and registry of the product, product-side observability. The corporate contour keeps what serves staff and engineering of the whole company. If one installation serves both, it keeps its corporate name and the product refers to it.
+
+| Service | Contour | Name |
+|---|---|---|
+| IdP of product X operators | product | `login.access.platform.prd.svc.mess.systems` |
+| Mesh coordinator for product cells | product | `mesh.net.platform.prd.svc.mess.systems` |
+| Staff SSO | corp | `sso.iam.shared.svc.mess.systems` (unchanged) |
+
+### 12.5 Container images and registry
+
+| Object | Form | Example |
+|---|---|---|
+| Image | `<registry>/<product>/<service>[-<component>]:<tag>` | `<registry>/x/store-worker:v1.4.0` |
+| Release tag | `vX.Y.Z`, immutable | `v1.4.0` |
+| Build tag | `main-<sha7>`, optional `pr-<n>` | `main-3f9c2d1` |
+
+The registry host belongs to the vendor or the platform, not to the name; manifests keep it in one variable (`image.registry`). Commit hash and build number are annotations, not labels.
+
+### 12.6 Hosts that carry several roles
+
+Host form stays `<site>-<plane-or-product>-<domain>-<service>-<env>-<NN>`. When one host carries several roles, it is named after its main role; the other roles are listed in metadata `roles`. Renaming is not needed when roles move off the host.
+
+### 12.7 Infrastructure as code and runners
+
+- New service `iac` in domain `build` of product `platform`: state storage and plan/apply pipelines.
+- A CI runner is a component of `ci`, not a separate service: `ci-runner.build.platform.prd.svc.mess.systems`.
+
+| Object | Form | Example |
+|---|---|---|
+| Stack directory | `stacks/<product-or-platform>/<env-or-class>` | `stacks/x/prd`, `stacks/platform/prd` |
+| Bootstrap stack | `bootstrap` (applied by hand once) | `bootstrap` |
+| Module | `modules/<capability>` | `modules/k8s`, `modules/pg` |
+| State key | `<product-or-platform>/<stack>/<env>.tfstate` | `x/app/prd.tfstate`, `bootstrap/platform/prd.tfstate` |
+| Resource address | `<service>_<env>` (snake_case) | `x_k8s_prd` |
+
+### 12.8 Buckets
+
+| Object | Form | Example |
+|---|---|---|
+| Bucket | `<product>-<domain>-<service>-<env-or-class>` | `platform-build-iac-prd`, `x-records-backup-prd` |
+| Bucket, provider with global names | `<org>-` + the above | `<org>-platform-build-iac-prd` |
+
+Whether `<org>-` is used is decided once per provider and recorded in the catalog (`catalog/deployment.yaml`, key `global_bucket_names`).
+
+### 12.9 Access tokens issued by external systems
+
+Personal access tokens, API keys of SaaS services and forge tokens are named:
+
+```
+<issuer>-<consumer>-<scope>-<access>
+```
+
+| Part | Meaning | Examples |
+|---|---|---|
+| `issuer` | organisation or system that issued the token | `forge-x`, `mirror` |
+| `consumer` | who uses it: agent, service, runner | `agent`, `gitops`, `ci-runner` |
+| `scope` | what it acts on: repository, project, service | `infra`, `registry` |
+| `access` | level | `ro`, `rw`, `adm` |
+
+Example: `forge-x-agent-infra-rw`. Required metadata: `owner`, `consumer`, `expires` (ISO 8601). Where the token has a description field, write the metadata there; otherwise in the custom metadata of the secret that stores it. A token without `expires` is not issued; a non-expiring token needs a catalog entry. The value lives only in the secrets store ([03](03-secrets-conventions.md)).
+
+### 12.10 One object, one env code
+
+All names of one object carry the same env code: the namespace, the GitOps application, the identity, the secret path and the bucket of a `stg` deployment all say `stg`. The DNS alias is allowed only in public DNS. The golden test `invalid-mixed-env-codes.yaml` and `invalid-alias-outside-dns.yaml` check this; a resource lists its concrete names in metadata `names`.

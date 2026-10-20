@@ -1,0 +1,23 @@
+# Infrastructure as code as a platform service (07 section 12.7).
+metadata:
+  contour: product
+  product: platform
+  domain: build
+  service: iac
+  env: prd
+  owner: team-platform
+  cost-center: cc-platform
+  criticality: high
+  data-class: confidential
+  residency: any
+  tenant-scope: pooled
+  names:
+    bucket: platform-build-iac-prd
+    state-key: bootstrap/platform/prd.tfstate
+expect:
+  dns: iac.build.platform.prd.svc.mess.systems
+  otel:
+    service.namespace: platform.build
+    service.name: iac
+    deployment.environment.name: prd
+  spiffe: spiffe://product.mess.systems/platform/build/iac

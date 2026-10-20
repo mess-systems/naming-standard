@@ -1,0 +1,25 @@
+# A CI runner is a component of ci; the host carries a second role (07 sections 12.6, 12.7).
+metadata:
+  contour: product
+  product: platform
+  domain: build
+  service: ci
+  component: runner
+  env: prd
+  owner: team-platform
+  cost-center: cc-platform
+  criticality: high
+  data-class: internal
+  residency: any
+  tenant-scope: pooled
+  roles: [ci-runner, mesh-relay]
+  names:
+    host: cld-platform-build-ci-prd-01
+    token: forge-x-ci-runner-infra-rw
+expect:
+  dns: ci-runner.build.platform.prd.svc.mess.systems
+  otel:
+    service.namespace: platform.build
+    service.name: ci-runner
+    deployment.environment.name: prd
+  spiffe: spiffe://product.mess.systems/platform/build/ci

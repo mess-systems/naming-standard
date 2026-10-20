@@ -1,6 +1,8 @@
+# class: environment class (07 section 12.1). dns_alias: optional alias allowed only in public DNS (07 section 12.2).
 environments:
-  prd: {contours: [corp, product], trust_domain: product.mess.systems}
-  stg: {contours: [corp, product], trust_domain: nonprod.product.mess.systems}
-  tst: {contours: [corp, product], trust_domain: nonprod.product.mess.systems}
-  dev: {contours: [corp, product], trust_domain: nonprod.product.mess.systems}
-  sbx: {contours: [product], trust_domain: sandbox.product.mess.systems}
+  prd: {contours: [corp, product], class: prd, trust_domain: product.mess.systems}
+  stg: {contours: [corp, product], class: nonprod, dns_alias: stage, trust_domain: nonprod.product.mess.systems}
+  tst: {contours: [corp, product], class: nonprod, dns_alias: test, trust_domain: nonprod.product.mess.systems}
+  dev: {contours: [corp, product], class: nonprod, trust_domain: nonprod.product.mess.systems}
+  sbx: {contours: [product], class: sandbox, trust_domain: sandbox.product.mess.systems}
+classes: [prd, nonprod, sandbox]

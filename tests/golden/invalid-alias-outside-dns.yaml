@@ -1,0 +1,16 @@
+# Must fail: the DNS alias 'stage' is used in a namespace, outside public DNS.
+invalid: true
+metadata:
+  contour: product
+  product: x
+  domain: records
+  service: store
+  env: stg
+  owner: team-x-records
+  cost-center: cc-x
+  criticality: high
+  data-class: confidential
+  residency: jur-a
+  tenant-scope: pooled
+  names:
+    k8s-namespace: x-stage
