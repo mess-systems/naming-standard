@@ -185,8 +185,8 @@ app.<product-domain>, docs.<product-domain>, status.<product-domain>
 | 路径 | 内容 |
 |---|---|
 | `schema/resource-metadata.schema.json` | 产品轮廓资源元数据的 JSON Schema |
-| `catalog/*.yaml` | 词汇：轮廓、环境、提供商、司法辖区、区域、单元、产品 X 的域和服务、标签类别 |
-| `tests/golden/*.yaml` | 黄金示例：元数据及其必须生成的名称 |
+| `catalog/*.yaml` | 词汇：轮廓、环境、提供商、司法辖区、区域、单元、环境类别和 DNS 别名、产品 X 的域和服务、标签类别 |
+| `tests/golden/*.yaml` | 黄金示例：元数据及其必须生成的名称，包括“一个对象，一个环境代码”检查 |
 | `tests/check_golden.py` | 按 schema 和目录校验黄金示例的测试 |
 
 CI 在每个 pull request 上运行该测试。数据文件是虚构产品 X 的示例；组织应以自己的目录替换。
@@ -204,3 +204,116 @@ CI 在每个 pull request 上运行该测试。数据文件是虚构产品 X 的
 | 生产与非生产负载在同一信任域 | 第 9 节 |
 | 产品轮廓资源缺少 `residency` | 第 7 节 |
 | 以真实提供商名称作为提供商代码 | 第 4 节 |
+| 只服务一个环境的资源使用类别代码 | 第 12.1 节 |
+| 环境 DNS 别名出现在公开 DNS 之外，或公开名称中混用别名和代码 | 第 12.2 节 |
+| 名为 `-prd` 的集群运行非生产节点池 | 第 12.3 节 |
+| 一个对象的名称中出现两个不同的环境代码 | 第 12.10 节 |
+| 外部令牌缺少 `owner`、`consumer` 或 `expires` | 第 12.9 节 |
+
+## 12. 产品的基础设施对象（v2.5）
+
+产品在其服务之外所需对象的规则：环境类别、集群、镜像、主机、存储桶、基础设施即代码和访问令牌。仅适用于产品轮廓；企业轮廓（[01](01-naming-conventions.md) 至 [06](06-endpoint-conventions.md)）保持不变，以后可自行决定是否采用。
+
+### 12.1 环境类别
+
+有些资源同时服务多个环境：云项目、节点池、同时承载 `stg` 和 `tst` 数据库的数据库集群。它们使用环境类别代替环境代码。
+
+| 类别 | 环境 | 信任域 |
+|---|---|---|
+| `prd` | `prd` | `product.mess.systems` |
+| `nonprod` | `stg`、`tst`、`dev` | `nonprod.product.mess.systems` |
+| `sandbox` | `sbx` | `sandbox.product.mess.systems` |
+
+- 类别记录在 `catalog/environments.yaml`（键 `class`）。
+- 只有资源确实服务多个环境时，类别代码才进入名称：`x-nonprod`（云项目）、`x-records-store-nonprod`（数据库集群）。其内部对象仍写自己的环境：数据库 `x_records_store_stg`。
+- 只服务一个环境的资源从不使用类别代码。
+
+### 12.2 环境的 DNS 别名
+
+公开名称可使用环境代码的可读别名，每个组织在 `catalog/environments.yaml`（键 `dns_alias`）中登记一次。
+
+| 环境 | 各处使用的代码 | 可选 DNS 别名 |
+|---|---|---|
+| staging | `stg` | `stage` |
+| test | `tst` | `test` |
+
+- 别名只允许出现在公开 DNS 名称中：`api.stage.x.example`。其他所有名称（namespace、GitOps 应用、身份、组、机密路径、存储桶、state 键）都使用代码。
+- 一个组织只做一种选择：所有公开名称要么用代码，要么用别名，不得混用。
+
+### 12.3 集群与节点池
+
+| 对象 | 形式 | 示例 |
+|---|---|---|
+| 单一环境或类别的集群 | `<product>-k8s-<env-or-class>` | `x-k8s-prd`、`x-k8s-nonprod` |
+| 运行多个类别的集群 | `<product>-k8s-multi` | `x-k8s-multi` |
+| 节点池 | `<cluster>-<env-or-class>` | `x-k8s-multi-prd`、`x-k8s-multi-nonprod` |
+| 产品环境的 namespace | `<product>-<env>` | `x-prd`、`x-stg` |
+
+集群名称不得声称它并非独占运行的环境：带有 `nonprod` 节点池的集群不叫 `-prd`。
+
+### 12.4 产品平台与企业服务
+
+如果产品在自己的部署中离不开某个服务，该服务属于产品 `platform`：面向客户和产品运维人员的 IdP、产品网格、产品机密存储、产品的 CI 运行器和镜像仓库、产品侧可观测性。企业轮廓保留服务全公司员工和工程工作的部分。如果一套安装同时服务两者，它保留企业名称，产品引用它。
+
+| 服务 | 轮廓 | 名称 |
+|---|---|---|
+| 产品 X 运维人员的 IdP | product | `login.access.platform.prd.svc.mess.systems` |
+| 产品单元的网格协调器 | product | `mesh.net.platform.prd.svc.mess.systems` |
+| 员工 SSO | corp | `sso.iam.shared.svc.mess.systems`（不变） |
+
+### 12.5 容器镜像与镜像仓库
+
+| 对象 | 形式 | 示例 |
+|---|---|---|
+| 镜像 | `<registry>/<product>/<service>[-<component>]:<tag>` | `<registry>/x/store-worker:v1.4.0` |
+| 发布标签 | `vX.Y.Z`，不可变 | `v1.4.0` |
+| 构建标签 | `main-<sha7>`，可选 `pr-<n>` | `main-3f9c2d1` |
+
+镜像仓库主机属于供应商或平台，不属于名称；清单中只在一个变量（`image.registry`）里保存它。提交哈希和构建号是注解，不是标签。
+
+### 12.6 承担多个角色的主机
+
+主机形式仍为 `<site>-<plane-or-product>-<domain>-<service>-<env>-<NN>`。一台主机承担多个角色时，按主要角色命名，其余角色列在元数据 `roles` 中。角色迁出主机时无需改名。
+
+### 12.7 基础设施即代码与运行器
+
+- 产品 `platform` 的 `build` 域新增服务 `iac`：state 存储和 plan/apply 流水线。
+- CI 运行器是 `ci` 的组件，不是独立服务：`ci-runner.build.platform.prd.svc.mess.systems`。
+
+| 对象 | 形式 | 示例 |
+|---|---|---|
+| 栈目录 | `stacks/<product-or-platform>/<env-or-class>` | `stacks/x/prd`、`stacks/platform/prd` |
+| Bootstrap 栈 | `bootstrap`（手动应用一次） | `bootstrap` |
+| 模块 | `modules/<capability>` | `modules/k8s`、`modules/pg` |
+| State 键 | `<product-or-platform>/<stack>/<env>.tfstate` | `x/app/prd.tfstate`、`bootstrap/platform/prd.tfstate` |
+| 资源地址 | `<service>_<env>`（snake_case） | `x_k8s_prd` |
+
+### 12.8 存储桶
+
+| 对象 | 形式 | 示例 |
+|---|---|---|
+| 存储桶 | `<product>-<domain>-<service>-<env-or-class>` | `platform-build-iac-prd`、`x-records-backup-prd` |
+| 提供商要求全局唯一名称时 | `<org>-` 加上述形式 | `<org>-platform-build-iac-prd` |
+
+是否使用 `<org>-` 按提供商决定一次，并记录在目录中（`catalog/deployment.yaml`，键 `global_bucket_names`）。
+
+### 12.9 外部系统签发的访问令牌
+
+个人访问令牌、SaaS 服务的 API 密钥和代码托管平台令牌命名为：
+
+```
+<issuer>-<consumer>-<scope>-<access>
+```
+
+| 部分 | 含义 | 示例 |
+|---|---|---|
+| `issuer` | 签发令牌的组织或系统 | `forge-x`、`mirror` |
+| `consumer` | 使用者：代理、服务、运行器 | `agent`、`gitops`、`ci-runner` |
+| `scope` | 作用对象：仓库、项目、服务 | `infra`、`registry` |
+| `access` | 级别 | `ro`、`rw`、`adm` |
+
+示例：`forge-x-agent-infra-rw`。必需元数据：`owner`、`consumer`、`expires`（ISO 8601）。令牌有描述字段时写在那里，否则写在存放它的机密的自定义元数据中。没有 `expires` 的令牌不予签发；永不过期的令牌需要目录登记。令牌值只存放在机密存储中（[03](03-secrets-conventions.md)）。
+
+### 12.10 一个对象，一个环境代码
+
+一个对象的所有名称使用同一个环境代码：`stg` 部署的 namespace、GitOps 应用、身份、机密路径和存储桶都写 `stg`。DNS 别名只允许出现在公开 DNS 中。golden 测试 `invalid-mixed-env-codes.yaml` 和 `invalid-alias-outside-dns.yaml` 检查这一点；资源在元数据 `names` 中列出其具体名称。

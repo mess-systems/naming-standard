@@ -14,7 +14,7 @@
     "product": {"$ref": "#/definitions/code", "not": {"enum": ["shared", "corp", "eng", "ext"]}},
     "domain": {"$ref": "#/definitions/code"},
     "service": {"$ref": "#/definitions/code"},
-    "component": {"enum": ["api", "worker", "migrate"]},
+    "component": {"enum": ["api", "worker", "migrate", "runner"]},
     "env": {"enum": ["prd", "stg", "tst", "dev", "sbx"]},
     "owner": {"type": "string", "pattern": "^(role|team|app)-[a-z0-9-]+$"},
     "cost-center": {"type": "string", "pattern": "^cc-[a-z0-9-]+$"},
@@ -27,6 +27,13 @@
     "tenant-entity": {"type": "string", "pattern": "^le-[a-hjkmnp-z][a-hjkmnp-z2-9]{5}$"},
     "tenant-customer": {"type": "string", "pattern": "^ec-[a-hjkmnp-z][a-hjkmnp-z2-9]{5}$"},
     "lifecycle": {"enum": ["ephemeral", "retiring"]},
+    "roles": {"type": "array", "items": {"$ref": "#/definitions/code"}, "minItems": 1, "uniqueItems": true},
+    "names": {
+      "description": "Concrete names of this object. Keys starting with public-dns may use the env DNS alias; all others must use the env code (07 section 12.10).",
+      "type": "object",
+      "propertyNames": {"pattern": "^[a-z][a-z0-9-]*$"},
+      "additionalProperties": {"type": "string", "minLength": 1}
+    },
     "provider": {"type": "string", "pattern": "^(own|pub-[a-z])$"},
     "region": {"type": "string", "pattern": "^reg-[a-z][0-9]$"},
     "jurisdiction": {"type": "string", "pattern": "^jur-[a-z0-9]+$"},

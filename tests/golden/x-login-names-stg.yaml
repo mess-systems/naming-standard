@@ -1,0 +1,26 @@
+# One object, one env code (07 section 12.10): code everywhere, DNS alias only in public DNS.
+metadata:
+  contour: product
+  product: x
+  domain: access
+  service: login
+  env: stg
+  owner: team-x-access
+  cost-center: cc-x
+  criticality: medium
+  data-class: internal
+  residency: any
+  tenant-scope: pooled
+  names:
+    k8s-namespace: x-stg
+    gitops-app: x-access-login-stg
+    service-account: svc-x-access-login-stg
+    bucket: x-access-login-stg
+    public-dns: api.stage.x.example
+expect:
+  dns: login.access.x.stg.svc.mess.systems
+  otel:
+    service.namespace: x.access
+    service.name: login
+    deployment.environment.name: stg
+  spiffe: spiffe://nonprod.product.mess.systems/stg/x/access/login

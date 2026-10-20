@@ -11,8 +11,32 @@ ROOT = __file__.rsplit("/tests/", 1)[0]
 schema = json.load(open(f"{ROOT}/schema/resource-metadata.schema.json"))
 products = yaml.safe_load(open(f"{ROOT}/catalog/products.yaml"))["products"]
 envs = yaml.safe_load(open(f"{ROOT}/catalog/environments.yaml"))["environments"]
+env_cat = yaml.safe_load(open(f"{ROOT}/catalog/environments.yaml"))
+classes = env_cat["classes"]
 cells = yaml.safe_load(open(f"{ROOT}/catalog/deployment.yaml"))["cells"]
 validator = Draft202012Validator(schema)
+ALIASES = {v["dns_alias"]: k for k, v in envs.items() if "dns_alias" in v}
+# Words that read as an env in a name even if not a code (07 section 12.10).
+ENV_WORDS = set(envs) | set(ALIASES) | set(classes) | {"prod", "production", "stage", "staging", "test", "dev", "development", "sandbox"}
+
+
+def env_code_errors(m):
+    """One object, one env code: every env-like token in names must be the object's env code.
+    The DNS alias of that env is allowed only under keys starting with public-dns."""
+    errs = []
+    for key, name in m.get("names", {}).items():
+        for tok in [t for t in name.replace("_", "-").replace(".", "-").replace("/", "-").split("-") if t in ENV_WORDS]:
+            if tok == m["env"]:
+                continue
+            if key.startswith("public-dns") and ALIASES.get(tok) == m["env"]:
+                continue
+            errs.append(f"names.{key}: env token '{tok}' differs from env '{m['env']}'")
+        if key.startswith("public-dns"):
+            toks = set(name.split("."))
+            alias = envs[m["env"]].get("dns_alias")
+            if alias and m["env"] in toks and alias in toks:
+                errs.append(f"names.{key}: code and alias mixed")
+    return errs
 
 
 def expected(m):
@@ -46,6 +70,7 @@ for path in sorted(glob.glob(f"{ROOT}/tests/golden/*.yaml")):
             errors.append("cell not in catalog")
         if m.get("tenant-scope") == "dedicated" and m.get("cell") != "d" + m["tenant-entity"][3:]:
             errors.append("dedicated cell must be d<legal-entity key>")
+        errors += env_code_errors(m)
     if case.get("invalid"):
         ok = bool(errors)
     else:

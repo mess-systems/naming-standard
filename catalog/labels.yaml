@@ -7,5 +7,7 @@ conditional:
   tenant-entity: dedicated resource
   tenant-customer: dedicated resource
   lifecycle: resource is ephemeral or retiring
+  roles: host carries more than one role (07 section 12.6)
+  names: concrete names of the object, checked for one env code (07 section 12.10)
 derived: [provider, region, jurisdiction, site, managed-by, source-repo, implementation]
 in_names: [service, domain, product, env, cell]

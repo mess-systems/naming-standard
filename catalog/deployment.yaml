@@ -1,8 +1,8 @@
 # Neutral, opaque example codes. Real provider names and jurisdictions live only in a private catalog.
 providers:
-  own: {description: own infrastructure and private cloud}
-  pub-a: {description: public provider A}
-  pub-b: {description: public provider B}
+  own: {description: own infrastructure and private cloud, global_bucket_names: false}
+  pub-a: {description: public provider A, global_bucket_names: true}
+  pub-b: {description: public provider B, global_bucket_names: false}
 jurisdictions:
   jur-a: {description: jurisdiction A}
   jur-b: {description: jurisdiction B}

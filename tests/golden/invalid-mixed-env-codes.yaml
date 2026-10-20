@@ -1,0 +1,17 @@
+# Must fail: one object carries two env codes (stg in the namespace, test in the GitOps application).
+invalid: true
+metadata:
+  contour: product
+  product: x
+  domain: access
+  service: login
+  env: stg
+  owner: team-x-access
+  cost-center: cc-x
+  criticality: medium
+  data-class: internal
+  residency: any
+  tenant-scope: pooled
+  names:
+    k8s-namespace: x-stg
+    gitops-app: x-access-login-test
