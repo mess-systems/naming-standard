@@ -15,7 +15,7 @@ Thanks for helping improve the naming standard. It is meant to be argued with: c
 ## How to propose a change
 
 1. **Search first.** Codes must be unique across all domains (see [capability codes](01-naming-conventions.md#43-capability-codes-unique-across-all-domains)); check the tables and existing issues.
-2. **State the problem with an example**, not just the rule you want. Use fictional names (`example.com`, `*.example`, `corp.lan`, `jdoe`, `acmecloud`).
+2. **State the problem with an example**, not just the rule you want. Use fictional names (names under `mess.systems` such as `sso.iam.shared.svc.mess.systems`, `jdoe`, `acmecloud`).
 3. **Name what it breaks.** Which files and sections change? Does an existing valid name become invalid (breaking) or does an invalid one become valid (additive)?
 4. **Keep the grammar closed.** "We need a special case" is usually a missing code or a group, not a new grammar (see [there is no grammar C](01-naming-conventions.md#33-there-is-no-grammar-c)).
 5. **Open a PR** that updates every affected file in one change: rule, tables, worked encodings, refusals, and the [worked example](02-worked-example.md) if relevant.
@@ -34,7 +34,7 @@ Editorial rules: English, Markdown, one sentence per rule where possible, tables
 
 Before you post, confirm that the text contains **none** of:
 
-- [ ] Real internal hostnames, domains, or zones (yours or anyone else's). Use `example.com`, `*.example`, `corp.lan`.
+- [ ] Real internal hostnames, domains, or zones (yours or anyone else's). Use names under `mess.systems`, such as `sso.iam.shared.svc.mess.systems` or `x.mess.systems`.
 - [ ] IP addresses, CIDRs, ports, or VPN/mesh details of real networks. If you need addresses, use the documentation ranges from [RFC 5737](https://www.rfc-editor.org/rfc/rfc5737) (`192.0.2.0/24`) or [RFC 3849](https://www.rfc-editor.org/rfc/rfc3849).
 - [ ] Secrets or anything that looks like one: tokens, API keys, passwords, private keys, connection strings, real secrets paths.
 - [ ] Real usernames, account IDs, group names, or email addresses of people or systems.

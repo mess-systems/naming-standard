@@ -82,7 +82,7 @@ api.stg.<product-domain>             # non-production surface
 app.<product-domain>, docs.<product-domain>, status.<product-domain>
 ```
 
-产品 X 使用占位域名 `x.example`：`api.x.example`、`app.x.example`、`api.stg.x.example`。公共名称中不含域、服务、单元、区域、提供商或租户。把请求路由到单元是路由层的工作，而不是公共名称的工作。
+产品 X 使用占位域名 `x.mess.systems`：`api.x.mess.systems`、`app.x.mess.systems`、`api.stg.x.mess.systems`。公共名称中不含域、服务、单元、区域、提供商或租户。把请求路由到单元是路由层的工作，而不是公共名称的工作。
 
 ## 4. 部署键
 
@@ -237,7 +237,7 @@ CI 在每个 pull request 上运行该测试。数据文件是虚构产品 X 的
 | staging | `stg` | `stage` |
 | test | `tst` | `test` |
 
-- 别名只允许出现在公开 DNS 名称中：`api.stage.x.example`。其他所有名称（namespace、GitOps 应用、身份、组、机密路径、存储桶、state 键）都使用代码。
+- 别名只允许出现在公开 DNS 名称中：`api.stage.x.mess.systems`。其他所有名称（namespace、GitOps 应用、身份、组、机密路径、存储桶、state 键）都使用代码。
 - 一个组织只做一种选择：所有公开名称要么用代码，要么用别名，不得混用。
 
 ### 12.3 集群与节点池

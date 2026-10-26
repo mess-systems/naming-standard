@@ -16,7 +16,7 @@ metadata:
     gitops-app: x-access-login-stg
     service-account: svc-x-access-login-stg
     bucket: x-access-login-stg
-    public-dns: api.stage.x.example
+    public-dns: api.stage.x.mess.systems
 expect:
   dns: login.access.x.stg.svc.mess.systems
   otel:

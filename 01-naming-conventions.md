@@ -160,7 +160,7 @@ Site codes are short, organisation-specific, and listed in the catalog; the two 
 | Family | Form | Example |
 |---|---|---|
 | Internal FQDN | [grammar A](#31-grammar-a-internal) | `git.sdlc.eng.svc.mess.systems` |
-| Public FQDN | [grammar B](#32-grammar-b-public) | `app.shopfront.example` |
+| Public FQDN | [grammar B](#32-grammar-b-public) | `app.shopfront.mess.systems` |
 | Application (catalog, `service.name`, OIDC slug, AppRole) | `<plane>-<domain>-<product>` | `eng-sdlc-gitea` |
 | Host / container / VM | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | Hypervisor node | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
@@ -243,4 +243,4 @@ One install has one base URL: `https://<fqdn>`. Path-based multi-tenancy (`/admi
 | platform / data / docstore / MongoDB / prd | `docstore.data.platform.svc.mess.systems` | `platform-data-mongodb` | `dc1-platform-data-mongodb-prd-01..03` |
 | shared / net / mesh / Headscale / prd (cloud site) | `mesh.net.shared.svc.mess.systems` | `shared-net-headscale` | `cld-shared-net-headscale-prd-01` |
 | ext / demo portal | `demo.apps.mess.systems` | `ext-gov-demo-portal` | `cld-ext-gov-portal-prd-01` |
-| shopfront (product) / app | `app.shopfront.example` | `shopfront-api` | `cld-shopfront-api-prd-01` |
+| shopfront (product) / app | `app.shopfront.mess.systems` | `shopfront-api` | `cld-shopfront-api-prd-01` |

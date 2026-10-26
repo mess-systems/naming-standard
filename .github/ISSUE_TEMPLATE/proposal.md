@@ -5,7 +5,7 @@ title: "[proposal] "
 labels: proposal
 ---
 
-<!-- Use fictional names only (example.com, *.example, corp.lan, jdoe). See the publication checklist in CONTRIBUTING.md. -->
+<!-- Use fictional names only (names under mess.systems such as sso.iam.shared.svc.mess.systems, jdoe). See the publication checklist in CONTRIBUTING.md. -->
 
 ## Problem
 

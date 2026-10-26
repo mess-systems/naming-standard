@@ -80,7 +80,7 @@ api.stg.<product-domain>             # non-production surface
 app.<product-domain>, docs.<product-domain>, status.<product-domain>
 ```
 
-For product X with the placeholder domain `x.example`: `api.x.example`, `app.x.example`, `api.stg.x.example`. Public names never carry domain, service, cell, region, provider or tenant. Routing a request to a cell is the job of the routing layer, not of the public name.
+For product X with the placeholder domain `x.mess.systems`: `api.x.mess.systems`, `app.x.mess.systems`, `api.stg.x.mess.systems`. Public names never carry domain, service, cell, region, provider or tenant. Routing a request to a cell is the job of the routing layer, not of the public name.
 
 ## 4. Deployment keys
 
@@ -235,7 +235,7 @@ Public names may use a readable alias of an env code, registered once per organi
 | staging | `stg` | `stage` |
 | test | `tst` | `test` |
 
-- The alias is allowed only in public DNS names: `api.stage.x.example`. Every other name (namespace, GitOps application, identity, group, secret path, bucket, state key) uses the code.
+- The alias is allowed only in public DNS names: `api.stage.x.mess.systems`. Every other name (namespace, GitOps application, identity, group, secret path, bucket, state key) uses the code.
 - One organisation, one choice: either the code or the alias in all public names, never both.
 
 ### 12.3 Clusters and node pools

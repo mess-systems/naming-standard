@@ -122,7 +122,7 @@ Forgejo Actions 和 GitHub Actions 都通过将 `runs-on` 与运行器标签匹�
 | `mess.systems/cost-center` | `cc-*` | 是 |
 | `mess.systems/data-class` | 数据分级 | 存储数据时 |
 
-在公开标准中前缀为 `mess.systems/`。采用本标准的组织将其替换为自己的域名（`example.com/`）。
+在公开标准中前缀为 `mess.systems/`。采用本标准的组织将其替换为自己的域名（例如 `<org-domain>/`）。
 
 ### 4.2 标签还是注解
 

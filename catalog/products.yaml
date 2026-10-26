@@ -9,7 +9,7 @@ products:
       net: [mesh]
   x:
     description: Product X, a simple records application
-    public_domain: x.example
+    public_domain: x.mess.systems
     domains:
       records: [store, export]
       access: [login, session]

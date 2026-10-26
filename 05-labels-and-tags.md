@@ -118,7 +118,7 @@ Isolation codes, from strongest to weakest:
 | `mess.systems/cost-center` | `cc-*` | yes |
 | `mess.systems/data-class` | data class | where data is stored |
 
-In the public standard the prefix is `mess.systems/`. An adopting organization replaces it with its own domain (`example.com/`).
+In the public standard the prefix is `mess.systems/`. An adopting organization replaces it with its own domain (for example `<org-domain>/`).
 
 ### 4.2 Labels or annotations
 
