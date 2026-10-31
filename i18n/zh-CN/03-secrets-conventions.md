@@ -1,6 +1,6 @@
 [English](../../03-secrets-conventions.md) | [Русский](../ru/03-secrets-conventions.md) | **简体中文**
 
-> **译文说明。** 本文为标准 v2 版本的译文，源提交 `ca24160`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
+> **译文说明。** 本文为标准 v2.7 版本的译文，源提交 `a60b331`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
 
 # 机密规范：OpenBao 与 HashiCorp Vault
 
@@ -33,7 +33,10 @@
 | `platform/` | kv-v2 | 产品共享运行时 |
 | `ext/` | kv-v2 | 合作伙伴/演示门户 |
 | `<product>/` | kv-v2 | 每个产品一个挂载点（例如 `shopfront/`、`ledger/`） |
+| `pki-root/` | pki | 离线根 CA，仅用于签署签发 CA |
 | `pki-int/` | pki | 内部签发 CA |
+| `database-<plane>/`（例如 `database-shared/`） | database | 一个平面的短期数据库凭据 |
+| `ssh-<plane>/`（例如 `ssh-shared/`） | ssh | 一个平面主机的已签名 SSH 证书 |
 | `transit/` | transit | 加密即服务密钥，以 `<application>` 命名 |
 | `auth/approle` | auth | 不使用 SPIFFE 的工作负载 |
 | `auth/jwt-<idp>`（例如 `jwt-keycloak`） | auth | 通过 OIDC 认证的人员和 CI |
@@ -41,6 +44,38 @@
 | `auth/kubernetes-<cluster>` | auth | Kubernetes 服务账号 |
 
 遗留的 `secret/` 挂载点保留到[迁移](#7-从遗留路径迁移示意)一节中列出的所有路径迁移完毕，然后停用。
+
+### 2.1 kv 以外的引擎
+
+任何其他引擎的挂载点命名为 `<engine>-<plane>/`，使平面仍是第一道隔离边界（规则 S2），并使引擎在每条路径中可见。供应商或产品名称绝不作为挂载点（`postgres/`、`mysql/`）。这些挂载点下的路径是引擎自身的 API 路径；[路径语法](#3-路径语法)的固定深度只适用于 kv 挂载点。
+
+| 引擎 | 对象 | 形式 | 示例 |
+|---|---|---|---|
+| database | 挂载点 | `database-<plane>/` | `database-shared/` |
+| database | 连接 | 集群的应用名（[对象形式](01-naming-conventions.md#5-对象形式)） | `database-shared/config/shared-data-postgres` |
+| database | 动态角色 | 其授予的数据库角色（[数据库角色](04-identity-conventions.md#11-数据库角色)） | `database-shared/roles/eng_sdlc_git_ro` |
+| database | 静态角色 | 其轮换的数据库账号 | `database-shared/static-roles/svc_eng_sdlc_forgejo` |
+| ssh | 角色 | 其成员可以签名的组（[层级组](04-identity-conventions.md#31-层级组特权)、[角色组](04-identity-conventions.md#32-角色组职能)） | `ssh-shared/roles/tier-t1-platform-ops` |
+| pki | 挂载点 | `pki-root/`（离线）和 `pki-int/` | `pki-int/` |
+| pki | 签发者 | `<org>-<root\|int>-<YYYY>` | `mess-systems-int-2026` |
+| pki | 角色 | `<domain>-<plane>`，每个区域 `<domain>.<plane>.svc.mess.systems` 一个角色 | `iam-shared`、`data-shared` |
+| pki | ACME 目录 | `pki-int/roles/<role>/acme/directory` | `pki-int/roles/data-shared/acme/directory` |
+
+database 引擎规则：
+
+- 动态角色授予同名的已有 `NOLOGIN` 数据库角色的成员资格；它从不自行创建权限。
+- 临时用户的用户名遵循[临时数据库用户](04-identity-conventions.md#111-临时数据库用户)；模板按连接设置。
+- 引擎使用以机密管理器命名的服务账号（`svc_shared_iam_openbao`）连接。其密码在配置后立即用 `rotate-root` 轮换，因此只有机密管理器知道；它绝不存放在 kv 中。
+- 角色的使用方是通过 JWT 认证角色（[认证角色与令牌](#6-认证角色与令牌)）绑定的组，而不是个人。
+
+pki 引擎规则：
+
+- 角色只允许其区域：`allowed_domains` 为该区域，`allow_subdomains = true`；`allow_bare_domains`、`allow_wildcard_certificates`、`allow_glob_domains`、`allow_any_name` 和 `allow_ip_sans` 为 `false`。
+- 通配符证书由记录在清单中的单独角色签发，绝不由区域角色签发。
+
+ssh 引擎规则：
+
+- 角色不包含主机名；其签名的 principals 是组 ID，主机按组接受 principals。
 
 ## 3. 路径语法
 
@@ -148,3 +183,6 @@ corp/ai/agent-code-review/prd/gateway       api_key, url          # consumer cop
 - `admin` 条目可被任何非 t0 策略读取。
 - 策略或角色名称与身份名称不一致。
 - 将生产机密复制到 `dev|tst|stg`。
+- 以供应商或产品命名的挂载点（`postgres/`），而不是 `<engine>-<plane>/`。
+- 动态数据库角色的名称与其授予的数据库角色不同。
+- 机密引擎的 root 密码存放在 kv 中。

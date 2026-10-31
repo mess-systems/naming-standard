@@ -1,6 +1,6 @@
 [English](../../04-identity-conventions.md) | [Русский](../ru/04-identity-conventions.md) | **简体中文**
 
-> **译文说明。** 本文为标准 v2 版本的译文，源提交 `ca24160`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
+> **译文说明。** 本文为标准 v2.7 版本的译文，源提交 `a60b331`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
 
 # 身份规范：人员、智能体、服务账号、组、角色
 
@@ -76,6 +76,20 @@
 
 预配工具的默认组如 `app-<name>-operators` 改为 `app-<capability>-admin`。带区域后缀的提供方（`grafana-public/-private/-admin`）予以取消：暴露范围由网状网络组表达（见[网状 VPN 组](#4-网状-vpn-组)），管理员权限由 `app-dashboards-admin` 表达。
 
+### 3.4 产品访问组
+
+应用组描述对企业轮廓中某个能力的访问。产品轮廓中的产品（[部署与租户](07-deployment-and-tenants.md)）没有能力，因此对它的访问用其产品代码描述。
+
+| 形式 | 何时使用 | 示例 |
+|---|---|---|
+| `app-<product>-<access>` | 访问整个产品 | `app-arch-user` |
+| `app-<product>-<service>-<access>` | 访问产品的某一个服务 | `app-arch-store-editor` |
+
+- `<access>` 取自同一列表：`user`、`editor`、`admin`。
+- 产品代码绝不等于[能力代码](01-naming-conventions.md#43-能力代码在所有域中唯一)，以使 `app-<code>-user` 只有一种解读；检查依据 `catalog/products.yaml` 进行。
+- 产品代码是产品轮廓的代码，而不是供应商产品的名称，因此组名中拒绝供应商产品名称的规则依然有效。
+- 产品客户（租户）的组绝不在员工 IdP 中创建；它们存在于产品的 IdP 中，并遵循[租户键](07-deployment-and-tenants.md#5-租户)。
+
 ## 4. 网状 VPN 组
 
 | 组形式 | 包含 | 示例 |
@@ -85,8 +99,46 @@
 | `svc-<application>` | 服务对等节点 | `svc-eng-sdlc-jenkins` |
 | `egress-<plane>` | 出站网关 | `egress-corp` |
 | `site-<code>` | 位置 | `site-dc1`、`site-cld` |
+| `router-<site>` | 进入站点网络的路由对等节点，用于没有网状网络代理的设备 | `router-dc1` |
 
-策略：`<subject-group> → <zone-group>`。典型的遗留映射：拥有全部访问权限的 `admins` 组改为 `tier-t0-superadmin`，`devs` 组改为 `role-developers`，临时性的标签式组改为对应的 `tier-*` 或 `role-*` 组。
+路由器不是出站网关：出站网关让流量出到互联网，路由器让网状网络对等节点进入站点的本地网络。
+
+策略：`<subject-group> -> <target-group>`，其中目标为 `zone-<plane>` 或更窄的 `svc-<application>`。典型的遗留映射：拥有全部访问权限的 `admins` 组改为 `tier-t0-superadmin`，`devs` 组改为 `role-developers`，临时性的标签式组改为对应的 `tier-*` 或 `role-*` 组。
+
+### 4.1 网状网络策略、规则与状态检查
+
+| 对象 | 形式 | 示例 |
+|---|---|---|
+| 策略 | `<subject-group> -> <target-group>`（ASCII 箭头，两侧各一个空格） | `role-platform-engineers -> svc-shared-data-postgres` |
+| 按协议拆分的策略 | 上述形式 + ` (<protocol>)` | `role-developers -> svc-shared-net-dns (udp)` |
+| 策略内的规则 | 端口的 [IANA 服务名称](https://www.iana.org/assignments/service-names-port-numbers/)；多个名称用 `-` 连接 | `postgresql`、`https`、`ssh`、`ssh-https` |
+| 无 IANA 名称的端口，或不提供其 IANA 服务的端口的规则 | `<protocol>-<port>` | `tcp-9100`、`tcp-8200` |
+| 状态检查（posture check） | `posture-<what>-<condition>` | `posture-client-current`、`posture-os-supported` |
+
+- 每对组一个策略。只有当网状网络产品每条规则只允许一种协议而该组对需要两种时，才使用协议后缀。
+- 方向是规则的属性（默认单向），不是名称的一部分。
+- 内置策略 `Default` 保留其产品名称并被停用。任何策略都不以内置的 `All` 组作为主体或目标。
+
+### 4.2 网状网络的网络、资源与密钥
+
+| 对象 | 形式 | 示例 |
+|---|---|---|
+| 站点网络 | `site-<site>`（与站点组相同） | `site-dc1` |
+| 网络资源：单台主机 | 主机名（[对象形式](01-naming-conventions.md#5-对象形式)） | `dc1-shared-net-dns-prd-01` |
+| 网络资源：多台主机上的服务 | `<site>-<application>` | `dc1-shared-net-dns` |
+| 网络资源：子网 | `<site>-<plane>-<purpose>` | `dc1-shared-mgmt` |
+| 设置密钥（setup key） | 为其签发的主机名；一次性 | `dc1-shared-data-postgres-prd-01` |
+| 一组机器的设置密钥（仅限临时对等节点） | `<application>-<env>-ephemeral` | `platform-build-ci-runner-prd-ephemeral` |
+| 用于基础设施即代码的网状网络服务用户 | `svc-<iac-repo>`（[对象形式](01-naming-conventions.md#5-对象形式)） | `svc-shared-net-iac` |
+
+地址、子网和 VLAN 编号绝不进入网状网络对象的名称；它们存放在资源描述和清单中。
+
+### 4.3 网状网络 DNS
+
+| 对象 | 形式 | 示例 |
+|---|---|---|
+| 名称服务器组（nameserver group） | 区域中的点替换为连字符，再加站点 | `svc-mess-systems-dc1` |
+| 搜索域 | 仅 `svc.mess.systems`；不设按站点的搜索域 | `svc.mess.systems` |
 
 ## 5. 所有者
 
@@ -103,8 +155,16 @@
 | Outpost | `outpost-<plane>-<capability>` | `outpost-shared-ingress` |
 | 流程 (flow) | `flow-<purpose>` | `flow-admin-webauthn` |
 | 身份源（联合） | `src-<vendor>` | `src-github` |
+| 员工 IdP 的 realm（或租户） | `<org>`，每个组织一个 | `mess-systems` |
+| 产品 IdP 的 realm | `<product>-<env>` | `arch-prd`、`arch-stg` |
+| 智能体的 OIDC 客户端 | 智能体 ID | `agent-code-review` |
+| 人员工具（CLI 智能体、IDE）的 OIDC 客户端 | 该工具的账号 ID | `user-jdoe-cursor` |
+| 目标服务的令牌受众（audience） | 目标服务的应用 | `shared-data-postgres`、`corp-infra-kubernetes-mcp-server` |
 
 对象类型参照常见 IdP（Keycloak、Entra ID、Okta……）；请将其映射到您所用产品中的对应概念。
+
+- 人员工具（`user-<handle>-<tool>`）代表某个人行事，使用此人的组并加以收窄。智能体（`agent-<name>`）自行行事，并有一名操作员。选择取决于由谁发起操作，而不是工具产品。
+- 在令牌交换（[RFC 8693](https://www.rfc-editor.org/rfc/rfc8693)）中，主体是人员，行为者（`act`）是工具或智能体的客户端，按上表命名。
 
 以产品命名的遗留 slug（`grafana`、`argocd`）改为应用形式（`shared-obs-grafana`、`eng-sdlc-argocd`）。重定向 URI 只使用规范 FQDN（见[单一基础 URL](01-naming-conventions.md#6-单一基础-url)）。
 
@@ -178,6 +238,54 @@ RBAC 主体取自 OIDC 组声明，直接使用 `tier-*` 和 `role-*` 组，不�
 | MongoDB | `bot` | `agent_docs_writer` |
 | Postgres | 按应用划分的用户（`my_app`） | `svc_<plane>_<domain>_<product>`；数据库 `<plane>_<domain>_<capability>_<env>` |
 
+### 11.1 临时数据库用户
+
+临时数据库用户由机密管理器的 database 引擎签发（[kv 以外的引擎](03-secrets-conventions.md#21-kv-以外的引擎)）。名称说明了访问是如何、由谁、以哪个角色、在何时获得的，因此无需机密管理器的审计日志即可读懂数据库日志中的一行，而审计日志可以加以确认。
+
+```
+v_<auth>_<identity>_<role>_<ts>_<rand6>
+```
+
+| 部分 | 含义 | 示例 |
+|---|---|---|
+| `v_` | 标记临时用户 | `v_` |
+| `<auth>` | 请求者登录机密管理器的方式，取自下表的代码 | `oidc` |
+| `<identity>` | 人员、工具或智能体的 ID（[身份类型](#2-身份类型)），其中 `-` 替换为 `_` | `jdoe`、`user_jdoe_cursor`、`agent_code_review` |
+| `<role>` | 该用户所属的 `NOLOGIN` 数据库角色 | `eng_sdlc_git_ro` |
+| `<ts>` | UTC 签发时间，`YYYYMMDDtHHMMSSz`，与[快照](08-operations-objects.md#3-备份与快照)相同 | `20261031t020000z` |
+| `<rand6>` | 6 个 `[a-z0-9]` 字符 | `k7m2qa` |
+
+| 认证挂载点（[挂载点](03-secrets-conventions.md#2-挂载点)） | `<auth>` |
+|---|---|
+| `auth/jwt-<idp>`（通过 OIDC 认证的人员和 CI） | `oidc` |
+| `auth/jwt-spire` | `spire` |
+| `auth/kubernetes-<cluster>` | `k8s` |
+| `auth/approle` | `approle` |
+
+- 仅使用 `[a-z0-9_]`，因此名称在 SQL 中无需加引号，与其他数据库角色名称相同。
+- 最多 63 个字符（PostgreSQL 的限制）。当 `<auth>` = `oidc` 时，固定部分占 32 个字符，`<identity>` 和 `<role>` 合计剩余 31 个（`approle` 为 28 个）。
+- 名称放不下时缩短 `<identity>`；角色、时间和随机部分绝不缩短。拒绝对完成后的整个名称截断（`truncate 63`），因为这会截掉时间和随机部分。
+- 临时用户绝不拥有对象，也绝不获得 DDL 权限；DDL 通过流水线以 `<…>_owner` 角色执行。
+- 示例：`v_oidc_jdoe_eng_sdlc_git_ro_20261031t020000z_k7m2qa`（51 个字符）、`v_oidc_user_jdoe_cursor_eng_sdlc_git_ro_20261031t020000z_k7m2qa`（63 个）。
+
+OpenBao 模板（连接的 `username_template`），适用于 `user_claim = preferred_username` 的 `auth/jwt-keycloak`：
+
+```
+{{ printf "v_%s_%s_%s_%s" (.DisplayName | replace "jwt-keycloak-" "oidc-" | replace "-" "_" | truncate 21) (.RoleName) (timestamp "20060102t150405z") (random 6 | lowercase) }}
+```
+
+`truncate 21`（`oidc_` 加 16 个 `<identity>` 字符）适用于最长 15 个字符的角色；更长的角色需要更小的数字。请在测试连接上检查模板：数据库日志中的时间必须与审计日志中的 UTC 签发时间一致。
+
+与 OpenBao 默认模板（`v-%s-%s-%s-%s`，带 `random 20`、`unix_time`，并对整个名称使用 `truncate 63`）的比较：
+
+| 属性 | 默认模板 | 本标准 |
+|---|---|---|
+| 认证方式 | 由挂载点前缀推出 | 取自表中的代码 |
+| 时间 | Unix 时间，10 位数字，位于末尾 | UTC `YYYYMMDDtHHMMSSz`，位于随机部分之前：可读且可排序 |
+| 分隔符 | `-`，在 SQL 中需要引号 | `_`，与其他数据库角色名称相同 |
+| 随机部分 | 20 个字符，大小写混合 | 6 个 `[a-z0-9]` 字符；时间加随机部分使名称唯一 |
+| 超过 63 | 名称末尾连同时间和随机部分被截掉 | 缩短 `<identity>` |
+
 ## 12. 令牌、机器人账号、凭据 ID
 
 | 系统 | 形式 | 示例 |
@@ -209,3 +317,8 @@ RBAC 主体取自 OIDC 组声明，直接使用 `tier-*` 和 `role-*` 组，不�
 - 个人 ID 用于自动化，或 `-adm` 账号开通了邮件/聊天。
 - 共享账号使用共享密码（应使用紧急访问账号）。
 - 在数据库角色/环境变量之外的 ID 中使用下划线。
+- 网状网络组不符合[网状 VPN 组](#4-网状-vpn-组)的形式（`admins`、`servers`、`vpn-users`）。
+- 网状网络策略以内置的 `All` 组作为主体或目标（[网状网络策略](#41-网状网络策略规则与状态检查)）。
+- 网状网络对象名称中含有地址、子网或 VLAN 编号（[网状网络的网络、资源与密钥](#42-网状网络的网络资源与密钥)）。
+- 产品代码等于能力代码（[产品访问组](#34-产品访问组)）。
+- 临时数据库用户不符合[临时数据库用户](#111-临时数据库用户)的形式（没有认证代码或时间、使用 `-`、整体截断到 63），或拥有 DDL 权限。

@@ -1,6 +1,6 @@
 [English](../../01-naming-conventions.md) | [Русский](../ru/01-naming-conventions.md) | **简体中文**
 
-> **译文说明。** 本文为标准 v2 版本的译文，源提交 `ca24160`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
+> **译文说明。** 本文为标准 v2.7 版本的译文，源提交 `a60b331`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
 
 # mess.systems 命名规范（v2）
 
@@ -22,6 +22,23 @@
 | 数字 | 允许；令牌绝不以数字开头 | k8s 标签值、shell |
 | 序号 | 两位数，左侧补零（`01`） | 排序正确 |
 | 保留字 | `api`、`www`、`app`、`admin`、`internal`、`public`、`prod`、`test`、`svc`、`local`、`cluster`——绝不能用作平面、域、能力或产品代码 | 与语法令牌或 [RFC 6762](https://www.rfc-editor.org/rfc/rfc6762)、[RFC 6761](https://www.rfc-editor.org/rfc/rfc6761) 保留的名称冲突 |
+
+### 1.1 连字符解析规则
+
+连字符既分隔名称的各个轴，又连接同一令牌中的单词（`data-catalog`）。名称按位置解析，因此 `dc1-eng-sdlc-data-catalog-prd-01` 只有一种读法。
+
+| 规则 | 含义 |
+|---|---|
+| 平面和域代码 | 一个不含连字符的令牌（`shared`、`eng`、`sdlc`、`obs`） |
+| 解析 | 按[对象形式](#5-对象形式)中的位置从左到右：先是站点（仅主机名），然后是平面，然后是域，然后是产品或能力，然后是环境和序号（如果形式中包含） |
+| 环境 | 始终是[环境与站点](#44-环境与站点)中的代码，因此可按取值识别 |
+| 序号 | 始终是最后位置上的两位数字 |
+| 其余部分 | 域与环境（或名称末尾）之间的全部内容是一个产品或能力令牌，即使其中含有连字符 |
+| 检查 | 只有每个位置都与 `catalog/` 中对应列表匹配时名称才有效；不匹配即拒绝，而不是猜测 |
+
+示例：`dc1-eng-sdlc-data-catalog-prd-01`——站点 `dc1`、平面 `eng`、域 `sdlc`、产品 `data-catalog`、环境 `prd`、序号 `01`。
+
+所有者、范围和环境的限定绝不进入名称。它们只存在于标签中（`owner`、`scope`、`env`，见[标签与标记](05-labels-and-tags.md)），而这些标签无论如何都是必需的。双连字符不用作限定分隔符：它与 DNS 标签的保留形式 `xn--`（[RFC 5891](https://www.rfc-editor.org/rfc/rfc5891)）冲突。RoleBinding 形式 `<role>--<subject>`（[Kubernetes RBAC](04-identity-conventions.md#10-kubernetes-rbac)）保持不变：它连接两个完整名称，不是限定。
 
 ## 2. 十个元数据键
 
@@ -66,12 +83,25 @@
 ```
 <surface>.<product-domain>            # www | app | api | docs | status | auth
 <capability>.apps.mess.systems        # ext plane on the brand domain
+<surface>.<product>.x.mess.systems    # products in the showcase sub-zone
 www.mess.systems                      # brand
 ```
 
-- 公共名称绝不包含平面、域、环境或供应商。
-- `apps.mess.systems` 是品牌域名下**唯一**的公共子区域，承载 `ext` 能力（合作伙伴/演示门户）。它是以品牌作为产品的语法 B。
-- 对于必须在网状网络建立之前就可访问的控制平面（例如网状网络协调器），允许使用单个公共专用名称，但必须作为有记录、有文档的例外——而不是一种模式。
+- 公共名称绝不包含平面、域、环境或供应商。唯一的例外是产品的非生产界面（`api.stg.<product-domain>`，见[环境与 DNS](07-deployment-and-tenants.md#3-环境与-dns)）。
+- 品牌恰好有两个公共子区域，没有第三个：
+  - `apps.mess.systems` 承载 `ext` 能力（合作伙伴/演示门户）：`<capability>.apps.mess.systems`。它是以品牌作为产品的语法 B。
+  - `x.mess.systems` 承载产品轮廓中的产品（[部署与租户](07-deployment-and-tenants.md)）：产品域名 `<product>.x.mess.systems`，界面 `<surface>.<product>.x.mess.systems`，非生产界面 `<surface>.<env>.<product>.x.mess.systems`。拥有自己注册域名的产品使用该域名代替子区域，绝不同时使用两者。
+- `x` 是子区域标签，不是产品代码，也不是平台名称。发布在 `x.mess.systems` 中的产品集合称为**展示区**。子区域标签绝不是组织目录中的产品代码。[部署与租户](07-deployment-and-tenants.md#2-产品域服务实现)示例中的虚构产品 `x` 不在该目录中；在那里 `x.mess.systems` 是占位的产品域名。
+- 产品域名的顶点（`arch.x.mess.systems`）是产品的主界面，就像品牌的 `www`。
+- `mess.systems` 下语法 A 和 B 之外的公共名称，只允许作为 `catalog/dns-exceptions.yaml` 中登记的例外：名称、其语法 A 规范名称、原因、所有者组和复审日期。典型情况是必须在网状网络建立之前就可访问的控制平面的专用名称，例如网状网络协调器。两种语法之外且未登记的名称将被拒绝。例外绝不作为新名称的模式。
+
+```yaml
+- name: netbird.mess.systems
+  canonical: mesh.net.shared.svc.mess.systems
+  reason: the mesh coordinator must be reachable before the mesh is up
+  owner: role-platform-engineers
+  review: 2027-10-31
+```
 
 ### 3.3 不存在语法 C
 
@@ -157,19 +187,23 @@ www.mess.systems                      # brand
 | 开发 | `dev` | | |
 | 沙箱（仅产品轮廓，见 [07](07-deployment-and-tenants.md)） | `sbx` | | |
 
-站点代码简短、因组织而异，并在目录中列出；上面两个仅为示例。
+站点代码简短、因组织而异；上面两个仅为示例。站点代码在该站点出现第一台主机之前登记在 `catalog/sites.yaml` 中：代码（2 到 4 个 `a-z0-9` 字符，以字母开头）、类型（`own` 或 `cld`）和所有者组。站点代码绝不包含城市、地址或提供商名称；提供商是部署键 `provider`（[部署键](07-deployment-and-tenants.md#4-部署键)）。
 
 ## 5. 对象形式
 
 | 类别 | 形式 | 示例 |
 |---|---|---|
 | 内部 FQDN | [语法 A](#31-语法-a内部) | `git.sdlc.eng.svc.mess.systems` |
-| 公共 FQDN | [语法 B](#32-语法-b公共) | `app.shopfront.mess.systems` |
+| 公共 FQDN | [语法 B](#32-语法-b公共) | `app.shopfront.x.mess.systems` |
 | 应用（目录、`service.name`、OIDC slug、AppRole） | `<plane>-<domain>-<product>` | `eng-sdlc-gitea` |
 | 主机 / 容器 / 虚拟机 | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | 虚拟化平台节点 | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
 | 企业终端（笔记本、台式机） | `<profile>-<form>-<asset-id>`，见 [06 终端约定](06-endpoint-conventions.md) | `std-lt-a1b2c3` |
 | Git 组织 / 仓库 | 组织 `<plane>` · 仓库 `<domain>-<product>` | `eng/sdlc-gitea` |
+| 基础设施即代码仓库，扁平组织 | `<plane>-<domain>-iac` | `shared-sec-iac`、`shared-obs-iac` |
+| 产品的基础设施即代码仓库 | `<product>-<domain>-iac` | `platform-build-iac`、`shopfront-edge-iac` |
+| 基础设施即代码仓库，每个平面一个组织 | 组织 `<plane>` · 仓库 `<domain>-iac` | `shared/infra-iac` |
+| 共享的角色或模块库 | 所属仓库 + `-roles` 或 `-modules` | `shared-infra-iac-roles` |
 | 容器镜像 | `oci.sdlc.eng.svc.mess.systems/<plane>-<domain>/<product>[-<component>]:<tag>` | `oci.sdlc.eng.svc.mess.systems/corp-ai/agentgateway:1.6.0` |
 | 镜像仓库项目（例如 Harbor） | `<plane>-<domain>` | `corp-ai` |
 | 软件包源 | `<ecosystem>-<plane>` 或 `<ecosystem>-proxy` | `npm-proxy`、`pypi-eng` |
@@ -190,6 +224,24 @@ www.mess.systems                      # brand
 | OpenTofu 资源名称 | `<application>_<env>` | `corp_ai_agentgateway_prd` |
 | 证书（内部） | 每个域-平面组合一个 `*.<domain>.<plane>.svc.mess.systems` | `*.ai.corp.svc.mess.systems` |
 | 系统邮件发件人 | `<capability>@mess.systems` | `alerts@mess.systems` |
+
+基础设施即代码仓库：工具（`ansible`、`opentofu`、`terraform`）和站点（`dc1`、`cld`、云名称）绝不进入仓库名称。它们成为仓库内的文件夹（`stacks/<site>/…`、`roles/`、`modules/`）；工具已记录在 `managed-by` 标签中（[部署与租户](07-deployment-and-tenants.md#7-治理标签)）。一个仓库服务于一对平面和域：同一台机器上两个不同域的系统使用两个仓库，共享的机器在清单中描述。后缀 `-iac` 保留给基础设施代码。
+
+其他对象形式位于其他部分：
+
+| 对象 | 位置 |
+|---|---|
+| kv 以外机密引擎（database、ssh、pki）的挂载点、角色和签发者 | [kv 以外的引擎](03-secrets-conventions.md#21-kv-以外的引擎) |
+| 网状网络的组、策略、规则、状态检查、网络、资源、设置密钥、名称服务器组 | [网状 VPN 组](04-identity-conventions.md#4-网状-vpn-组)及其后的小节 |
+| 产品访问组 | [产品访问组](04-identity-conventions.md#34-产品访问组) |
+| 临时数据库用户 | [临时数据库用户](04-identity-conventions.md#111-临时数据库用户) |
+| Git 分支和标签 | [Git 分支与标签](08-operations-objects.md#1-git-分支与标签) |
+| CI 工作流和作业、计划任务 | [CI 与计划任务](08-operations-objects.md#2-ci-与计划任务) |
+| 备份作业、快照 | [备份与快照](08-operations-objects.md#3-备份与快照) |
+| 虚拟机管理程序客户机、资源池、模板 | [虚拟机管理程序客户机](08-operations-objects.md#4-虚拟机管理程序客户机) |
+| API 网关的路由、上游和使用方 | [API 网关](08-operations-objects.md#5-api-网关) |
+| DNS 记录 | [DNS 记录](08-operations-objects.md#6-dns-记录) |
+| PostgreSQL 集群、复制槽、发布 | [PostgreSQL 对象](08-operations-objects.md#7-postgresql-对象) |
 
 ## 6. 单一基础 URL
 
@@ -235,6 +287,13 @@ www.mess.systems                      # brand
 | 在实例级别注册 `sock` 或 `host` CI 运行器 | [标签与标记](05-labels-and-tags.md) |
 | 以提交哈希或构建号作为 Kubernetes 标签 | [标签与标记](05-labels-and-tags.md) |
 | 将标签用作授权依据 | [标签与标记](05-labels-and-tags.md) |
+| 平面或域代码中含有连字符 | [连字符解析规则](#11-连字符解析规则) |
+| 名称中含有所有者、范围或环境的限定，或用 `--` 作为限定分隔符 | [连字符解析规则](#11-连字符解析规则) |
+| 基础设施即代码仓库名称中含有工具或站点（`ansible-roles`、`infra-onprem`） | [对象形式](#5-对象形式) |
+| 一个基础设施即代码仓库中有两个域 | [对象形式](#5-对象形式) |
+| `mess.systems` 下语法 A 和 B 之外的公共名称，且未在 `catalog/dns-exceptions.yaml` 中登记 | [语法 B：公共](#32-语法-b公共) |
+| 品牌的第三个公共子区域 | [语法 B：公共](#32-语法-b公共) |
+| 不在 `catalog/sites.yaml` 中的站点代码，或含有城市、地址或提供商的站点代码 | [环境与站点](#44-环境与站点) |
 
 ## 11. 编码示例
 
@@ -245,6 +304,8 @@ www.mess.systems                      # brand
 | corp / ai / gateway / agentgateway / prd | `gateway.ai.corp.svc.mess.systems` | `corp-ai-agentgateway` | `dc1-corp-ai-agentgateway-prd-01` |
 | corp / ai / gateway / agentgateway / stg | `gateway.ai.corp.stg.svc.mess.systems` | `corp-ai-agentgateway` | `dc1-corp-ai-agentgateway-stg-01` |
 | platform / data / docstore / MongoDB / prd | `docstore.data.platform.svc.mess.systems` | `platform-data-mongodb` | `dc1-platform-data-mongodb-prd-01..03` |
-| shared / net / mesh / Headscale / prd (cloud site) | `mesh.net.shared.svc.mess.systems` | `shared-net-headscale` | `cld-shared-net-headscale-prd-01` |
+| shared / net / mesh / NetBird / prd | `mesh.net.shared.svc.mess.systems` | `shared-net-netbird` | `dc1-shared-net-netbird-prd-01` |
 | ext / demo portal | `demo.apps.mess.systems` | `ext-gov-demo-portal` | `cld-ext-gov-portal-prd-01` |
-| shopfront (product) / app | `app.shopfront.mess.systems` | `shopfront-api` | `cld-shopfront-api-prd-01` |
+| shopfront (product) / app | `app.shopfront.x.mess.systems` | `shopfront-api` | `cld-shopfront-api-prd-01` |
+
+网状网络协调器还有一个公共专用名称 `netbird.mess.systems`，登记在 `catalog/dns-exceptions.yaml` 中（[语法 B：公共](#32-语法-b公共)）。

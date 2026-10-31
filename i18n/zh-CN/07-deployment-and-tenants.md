@@ -1,8 +1,10 @@
 # 07. 部署与租户
 
-> 译文仅供参考；规范文本为[英文版](../../07-deployment-and-tenants.md)。
+> 译文仅供参考；规范文本为[英文版](../../07-deployment-and-tenants.md)。本文为标准 v2.7 版本的译文，源提交 `a60b331`。
 
 **产品轮廓**的规则：mess.systems 开发、运营和销售的云原生产品，它们如何在提供商、区域和单元（cell）之间部署，以及如何标识租户。所有示例均使用虚构公司 mess.systems 及其虚构的**产品 X**（`x`）：一个简单的记录应用，包含登录、订阅、管理控制台、带 webhook 的 API 和支付。
+
+产品 X（`x`）是虚构的。其域名 `x.mess.systems` 是[语法 B](01-naming-conventions.md#32-语法-b公共) 中产品域名的占位符，而不是 mess.systems 真正的产品子区域 `x.mess.systems`。示例中的 `api.x.mess.systems` 和 `api.stg.x.mess.systems` 是虚构产品 `x` 的界面 `api`（`<surface>.<product-domain>`），而不是产品子区域中代码为 `api` 的产品。在真正的子区域中，产品 `arch` 的同一界面是 `api.arch.x.mess.systems`。代码 `x` 只存在于示例、示例目录和黄金测试中；组织自己的目录不包含它。
 
 本部分源于对本标准的一次外部评审；感谢评审者。
 
@@ -28,6 +30,8 @@ mess.systems 有两个轮廓。它们共享字符规则、“名称从不授权�
 - 所有产品共用的服务（构建、镜像仓库、产品侧可观测性）属于产品 **`platform`**，与平面 `platform` 代码和含义相同。
 - 产品以企业名称使用企业服务（员工 SSO、代码托管、机密管理器）。企业服务从不使用产品轮廓的名称。
 - 环境的不对称是有意的：企业轮廓保留简短的生产名称；产品轮廓写出 `prd`，使每个名称在任何环境中都以同样方式解析。
+
+在本标准中，“轮廓”仅指 `corp` 或 `product`（键 `contour`）。拥有自己产品实例的某个客户组织的数据边界称为**组织边界**，绝不进入名称：在 mess.systems 内部它是专用单元 `d<tenant-key>`（[租户](#5-租户)），客户一侧的实例则按客户自己的标准命名。
 
 ## 2. 产品、域、服务、实现
 
@@ -81,6 +85,8 @@ api.<product-domain>                 # production
 api.stg.<product-domain>             # non-production surface
 app.<product-domain>, docs.<product-domain>, status.<product-domain>
 ```
+
+mess.systems 在子区域 `x.mess.systems` 中发布其产品（[语法 B](01-naming-conventions.md#32-语法-b公共)）：产品域名为 `<product>.x.mess.systems`。拥有自己注册域名的产品使用该域名代替子区域，绝不同时使用两者。
 
 产品 X 使用占位域名 `x.mess.systems`：`api.x.mess.systems`、`app.x.mess.systems`、`api.stg.x.mess.systems`。公共名称中不含域、服务、单元、区域、提供商或租户。把请求路由到单元是路由层的工作，而不是公共名称的工作。
 
@@ -185,9 +191,11 @@ app.<product-domain>, docs.<product-domain>, status.<product-domain>
 | 路径 | 内容 |
 |---|---|
 | `schema/resource-metadata.schema.json` | 产品轮廓资源元数据的 JSON Schema |
-| `catalog/*.yaml` | 词汇：轮廓、环境、提供商、司法辖区、区域、单元、环境类别和 DNS 别名、产品 X 的域和服务、标签类别 |
+| `catalog/*.yaml` | 词汇：轮廓、环境、提供商、司法辖区、区域、单元、环境类别和 DNS 别名、产品 X 的域和服务、标签类别、站点、公共 DNS 例外 |
 | `tests/golden/*.yaml` | 黄金示例：元数据及其必须生成的名称，包括“一个对象，一个环境代码”检查 |
 | `tests/check_golden.py` | 按 schema 和目录校验黄金示例的测试 |
+| `tests/names/*.yaml` | 企业轮廓形式和运维对象的名称示例，包括有效和无效示例 |
+| `tests/check_names.py` | 校验名称示例以及站点和 DNS 例外登记册的测试 |
 
 CI 在每个 pull request 上运行该测试。数据文件是虚构产品 X 的示例；组织应以自己的目录替换。
 
@@ -287,6 +295,8 @@ CI 在每个 pull request 上运行该测试。数据文件是虚构产品 X 的
 | 模块 | `modules/<capability>` | `modules/k8s`、`modules/pg` |
 | State 键 | `<product-or-platform>/<stack>/<env>.tfstate` | `x/app/prd.tfstate`、`bootstrap/platform/prd.tfstate` |
 | 资源地址 | `<service>_<env>`（snake_case） | `x_k8s_prd` |
+
+存放这些代码的仓库按命名约定的[对象形式](01-naming-conventions.md#5-对象形式)命名：`<product>-<domain>-iac`，例如 `platform-build-iac`。Git 分支、CI 工作流和作业遵循[运维对象](08-operations-objects.md)。
 
 ### 12.8 存储桶
 

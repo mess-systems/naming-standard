@@ -1,6 +1,6 @@
 [English](README.md) | [Русский](README.ru.md) | **简体中文**
 
-> **译文说明。** 本文为标准 v2 版本的译文，源提交 `ca24160`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
+> **译文说明。** 本文为标准 v2.7 版本的译文，源提交 `a60b331`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
 
 # mess.systems 命名标准
 
@@ -8,7 +8,7 @@
 
 这是一个持续演进的模板：在应用中接受检验和质疑，并随着理解的加深不断修订。可以直接使用，也可以根据贵组织的情况进行调整。
 
-**状态：** v2.5，持续演进中。名称和规则仍可能变化；变更记录在下方的变更日志中。
+**状态：** v2.7，持续演进中。名称和规则仍可能变化；变更记录在下方的变更日志中。
 
 ## 为什么
 
@@ -25,7 +25,8 @@
 | [05-labels-and-tags.md](i18n/zh-CN/05-labels-and-tags.md) | 键值标签：成本标签、CI 运行器标签、Kubernetes 标签与注解、云标签、议题与 PR 标签、平台限制 |
 | [06-endpoint-conventions.md](i18n/zh-CN/06-endpoint-conventions.md) | 员工设备：名称形式、配置档与形态、元数据、能力代码 `endpoint`、DNS、BYOD、PAW、拒绝情形 |
 | [07-deployment-and-tenants.md](i18n/zh-CN/07-deployment-and-tenants.md) | 产品轮廓：产品、域、服务、实现；环境与 DNS；部署键、单元、租户、治理标签、OpenTelemetry、SPIFFE |
-| [schema/](schema/)、[catalog/](catalog/)、[tests/](tests/) | 可执行标准：JSON Schema、示例词汇、在 CI 中检查的黄金示例 |
+| [08-operations-objects.md](i18n/zh-CN/08-operations-objects.md) | 运维对象：Git 分支与标签、CI 与计划任务、备份与快照、虚拟机管理程序客户机、API 网关、DNS 记录、PostgreSQL 对象 |
+| [schema/](schema/)、[catalog/](catalog/)、[tests/](tests/) | 可执行标准：JSON Schema、示例词汇、站点和公共 DNS 例外登记册、在 CI 中检查的黄金示例和名称示例 |
 | [CONTRIBUTING.md](i18n/zh-CN/CONTRIBUTING.md) | 如何提出变更以及讨论规则 |
 | [i18n/](i18n/) | 俄语与简体中文译文（参考性） |
 | [LICENSE](LICENSE) | CC BY 4.0 |
@@ -63,7 +64,24 @@
 
 ## 变更日志
 
-### v2.5（当前）
+### v2.7（当前）
+
+本版本还包含作为 v2.6 准备、但未单独发布的变更。
+
+- [连字符解析规则](i18n/zh-CN/01-naming-conventions.md#11-连字符解析规则)：平面和域代码是一个令牌，名称按位置解析，限定放在标签中而不是名称中。
+- 基础设施即代码仓库命名为 `<plane>-<domain>-iac` 或 `<product>-<domain>-iac`，名称中不含工具或站点，每个仓库一对平面和域（[对象形式](i18n/zh-CN/01-naming-conventions.md#5-对象形式)）。
+- 品牌的两个公共子区域：`apps.mess.systems`，以及用于产品（展示区）的 `x.mess.systems`；语法之外的公共名称只能通过登记册 `catalog/dns-exceptions.yaml`（[语法 B：公共](i18n/zh-CN/01-naming-conventions.md#32-语法-b公共)）。
+- 站点代码登记在 `catalog/sites.yaml` 中，不含城市、地址或提供商（[环境与站点](i18n/zh-CN/01-naming-conventions.md#44-环境与站点)）。
+- database、ssh 和 pki 引擎的挂载点、角色和签发者（[kv 以外的引擎](i18n/zh-CN/03-secrets-conventions.md#21-kv-以外的引擎)）。
+- 产品访问组 `app-<product>-<access>`（[产品访问组](i18n/zh-CN/04-identity-conventions.md#34-产品访问组)）；网状网络组 `router-<site>`；网状网络策略、规则、状态检查、网络、资源、设置密钥和名称服务器组的名称（[网状 VPN 组](i18n/zh-CN/04-identity-conventions.md#4-网状-vpn-组)）。
+- IdP realm、智能体和人员工具的 OIDC 客户端、令牌受众以及令牌交换中的行为者（[IdP 对象](i18n/zh-CN/04-identity-conventions.md#6-idp-对象)）。
+- [临时数据库用户](i18n/zh-CN/04-identity-conventions.md#111-临时数据库用户)：`v_<auth>_<identity>_<role>_<ts>_<rand6>`，最多 63 个字符，绝不整体截断。
+- 产品轮廓：发布在 `x.mess.systems` 中的产品、关于虚构产品 X 的说明以及术语“组织边界”（[部署与租户](i18n/zh-CN/07-deployment-and-tenants.md)）。
+- 新部分[运维对象](i18n/zh-CN/08-operations-objects.md)。
+- 网状网络协调器的编码示例改用 NetBird（`shared-net-netbird`）。
+- 可执行标准：`catalog/sites.yaml`、`catalog/dns-exceptions.yaml`、`tests/names/` 和 `tests/check_names.py`，在 CI 中检查。
+
+### v2.5
 
 - 产品轮廓新增关于基础设施对象的[第 12 节](i18n/zh-CN/07-deployment-and-tenants.md#12-产品的基础设施对象v25)。企业轮廓（第 01 至 06 部分）不变。
 - 环境类别 `prd`、`nonprod`、`sandbox`，用于服务多个环境的资源；可选的环境 DNS 别名（`stage`、`test`）只允许用于公开 DNS。
