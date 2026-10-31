@@ -190,7 +190,7 @@ Site codes are short and organisation-specific; the two above are examples. A si
 | Family | Form | Example |
 |---|---|---|
 | Internal FQDN | [grammar A](#31-grammar-a-internal) | `git.sdlc.eng.svc.mess.systems` |
-| Public FQDN | [grammar B](#32-grammar-b-public) | `app.shopfront.mess.systems` |
+| Public FQDN | [grammar B](#32-grammar-b-public) | `app.shopfront.x.mess.systems` |
 | Application (catalog, `service.name`, OIDC slug, AppRole) | `<plane>-<domain>-<product>` | `eng-sdlc-gitea` |
 | Host / container / VM | `<site>-<plane>-<domain>-<product>-<env>-<NN>` | `dc1-eng-sdlc-gitea-prd-01` |
 | Hypervisor node | `<site>-shared-infra-<hypervisor>-<env>-<NN>` | `dc1-shared-infra-kvm-prd-01` |
@@ -302,6 +302,6 @@ One install has one base URL: `https://<fqdn>`. Path-based multi-tenancy (`/admi
 | platform / data / docstore / MongoDB / prd | `docstore.data.platform.svc.mess.systems` | `platform-data-mongodb` | `dc1-platform-data-mongodb-prd-01..03` |
 | shared / net / mesh / NetBird / prd | `mesh.net.shared.svc.mess.systems` | `shared-net-netbird` | `dc1-shared-net-netbird-prd-01` |
 | ext / demo portal | `demo.apps.mess.systems` | `ext-gov-demo-portal` | `cld-ext-gov-portal-prd-01` |
-| shopfront (product) / app | `app.shopfront.mess.systems` | `shopfront-api` | `cld-shopfront-api-prd-01` |
+| shopfront (product) / app | `app.shopfront.x.mess.systems` | `shopfront-api` | `cld-shopfront-api-prd-01` |
 
 The mesh coordinator also has the public vanity name `netbird.mess.systems`, recorded in `catalog/dns-exceptions.yaml` ([grammar B: public](#32-grammar-b-public)).
