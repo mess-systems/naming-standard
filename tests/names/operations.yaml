@@ -1,0 +1,15 @@
+# Name examples for operations objects (08). `invalid: true` marks a name that must be refused.
+cases:
+  - {kind: branch, name: jdoe/pg-access}
+  - {kind: branch, name: user-jdoe-cursor/pg-access}
+  - {kind: branch, name: agent-code-review/fix-typo}
+  - {kind: branch, name: jdoe/142-pg-access}
+  - {kind: branch, name: main}
+  - {kind: branch, name: release/v1.4}
+  - {kind: branch, name: release/1.4, invalid: true}
+  - {kind: branch, name: cursor/fix, invalid: true}
+  - {kind: branch, name: feature/pg-access, invalid: true}
+  - {kind: branch, name: jdoe/PG_access, invalid: true}
+  - {kind: snapshot, name: shared-data-postgres-prd-20261031t020000z}
+  - {kind: snapshot, name: shared-data-postgres-prd-2026-10-31, invalid: true}
+  - {kind: snapshot, name: dc1-shared-data-postgres-prd-01-20261031t020000z, invalid: true}

@@ -29,7 +29,10 @@
 | `platform/` | kv-v2 | product-shared runtime |
 | `ext/` | kv-v2 | partner/demo portals |
 | `<product>/` | kv-v2 | one mount per product (e.g. `shopfront/`, `ledger/`) |
+| `pki-root/` | pki | offline root CA, used only to sign the issuing CA |
 | `pki-int/` | pki | internal issuing CA |
+| `database-<plane>/` (e.g. `database-shared/`) | database | short-lived database credentials of one plane |
+| `ssh-<plane>/` (e.g. `ssh-shared/`) | ssh | signed SSH certificates for hosts of one plane |
 | `transit/` | transit | encryption-as-a-service keys, named `<application>` |
 | `auth/approle` | auth | workloads without SPIFFE |
 | `auth/jwt-<idp>` (e.g. `jwt-keycloak`) | auth | humans and CI via OIDC |
@@ -37,6 +40,38 @@
 | `auth/kubernetes-<cluster>` | auth | Kubernetes service accounts |
 
 A legacy `secret/` mount stays until every path listed under [migration](#7-migration-from-legacy-paths-illustrative) has moved, then is disabled.
+
+### 2.1 Engines other than kv
+
+A mount of any other engine is named `<engine>-<plane>/`, so the plane stays the first isolation boundary (rule S2) and the engine is visible in every path. A vendor or product name is never a mount (`postgres/`, `mysql/`). Paths below these mounts are the engine's own API paths; the fixed depth of the [path grammar](#3-path-grammar) applies to kv mounts only.
+
+| Engine | Object | Form | Example |
+|---|---|---|---|
+| database | mount | `database-<plane>/` | `database-shared/` |
+| database | connection | the application of the cluster ([object forms](01-naming-conventions.md#5-object-forms)) | `database-shared/config/shared-data-postgres` |
+| database | dynamic role | the database role it grants ([database roles](04-identity-conventions.md#11-database-roles)) | `database-shared/roles/eng_sdlc_git_ro` |
+| database | static role | the database account it rotates | `database-shared/static-roles/svc_eng_sdlc_forgejo` |
+| ssh | role | the group whose members may sign ([tier groups](04-identity-conventions.md#31-tier-groups-privilege), [role groups](04-identity-conventions.md#32-role-groups-function)) | `ssh-shared/roles/tier-t1-platform-ops` |
+| pki | mounts | `pki-root/` (offline) and `pki-int/` | `pki-int/` |
+| pki | issuer | `<org>-<root\|int>-<YYYY>` | `mess-systems-int-2026` |
+| pki | role | `<domain>-<plane>`, one role per zone `<domain>.<plane>.svc.mess.systems` | `iam-shared`, `data-shared` |
+| pki | ACME directory | `pki-int/roles/<role>/acme/directory` | `pki-int/roles/data-shared/acme/directory` |
+
+Rules for the database engine:
+
+- A dynamic role grants membership in an existing `NOLOGIN` database role of the same name; it never creates privileges of its own.
+- The user name of a temporary user follows [temporary database users](04-identity-conventions.md#111-temporary-database-users); the template is set per connection.
+- The engine connects with a service account named after the secrets manager (`svc_shared_iam_openbao`). Its password is rotated with `rotate-root` right after setup, so only the secrets manager knows it; it is never stored in kv.
+- The consumer of a role is a group, bound through a JWT auth role ([auth roles and tokens](#6-auth-roles-and-tokens)), not a person.
+
+Rules for the pki engine:
+
+- A role allows only its zone: `allowed_domains` is the zone, `allow_subdomains = true`; `allow_bare_domains`, `allow_wildcard_certificates`, `allow_glob_domains`, `allow_any_name` and `allow_ip_sans` are `false`.
+- A wildcard certificate is issued by a separate role that is recorded in the inventory, never by the zone role.
+
+Rules for the ssh engine:
+
+- A role carries no host name; the principals it signs are group IDs, and hosts accept principals by group.
 
 ## 3. Path grammar
 
@@ -144,3 +179,6 @@ Policy `corp-ai-agentgateway`: read `corp/data/ai/gateway/prd/*`. Policy `agent-
 - `admin` item readable by any non-t0 policy.
 - Policy or role name that differs from the identity name.
 - Copying a prod secret into `dev|tst|stg`.
+- Mount named after a vendor or product (`postgres/`) instead of `<engine>-<plane>/`.
+- Dynamic database role whose name differs from the database role it grants.
+- Root password of a secrets engine stored in kv.

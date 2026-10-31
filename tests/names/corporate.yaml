@@ -1,0 +1,53 @@
+# Name examples for the corporate contour (01, 03, 04). `invalid: true` marks a name that must be refused.
+cases:
+  - {kind: secrets-mount, name: database-shared/}
+  - {kind: secrets-mount, name: ssh-shared/}
+  - {kind: secrets-mount, name: pki-int/}
+  - {kind: secrets-mount, name: database/, invalid: true}
+  - {kind: secrets-mount, name: database-arch/, invalid: true}
+  - {kind: iac-repo, name: shared-sec-iac}
+  - {kind: iac-repo, name: shared-obs-iac}
+  - {kind: iac-repo, name: shared-net-iac}
+  - {kind: iac-repo, name: platform-build-iac}
+  - {kind: iac-repo, name: infra-iac}
+  - {kind: iac-repo, name: shared-infra-iac-roles}
+  - {kind: iac-repo, name: ansible-roles, invalid: true}
+  - {kind: iac-repo, name: infra-onprem, invalid: true}
+  - {kind: iac-repo, name: shared-net-netbird-iac, invalid: true}
+  - {kind: iac-repo, name: dc1-infra-iac, invalid: true}
+  - {kind: iac-repo, name: shared-net-obs-iac, invalid: true}
+  - {kind: mesh-group, name: router-dc1}
+  - {kind: mesh-group, name: app-arch-user}
+  - {kind: mesh-group, name: admins, invalid: true}
+  - {kind: mesh-policy, name: role-platform-engineers -> svc-shared-data-postgres}
+  - {kind: mesh-policy, name: role-developers -> svc-shared-net-dns (udp)}
+  - {kind: mesh-policy, name: role-developers->svc-shared-net-dns, invalid: true}
+  - {kind: mesh-policy, name: All -> zone-shared, invalid: true}
+  - {kind: mesh-rule, name: ssh-https}
+  - {kind: mesh-rule, name: tcp-9100}
+  - {kind: mesh-rule, name: Allow-9100, invalid: true}
+  - {kind: posture-check, name: posture-client-current}
+  - {kind: posture-check, name: client-version, invalid: true}
+  - {kind: mesh-resource, name: dc1-shared-net-dns}
+  - {kind: mesh-resource, name: dc1-shared-net-dns-prd-01}
+  - {kind: mesh-resource, name: 192.0.2.10, invalid: true}
+  - {kind: mesh-resource, name: dns-servers, invalid: true}
+  - {kind: temp-user, name: v_oidc_jdoe_eng_sdlc_git_ro_20261031t020000z_k7m2qa}
+  - {kind: temp-user, name: v_oidc_user_jdoe_cursor_eng_sdlc_git_ro_20261031t020000z_k7m2qa}
+  - {kind: temp-user, name: v-oidc-jdoe-eng_sdlc_git_ro-1793412000-k7m2qa, invalid: true}
+  - {kind: temp-user, name: v_oidc_user_jdoe_cursor_eng_sdlc_git_ro_20261031t020000z_k7m2qa_x, invalid: true}
+  - {kind: temp-user, name: v_oidc_user_jdoe_cursor_eng_sdlc_git_ro_20261031t020000z_k7m, invalid: true}
+  - {kind: internal-dns, name: mesh.net.shared.svc.mess.systems}
+  - {kind: internal-dns, name: sql.data.shared.stg.svc.mess.systems}
+  - {kind: internal-dns, name: netbird.net.shared.svc.mess.systems.example, invalid: true}
+  - {kind: public-dns, name: www.mess.systems}
+  - {kind: public-dns, name: demo.apps.mess.systems}
+  - {kind: public-dns, name: arch.x.mess.systems}
+  - {kind: public-dns, name: app.arch.x.mess.systems}
+  - {kind: public-dns, name: api.stg.arch.x.mess.systems}
+  - {kind: public-dns, name: netbird.mess.systems}
+  - {kind: public-dns, name: sso.mess.systems}
+  - {kind: public-dns, name: arch-internal.x.mess.systems, invalid: true}
+  - {kind: public-dns, name: llm.mess.systems, invalid: true}
+  - {kind: public-dns, name: arch.y.mess.systems, invalid: true}
+  - {kind: public-dns, name: gateway.x.mess.systems, invalid: true}

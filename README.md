@@ -6,7 +6,7 @@ The naming standard of **mess.systems**: one grammar for DNS names, hosts, repos
 
 It is a living template: it is applied, questioned, and revised as understanding grows. Use it as-is or adapt it to your own organisation.
 
-**Status:** v2.5, evolving. Names and rules may still change; changes are recorded in the changelog below.
+**Status:** v2.7, evolving. Names and rules may still change; changes are recorded in the changelog below.
 
 ## Why
 
@@ -23,7 +23,8 @@ Names are the cheapest architecture decision and the most expensive one to chang
 | [05-labels-and-tags.md](05-labels-and-tags.md) | Key/value labels and tags: cost tags, CI runner labels, Kubernetes labels and annotations, cloud tags, issue and PR labels, platform limits |
 | [06-endpoint-conventions.md](06-endpoint-conventions.md) | Employee devices: name form, profiles and forms, metadata, the `endpoint` capability code, DNS, BYOD, PAW, refusals |
 | [07-deployment-and-tenants.md](07-deployment-and-tenants.md) | Product contour: product, domain, service, implementation; environments and DNS; deployment keys, cells, tenants, governance labels, OpenTelemetry, SPIFFE |
-| [schema/](schema/), [catalog/](catalog/), [tests/](tests/) | Executable standard: JSON Schema, example vocabulary, golden examples checked in CI |
+| [08-operations-objects.md](08-operations-objects.md) | Operations objects: Git branches and tags, CI and scheduled jobs, backups and snapshots, hypervisor guests, API gateways, DNS records, PostgreSQL objects |
+| [schema/](schema/), [catalog/](catalog/), [tests/](tests/) | Executable standard: JSON Schema, example vocabulary, site and public DNS exception registers, golden and name examples checked in CI |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to propose changes and discussion rules |
 | [i18n/](i18n/) | Russian and Simplified Chinese translations (informative) |
 | [LICENSE](LICENSE) | CC BY 4.0 |
@@ -61,7 +62,24 @@ Questioned and kept:
 
 ## Changelog
 
-### v2.5 (current)
+### v2.7 (current)
+
+This version also contains the changes prepared as v2.6, which was not released separately.
+
+- [Hyphen parse rule](01-naming-conventions.md#11-hyphen-parse-rule): plane and domain codes are one token, a name is parsed by position, and qualifiers live in labels, not in names.
+- Infrastructure-as-code repositories are named `<plane>-<domain>-iac` or `<product>-<domain>-iac`, with no tool or site in the name and one plane and domain per repository ([object forms](01-naming-conventions.md#5-object-forms)).
+- Two public sub-zones of the brand: `apps.mess.systems` and `x.mess.systems` for products (the showcase); public names outside the grammars only through the register `catalog/dns-exceptions.yaml` ([grammar B: public](01-naming-conventions.md#32-grammar-b-public)).
+- Site codes are registered in `catalog/sites.yaml`, with no city, address or provider ([environments and sites](01-naming-conventions.md#44-environments-and-sites)).
+- Mounts, roles and issuers of the database, ssh and pki engines ([engines other than kv](03-secrets-conventions.md#21-engines-other-than-kv)).
+- Product access groups `app-<product>-<access>` ([product access groups](04-identity-conventions.md#34-product-access-groups)); mesh group `router-<site>`; names of mesh policies, rules, posture checks, networks, resources, setup keys and nameserver groups ([mesh VPN groups](04-identity-conventions.md#4-mesh-vpn-groups)).
+- IdP realms, OIDC clients of agents and of humans' tools, token audiences and the actor of a token exchange ([IdP objects](04-identity-conventions.md#6-idp-objects)).
+- [Temporary database users](04-identity-conventions.md#111-temporary-database-users): `v_<auth>_<identity>_<role>_<ts>_<rand6>`, at most 63 characters, never truncated as a whole.
+- Product contour: products published in `x.mess.systems`, the note on the fictional product X, and the term "organization boundary" ([deployment and tenants](07-deployment-and-tenants.md)).
+- New part [operations objects](08-operations-objects.md).
+- The worked encoding of the mesh coordinator uses NetBird (`shared-net-netbird`).
+- Executable standard: `catalog/sites.yaml`, `catalog/dns-exceptions.yaml`, `tests/names/` and `tests/check_names.py`, checked in CI.
+
+### v2.5
 
 - Product contour, new [section 12](07-deployment-and-tenants.md#12-infrastructure-objects-of-a-product-v25) on infrastructure objects. The corporate contour (parts 01 to 06) is unchanged.
 - Environment class `prd`, `nonprod`, `sandbox` for resources that serve several envs; optional env DNS alias (`stage`, `test`) allowed only in public DNS.

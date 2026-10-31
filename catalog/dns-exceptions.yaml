@@ -1,0 +1,14 @@
+# Public names under mess.systems outside grammars A and B (01, grammar B: public).
+# Each entry names its canonical grammar-A name, the reason, the owner group and a review date.
+# An exception is never a pattern for a new name.
+exceptions:
+  - name: netbird.mess.systems
+    canonical: mesh.net.shared.svc.mess.systems
+    reason: the mesh coordinator must be reachable before the mesh is up
+    owner: role-platform-engineers
+    review: 2027-10-31
+  - name: sso.mess.systems
+    canonical: sso.iam.shared.svc.mess.systems
+    reason: sign-in for external demo observers until the product IdP exists
+    owner: role-platform-engineers
+    review: 2027-04-30

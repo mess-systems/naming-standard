@@ -1,0 +1,6 @@
+# Site codes (01, environments and sites). Neutral example codes.
+# A code is 2 to 4 characters, a-z0-9, starting with a letter.
+# No city, address or provider: the provider is the deployment key `provider`.
+sites:
+  dc1: {kind: own, owner: role-platform-engineers, description: on-premises data centre}
+  cld: {kind: cld, owner: role-platform-engineers, description: public cloud tenant}

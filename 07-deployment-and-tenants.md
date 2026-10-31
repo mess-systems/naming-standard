@@ -2,6 +2,8 @@
 
 The rules for the **product contour**: the cloud-native products that mess.systems builds, runs and sells, how they are deployed across providers, regions and cells, and how tenants are identified. All examples use the fictional company mess.systems and its fictional **product X** (`x`), a simple records application with login, subscription, an admin console, an API with webhooks and payments.
 
+Product X (`x`) is fictional. Its domain `x.mess.systems` is a placeholder for a product domain in [grammar B](01-naming-conventions.md#32-grammar-b-public), not the real product sub-zone `x.mess.systems` of mess.systems. In the examples, `api.x.mess.systems` and `api.stg.x.mess.systems` are the surface `api` of the fictional product `x` (`<surface>.<product-domain>`), not a product with the code `api` in the product sub-zone. In the real sub-zone the same surface of a product `arch` is `api.arch.x.mess.systems`. The code `x` exists only in the examples, the example catalog and the golden tests; an organisation's own catalog does not contain it.
+
 This part was shaped by an external review of the standard; thanks to the reviewer.
 
 ## 1. Two contours
@@ -26,6 +28,8 @@ mess.systems has two contours. They share the character rules, the "names never 
 - Shared services that every product uses (build, registry, product-side observability) are the product **`platform`**, the same code and meaning as the `platform` plane.
 - A product uses corporate services (SSO for staff, the forge, the secrets manager) under their corporate names. A corporate service never takes a product-contour name.
 - The asymmetry in environments is deliberate: the corporate contour keeps its short production names; the product contour writes `prd` so that every name parses the same way in every environment.
+
+In this standard "contour" means only `corp` or `product` (key `contour`). The data boundary of one customer organisation that has its own instance of a product is called the **organization boundary** and never goes into a name: inside mess.systems it is a dedicated cell `d<tenant-key>` ([tenants](#5-tenants)), and an instance on the customer's side is named by the customer's own standard.
 
 ## 2. Product, domain, service, implementation
 
@@ -79,6 +83,8 @@ api.<product-domain>                 # production
 api.stg.<product-domain>             # non-production surface
 app.<product-domain>, docs.<product-domain>, status.<product-domain>
 ```
+
+mess.systems publishes its products in the sub-zone `x.mess.systems` ([grammar B](01-naming-conventions.md#32-grammar-b-public)): the product domain is `<product>.x.mess.systems`. A product with its own registered domain uses that domain instead of the sub-zone, never both.
 
 For product X with the placeholder domain `x.mess.systems`: `api.x.mess.systems`, `app.x.mess.systems`, `api.stg.x.mess.systems`. Public names never carry domain, service, cell, region, provider or tenant. Routing a request to a cell is the job of the routing layer, not of the public name.
 
@@ -183,9 +189,11 @@ The vocabulary and the rules of this part are also data in the repository:
 | Path | Content |
 |---|---|
 | `schema/resource-metadata.schema.json` | JSON Schema for the metadata of a product-contour resource |
-| `catalog/*.yaml` | Vocabulary: contours, environments, providers, jurisdictions, regions, cells, environment classes and DNS aliases, product X domains and services, label classes |
+| `catalog/*.yaml` | Vocabulary: contours, environments, providers, jurisdictions, regions, cells, environment classes and DNS aliases, product X domains and services, label classes, sites, public DNS exceptions |
 | `tests/golden/*.yaml` | Golden examples: metadata and the names it must produce, including the one object, one env code check |
 | `tests/check_golden.py` | Test that validates the golden examples against the schema and the catalog |
+| `tests/names/*.yaml` | Name examples, valid and invalid, for the forms of the corporate contour and the operations objects |
+| `tests/check_names.py` | Test that checks the name examples and the site and DNS exception registers |
 
 CI runs the test on every pull request. The data files are examples for the fictional product X; an organisation replaces the catalog with its own.
 
@@ -285,6 +293,8 @@ Host form stays `<site>-<plane-or-product>-<domain>-<service>-<env>-<NN>`. When 
 | Module | `modules/<capability>` | `modules/k8s`, `modules/pg` |
 | State key | `<product-or-platform>/<stack>/<env>.tfstate` | `x/app/prd.tfstate`, `bootstrap/platform/prd.tfstate` |
 | Resource address | `<service>_<env>` (snake_case) | `x_k8s_prd` |
+
+The repositories that hold this code are named by the [object forms](01-naming-conventions.md#5-object-forms) of the naming conventions: `<product>-<domain>-iac`, for example `platform-build-iac`. Git branches, CI workflows and jobs follow [operations objects](08-operations-objects.md).
 
 ### 12.8 Buckets
 

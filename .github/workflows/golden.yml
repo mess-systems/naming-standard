@@ -15,3 +15,4 @@ jobs:
           python-version: "3.12"
       - run: pip install jsonschema pyyaml
       - run: python tests/check_golden.py
+      - run: python tests/check_names.py
