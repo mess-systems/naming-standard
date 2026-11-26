@@ -1,6 +1,6 @@
 [English](../../01-naming-conventions.md) | **Русский** | [简体中文](../zh-CN/01-naming-conventions.md)
 
-> **Перевод.** Перевод стандарта версии v2.7, исходный коммит `a60b331` с редакторской правкой ссылок. Нормативным является английский текст: при любых расхождениях преимущество имеет английская версия.
+> **Перевод.** Перевод стандарта версии v2.7, исходный коммит `018df42` с редакторской правкой ссылок. Нормативным является английский текст: при любых расхождениях преимущество имеет английская версия.
 
 # Соглашения об именовании mess.systems (v2)
 
@@ -136,7 +136,7 @@ www.mess.systems                      # brand
 | `net` | DNS, mesh, edge, межсетевой экран | shared |
 | `infra` | вычисления, хранение, резервное копирование, гипервизор | shared |
 | `sdlc` | код, CI, артефакты, GitOps | eng |
-| `adlc` | жизненный цикл ИИ и агентов, оценки (evals), sidecar-политики | eng |
+| `adlc` | жизненный цикл ИИ и агентов, оценки (evals), навыки агентов, процессы агентской поставки, sidecar-политики | eng |
 | `ai` | инференс, шлюз, речь, зрение, агенты | corp |
 | `data` | хранилище данных, конвейеры, каталог, BI, документное хранилище | platform |
 | `collab` | чат, вики, документы, видео | corp |
@@ -160,7 +160,7 @@ www.mess.systems                      # brand
 | `net` | `dns mesh ingress egress firewall` |
 | `infra` | `compute storage backup k8s` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
-| `adlc` | `registry sandbox evals` |
+| `adlc` | `registry sandbox evals skills delivery` |
 | `ai` | `gateway inference stt tts ocr llm-traces kb docs guard assistant` |
 | `data` | `warehouse orchestrate transform ingest data-catalog bi docstore convert sql cache objects` |
 | `collab` | `chat wiki intranet video` |
