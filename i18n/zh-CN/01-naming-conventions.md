@@ -1,6 +1,6 @@
 [English](../../01-naming-conventions.md) | [Русский](../ru/01-naming-conventions.md) | **简体中文**
 
-> **译文说明。** 本文为标准 v2.7 版本的译文，源提交 `a60b331`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
+> **译文说明。** 本文为标准 v2.7 版本的译文，源提交 `018df42`（含链接编辑修订）。英文文本为规范性文本：如有任何不一致，以英文版本为准。
 
 # mess.systems 命名规范（v2）
 
@@ -136,7 +136,7 @@ www.mess.systems                      # brand
 | `net` | DNS、网状网络、边缘、防火墙 | shared |
 | `infra` | 计算、存储、备份、虚拟化平台 | shared |
 | `sdlc` | 代码、CI、制品、GitOps | eng |
-| `adlc` | AI/智能体生命周期、评测 (evals)、策略 sidecar | eng |
+| `adlc` | AI/智能体生命周期、评测 (evals)、智能体技能 (skills)、智能体交付流程 (delivery)、策略 sidecar | eng |
 | `ai` | 推理、网关、语音、视觉、智能体 | corp |
 | `data` | 数据仓库、数据管道、目录、BI、文档存储 | platform |
 | `collab` | 聊天、wiki、文档、视频 | corp |
@@ -160,7 +160,7 @@ www.mess.systems                      # brand
 | `net` | `dns mesh ingress egress firewall` |
 | `infra` | `compute storage backup k8s` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
-| `adlc` | `registry sandbox evals` |
+| `adlc` | `registry sandbox evals skills delivery` |
 | `ai` | `gateway inference stt tts ocr llm-traces kb docs guard assistant` |
 | `data` | `warehouse orchestrate transform ingest data-catalog bi docstore convert sql cache objects` |
 | `collab` | `chat wiki intranet video` |
