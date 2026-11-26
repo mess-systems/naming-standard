@@ -39,6 +39,8 @@ cases:
   - {kind: temp-user, name: v_oidc_user_jdoe_cursor_eng_sdlc_git_ro_20261031t020000z_k7m, invalid: true}
   - {kind: internal-dns, name: mesh.net.shared.svc.mess.systems}
   - {kind: internal-dns, name: sql.data.shared.stg.svc.mess.systems}
+  - {kind: internal-dns, name: skills.adlc.eng.svc.mess.systems}
+  - {kind: internal-dns, name: delivery.adlc.eng.svc.mess.systems}
   - {kind: internal-dns, name: netbird.net.shared.svc.mess.systems.example, invalid: true}
   - {kind: public-dns, name: www.mess.systems}
   - {kind: public-dns, name: demo.apps.mess.systems}

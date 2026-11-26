@@ -132,7 +132,7 @@ www.mess.systems                      # brand
 | `net` | DNS, mesh, edge, firewall | shared |
 | `infra` | compute, storage, backup, hypervisor | shared |
 | `sdlc` | code, CI, artifacts, GitOps | eng |
-| `adlc` | AI/agent lifecycle, evals, policy sidecars | eng |
+| `adlc` | AI/agent lifecycle, evals, agent skills, agentic delivery workflows, policy sidecars | eng |
 | `ai` | inference, gateway, speech, vision, agents | corp |
 | `data` | warehouse, pipelines, catalog, BI, document store | platform |
 | `collab` | chat, wiki, docs, video | corp |
@@ -156,7 +156,7 @@ A code has **one meaning** in the whole company. The same code may appear in sev
 | `net` | `dns mesh ingress egress firewall` |
 | `infra` | `compute storage backup k8s` |
 | `sdlc` | `git ci oci packages gitops flags hub-cache` |
-| `adlc` | `registry sandbox evals` |
+| `adlc` | `registry sandbox evals skills delivery` |
 | `ai` | `gateway inference stt tts ocr llm-traces kb docs guard assistant` |
 | `data` | `warehouse orchestrate transform ingest data-catalog bi docstore convert sql cache objects` |
 | `collab` | `chat wiki intranet video` |
